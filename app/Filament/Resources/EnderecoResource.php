@@ -65,29 +65,43 @@ class EnderecoResource extends Resource
                 Tables\Columns\TextColumn::make('parceiro_id')
                     ->numeric()
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('rua')
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('numero')
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('complemento')
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('bairro')
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('codigo_municipio')
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('cidade')
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('estado')
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('cep')
+                    ->label('CEP')
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('pais')
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Criado Em')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Atualizado Em')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

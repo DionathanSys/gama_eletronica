@@ -37,4 +37,21 @@ class Parceiro extends Model
     {
         return $this->hasMany(Veiculo::class);
     }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Atributos
+    |--------------------------------------------------------------------------
+    */
+
+    public function setNomeAttribute($value)
+    {
+        $this->attributes['nome'] = strtoupper($value);
+    }
+
+    public function setNroDocumentoAttribute($value)
+    {
+        $this->attributes['nro_documento'] = preg_replace('/[-\/\.]/', '', $value);
+    }
 }

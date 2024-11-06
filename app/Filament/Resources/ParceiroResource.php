@@ -27,16 +27,21 @@ class ParceiroResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+            ->columns(5)
             ->schema([
                 Forms\Components\TextInput::make('nome')
+                    ->columnSpan(2)
                     ->required()
                     ->maxLength(255),
 
                 Forms\Components\Select::make('tipo_vinculo')
+                    ->label('Vínculo')
+                    ->columnSpan(1)
                     ->required()
                     ->options(VinculoParceiroEnum::class),
 
                 Forms\Components\Select::make('tipo_documento')
+                    ->columnSpan(1)
                     ->required()
                     ->options(['CPF' => 'CPF', 'CNPJ' => 'CNPJ'])
                     ->live()
@@ -44,6 +49,7 @@ class ParceiroResource extends Resource
                     ->default('CNPJ'),
 
                 Forms\Components\TextInput::make('nro_documento')
+                    ->columnSpan(1)
                     ->required()
                     ->length(fn(Get $get) => $get('tipo_documento') == 'CPF' ? 14 : 18)
                     ->mask(function(Get $get) {
@@ -55,6 +61,7 @@ class ParceiroResource extends Resource
                     }),
 
                 Forms\Components\Toggle::make('ativo')
+                    ->columnSpan(1)
                     ->required()
                     ->default(true),
             ]);
@@ -67,7 +74,8 @@ class ParceiroResource extends Resource
                 Tables\Columns\TextColumn::make('nome')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('tipo_vinculo'),
+                Tables\Columns\TextColumn::make('tipo_vinculo')
+                    ->label('Vínculo'),
 
                 Tables\Columns\TextColumn::make('tipo_documento'),
 

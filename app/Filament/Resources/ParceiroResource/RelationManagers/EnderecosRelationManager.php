@@ -35,7 +35,8 @@ class EnderecosRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->label('Novo Endereço'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
