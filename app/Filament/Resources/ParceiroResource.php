@@ -3,9 +3,9 @@
 namespace App\Filament\Resources;
 
 use App\Enums\VinculoParceiroEnum;
-use App\Filament\Resources\ContatoResource\RelationManagers\ContatoRelationManager;
 use App\Filament\Resources\ParceiroResource\Pages;
 use App\Filament\Resources\ParceiroResource\RelationManagers;
+use App\Filament\Resources\ParceiroResource\RelationManagers\ContatoRelationManager;
 use App\Filament\Resources\ParceiroResource\RelationManagers\EnderecosRelationManager;
 use App\Models\Parceiro;
 use Filament\Forms;

@@ -9,4 +9,5 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateEndereco extends CreateRecord
 {
     protected static string $resource = EnderecoResource::class;
+
 }

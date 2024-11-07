@@ -21,36 +21,48 @@ class EnderecoResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Endereços';
 
+    protected static ?string $navigationLabel = 'Endereços';
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('parceiro_id')
+                Forms\Components\Select::make('parceiro_id')
                     ->required()
-                    ->numeric(),
+                    ->searchable()
+                    ->relationship('parceiro', 'nome'),
+
                 Forms\Components\TextInput::make('rua')
                     ->required()
                     ->maxLength(75),
+
                 Forms\Components\TextInput::make('numero')
                     ->required()
                     ->maxLength(7),
+
                 Forms\Components\TextInput::make('complemento')
                     ->maxLength(10),
+
                 Forms\Components\TextInput::make('bairro')
                     ->required()
                     ->maxLength(75),
+
                 Forms\Components\TextInput::make('codigo_municipio')
                     ->maxLength(10),
+
                 Forms\Components\TextInput::make('cidade')
                     ->required()
                     ->maxLength(50),
+
                 Forms\Components\TextInput::make('estado')
                     ->required()
                     ->maxLength(2)
                     ->default('SC'),
+
                 Forms\Components\TextInput::make('cep')
                     ->required()
                     ->maxLength(255),
+
                 Forms\Components\TextInput::make('pais')
                     ->required()
                     ->maxLength(255)
@@ -130,8 +142,8 @@ class EnderecoResource extends Resource
     {
         return [
             'index' => Pages\ListEnderecos::route('/'),
-            'create' => Pages\CreateEndereco::route('/create'),
-            'edit' => Pages\EditEndereco::route('/{record}/edit'),
+            // 'create' => Pages\CreateEndereco::route('/create'),
+            // 'edit' => Pages\EditEndereco::route('/{record}/edit'),
         ];
     }
 }
