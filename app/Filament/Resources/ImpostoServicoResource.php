@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\EquipamentoResource\Pages;
-use App\Filament\Resources\EquipamentoResource\RelationManagers;
-use App\Models\Equipamento;
+use App\Filament\Resources\ImpostoServicoResource\Pages;
+use App\Filament\Resources\ImpostoServicoResource\RelationManagers;
+use App\Models\ImpostoServico;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,41 +13,37 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class EquipamentoResource extends Resource
+class ImpostoServicoResource extends Resource
 {
-    protected static ?string $model = Equipamento::class;
+    protected static ?string $model = ImpostoServico::class;
 
     protected static ?string $navigationGroup = 'Cadastros';
 
-    protected static ?string $pluralModelLabel = 'Equipamentos';
+    protected static ?string $pluralModelLabel = 'Imposto Serviços';
 
-    protected static ?string $navigationLabel = 'Equipamentos';
+    protected static ?string $navigationLabel = 'Imposto Serviços';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('parceiro_id')
-                    ->relationship('parceiro', 'id')
-                    ->required(),
-
-                Forms\Components\TextInput::make('descricao')
-                    ->maxLength(255),
-
-                Forms\Components\TextInput::make('nro_serie')
-                    ->maxLength(255),
-
-                Forms\Components\TextInput::make('modelo')
-                    ->maxLength(255),
-
-                Forms\Components\TextInput::make('marca')
-                    ->maxLength(255),
-
-                Forms\Components\TextInput::make('created_by')
+                Forms\Components\TextInput::make('codigo_municipio')
+                    ->label('Código Município')
                     ->required()
                     ->numeric(),
 
-                Forms\Components\TextInput::make('updated_by')
+                Forms\Components\TextInput::make('municipio')
+                    ->label('Município')
+                    ->required()
+                    ->maxLength(150),
+
+                Forms\Components\TextInput::make('codigo_servico')
+                    ->label('Código Serviço')
+                    ->required()
+                    ->numeric(),
+
+                Forms\Components\TextInput::make('aliq_iss')
+                    ->label('Alíquota ISS')
                     ->required()
                     ->numeric(),
             ]);
@@ -57,27 +53,21 @@ class EquipamentoResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('parceiro.id')
+                Tables\Columns\TextColumn::make('codigo_municipio')
+                    ->label('Código Município')
                     ->numeric()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('descricao')
+                Tables\Columns\TextColumn::make('municipio')
+                    ->label('Município')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('nro_serie')
+                Tables\Columns\TextColumn::make('codigo_servico')
+                    ->label('Código Serviço')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('modelo')
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('marca')
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('created_by')
-                    ->numeric()
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('updated_by')
+                Tables\Columns\TextColumn::make('aliq_iss')
+                    ->label('Alíquota ISS')
                     ->numeric()
                     ->sortable(),
 
@@ -104,6 +94,7 @@ class EquipamentoResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -112,19 +103,10 @@ class EquipamentoResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListEquipamentos::route('/'),
-            'create' => Pages\CreateEquipamento::route('/create'),
-            'edit' => Pages\EditEquipamento::route('/{record}/edit'),
+            'index' => Pages\ManageImpostoServicos::route('/'),
         ];
     }
 }
