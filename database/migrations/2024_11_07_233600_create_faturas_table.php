@@ -11,17 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('servicos', function (Blueprint $table) {
+        Schema::create('faturas', function (Blueprint $table) {
             $table->id();
-            $table->string('nome');
-            $table->string('descricao')->nullable();
-            $table->decimal('valor_unitario', 8, 2);
-            $table->boolean('ativo')->default(1);
-            $table->foreignId('imposto_servico_id')->nullable()->constrained('imposto_servicos');
+            $table->foreignId('parceiro_id')->constrained('parceiros');
+            $table->decimal('valor_total');
+            $table->decimal('desconto', 2);
+            $table->string('status');
+            $table->string('path_pdf');
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('updated_by')->constrained('users');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('servicos');
+        Schema::dropIfExists('faturas');
     }
 };

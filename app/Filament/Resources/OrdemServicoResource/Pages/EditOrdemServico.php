@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Filament\Resources\EnderecoResource\Pages;
+namespace App\Filament\Resources\OrdemServicoResource\Pages;
 
-use App\Filament\Resources\EnderecoResource;
+use App\Filament\Resources\OrdemServicoResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\Auth;
 
-class EditEndereco extends EditRecord
+class EditOrdemServico extends EditRecord
 {
-    protected static string $resource = EnderecoResource::class;
+    protected static string $resource = OrdemServicoResource::class;
+
+    protected static ?string $title = 'Editar Ordem';
 
     protected function getHeaderActions(): array
     {

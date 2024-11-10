@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Resources\EnderecoResource\Pages;
+namespace App\Filament\Resources\FaturaResource\Pages;
 
-use App\Filament\Resources\EnderecoResource;
+use App\Filament\Resources\FaturaResource;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Auth;
 
-class CreateEndereco extends CreateRecord
+class CreateFatura extends CreateRecord
 {
-    protected static string $resource = EnderecoResource::class;
+    protected static string $resource = FaturaResource::class;
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
@@ -18,5 +18,4 @@ class CreateEndereco extends CreateRecord
         
         return $data;
     }
-
 }

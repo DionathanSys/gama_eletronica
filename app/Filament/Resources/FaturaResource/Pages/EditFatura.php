@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Resources\EnderecoResource\Pages;
+namespace App\Filament\Resources\FaturaResource\Pages;
 
-use App\Filament\Resources\EnderecoResource;
+use App\Filament\Resources\FaturaResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\Auth;
 
-class EditEndereco extends EditRecord
+class EditFatura extends EditRecord
 {
-    protected static string $resource = EnderecoResource::class;
+    protected static string $resource = FaturaResource::class;
 
     protected function getHeaderActions(): array
     {

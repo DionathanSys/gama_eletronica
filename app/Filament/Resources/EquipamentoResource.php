@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\EquipamentoResource\Pages;
 use App\Filament\Resources\EquipamentoResource\RelationManagers;
 use App\Models\Equipamento;
+use App\Models\Parceiro;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -26,30 +27,14 @@ class EquipamentoResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+            ->columns(4)
             ->schema([
-                Forms\Components\Select::make('parceiro_id')
-                    ->relationship('parceiro', 'id')
-                    ->required(),
+                static::getParceiroFormField(),
+                static::getDescricaoFormField(),
+                static::getNroSerieFormField(),
+                static::getModeloFormField(),
+                static::getMarcaFormField(),
 
-                Forms\Components\TextInput::make('descricao')
-                    ->maxLength(255),
-
-                Forms\Components\TextInput::make('nro_serie')
-                    ->maxLength(255),
-
-                Forms\Components\TextInput::make('modelo')
-                    ->maxLength(255),
-
-                Forms\Components\TextInput::make('marca')
-                    ->maxLength(255),
-
-                Forms\Components\TextInput::make('created_by')
-                    ->required()
-                    ->numeric(),
-
-                Forms\Components\TextInput::make('updated_by')
-                    ->required()
-                    ->numeric(),
             ]);
     }
 
@@ -126,5 +111,51 @@ class EquipamentoResource extends Resource
             'create' => Pages\CreateEquipamento::route('/create'),
             'edit' => Pages\EditEquipamento::route('/{record}/edit'),
         ];
+    }
+    
+    public static function getParceiroFormField(): Forms\Components\Select
+    {
+        return Forms\Components\Select::make('parceiro_id')
+                    ->columnSpan(1)
+                    ->label('Parceiro')
+                    ->relationship('parceiro', 'nome')
+                    ->preload()
+                    ->searchable()
+                    ->options(function () {
+                        return Parceiro::where('tipo_vinculo', 'cliente')
+                                        ->where('ativo', true)
+                                        ->pluck('nome', 'id');
+                    })
+                    ->required();
+    }
+    
+    public static function getDescricaoFormField(): Forms\Components\TextInput
+    {
+        return Forms\Components\TextInput::make('descricao')
+                    ->columnSpan(2)
+                    ->label('Descrição')
+                    ->maxLength(255);
+    }
+    
+    public static function getNroSerieFormField(): Forms\Components\TextInput
+    {
+        return Forms\Components\TextInput::make('nro_serie')
+                    ->columnSpan(1)
+                    ->label('Nro. Série')
+                    ->maxLength(255);
+    }
+    
+    public static function getModeloFormField(): Forms\Components\TextInput
+    {
+        return Forms\Components\TextInput::make('modelo')
+                    ->columnSpan(1)
+                    ->maxLength(255);
+    }
+    
+    public static function getMarcaFormField(): Forms\Components\TextInput
+    {
+        return Forms\Components\TextInput::make('marca')
+                    ->columnSpan(1)
+                    ->maxLength(255);
     }
 }

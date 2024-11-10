@@ -9,6 +9,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class EnderecosRelationManager extends RelationManager
 {
@@ -114,8 +115,8 @@ class EnderecosRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make()
                     ->label('Novo Endereço')
                     ->mutateFormDataUsing(function (array $data): array {
-                        $data['created_by'] = auth()->id();
-                        $data['updated_by'] = auth()->id();
+                        $data['created_by'] = Auth::id();
+                        $data['updated_by'] = Auth::id();
                  
                         return $data;
                     }),

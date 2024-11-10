@@ -11,17 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('servicos', function (Blueprint $table) {
+        Schema::create('itens_ordem_servico', function (Blueprint $table) {
             $table->id();
-            $table->string('nome');
-            $table->string('descricao')->nullable();
+            $table->foreignId('ordem_servico_id')->constrained('ordens_servico');
+            $table->foreignId('servico_id')->constrained('servicos')->cascadeOnDelete();
+            $table->decimal('quantidade', 2);
             $table->decimal('valor_unitario', 8, 2);
-            $table->boolean('ativo')->default(1);
-            $table->foreignId('imposto_servico_id')->nullable()->constrained('imposto_servicos');
+            $table->decimal('valor_total', 8, );
+            $table->decimal('desconto', 8, 2)->default(0);
+            $table->string('observacao')->nullable();
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('updated_by')->constrained('users');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('servicos');
+        Schema::dropIfExists('itens_ordem_servico');
     }
 };

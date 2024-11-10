@@ -16,6 +16,11 @@ class Servico extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function itens_ordem_servico(): HasMany
+    {
+        return $this->hasMany(ItemOrdemServico::class);
+    }
+
     public function impostos()
     {
         return $this->hasMany(ImpostoServico::class, 'id', 'imposto_servico_id');

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\ContatoResource\Pages;
 use App\Filament\Resources\ContatoResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Auth;
 
 class EditContato extends EditRecord
 {
@@ -15,5 +16,12 @@ class EditContato extends EditRecord
         return [
             Actions\DeleteAction::make(),
         ];
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $data['updated_by'] = Auth::id();
+        
+        return $data;
     }
 }

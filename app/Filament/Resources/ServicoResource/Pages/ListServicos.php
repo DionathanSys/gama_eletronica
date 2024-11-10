@@ -10,6 +10,8 @@ class ListServicos extends ListRecords
 {
     protected static string $resource = ServicoResource::class;
 
+    protected static ?string $title = 'Serviços';
+
     protected function getHeaderActions(): array
     {
         return [

@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('ordens_servico', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('parceiro_id')->constrained('parceiros');
+            $table->foreignId('equipamento_id')->constrained('equipamentos');
+            $table->foreignId('veiculo_id')->nullable()->constrained('veiculos');
+            $table->foreignId('fatura_id')->nullable()->constrained('faturas');
+            $table->date('data_ordem');
+            $table->decimal('valor_total', 8, 2)->default(0);
+            $table->decimal('desconto', 8, 2)->default(0);
+            $table->string('status')->default('pendente');
+            $table->string('path_pdf')->nullable();
+            $table->foreignId('created_by')->constrained('users');
+            $table->foreignId('updated_by')->constrained('users');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('ordens_servico');
+    }
+};

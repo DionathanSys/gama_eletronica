@@ -35,10 +35,17 @@ class ServicoResource extends Resource
                     ->maxLength(170),
 
                 Forms\Components\TextInput::make('descricao')
-                    ->columnSpan(3)
+                    ->columnSpan(2)
                     ->label('Descrição')
                     ->autocomplete(false)
                     ->maxLength(250),
+                
+                Forms\Components\TextInput::make('valor_unitario')
+                    ->columnSpan(1)
+                    ->label('Vlr. Unitário')
+                    ->numeric()
+                    ->minValue(0.01)
+                    ->prefix('R$'),
             ]);
     }
 
@@ -51,6 +58,10 @@ class ServicoResource extends Resource
 
                 Tables\Columns\TextColumn::make('descricao')
                     ->label('Descrição')
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('valor_unitario')
+                    ->label('Valor Unitário')
                     ->searchable(),
 
                 Tables\Columns\ToggleColumn::make('ativo'),
