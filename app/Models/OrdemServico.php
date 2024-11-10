@@ -37,8 +37,10 @@ class OrdemServico extends Model
         return $this->hasMany(ItemOrdemServico::class);
     }
 
-    public function servicos_anteriores()
+    public function itensOrdensAnteriores()
     {
-        return $this->hasMany(ItemOrdemServico::class,);
+        return $this->hasManyThrough(ItemOrdemServico::class, OrdemServico::class, 'equipamento_id', 'ordem_servico_id', 'equipamento_id', 'id')
+                    ->where('ordens_servico.data_ordem', '<', $this->data_ordem);
+
     }
 }

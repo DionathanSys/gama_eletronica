@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrdemServicoResource\Pages;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers;
+use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensOrdensAnterioresRelationManager;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensRelationManager;
 use App\Models\Equipamento;
 use App\Models\OrdemServico;
@@ -113,6 +114,7 @@ class OrdemServicoResource extends Resource
     {
         return [
             ItensRelationManager::class,
+            ItensOrdensAnterioresRelationManager::class,
         ];
     }
 

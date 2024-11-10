@@ -89,7 +89,7 @@ class ServicoResource extends Resource
     {
         return [
             'index' => Pages\ListServicos::route('/'),
-            'create' => Pages\CreateServico::route('/create'),
+            // 'create' => Pages\CreateServico::route('/create'),
             // 'edit' => Pages\EditServico::route('/{record}/edit'),
         ];
     }
