@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\FaturaResource\Pages;
 use App\Filament\Resources\FaturaResource\RelationManagers;
+use App\Filament\Resources\FaturaResource\RelationManagers\OrdensServicoRelationManager;
 use App\Models\Fatura;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -26,16 +27,19 @@ class FaturaResource extends Resource
             ->columns(4)
             ->schema([
                 Forms\Components\Select::make('parceiro_id')
+                    ->disabled()
                     ->columnSpan(2)
                     ->label('Parceiro')
                     ->relationship('parceiro', 'nome'),
 
                 Forms\Components\TextInput::make('valor_total')
+                    ->disabled()
                     ->columnSpan(1)
                     ->label('Valor Total')
                     ->prefix('R$'),
 
                 Forms\Components\TextInput::make('status')
+                    ->disabled()
                     ->columnSpan(1),
                     
             ]);
@@ -95,7 +99,7 @@ class FaturaResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            OrdensServicoRelationManager::class,
         ];
     }
 
