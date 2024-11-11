@@ -43,4 +43,15 @@ class OrdemServico extends Model
                     ->where('ordens_servico.data_ordem', '<', $this->data_ordem);
 
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Helpers
+    |--------------------------------------------------------------------------
+    */
+
+    public function toPdf(): string|false
+    {
+        return false;
+    }
 }

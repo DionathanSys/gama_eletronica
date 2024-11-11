@@ -36,6 +36,7 @@ class OrdemServicoResource extends Resource
                 static::getEquipamentoFormField(),
                 static::getVeiculoFormField(),
                 static::getDataOrdemFormField(),
+                static::getStatusFormField(),
                     
             ]);
     }
@@ -61,9 +62,11 @@ class OrdemServicoResource extends Resource
 
                 Tables\Columns\TextColumn::make('veiculo.placa')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('fatura_id')
+                    ->label('Fatura')
                     ->numeric()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -78,7 +81,8 @@ class OrdemServicoResource extends Resource
 
                 Tables\Columns\TextColumn::make('desconto')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
@@ -164,7 +168,7 @@ class OrdemServicoResource extends Resource
     public static function getEquipamentoFormField(): Forms\Components\Select
     {
         return Forms\Components\Select::make('equipamento_id')
-                    ->columnSpan(1)
+                    ->columnSpan(2)
                     ->label('Equipamento')
                     ->placeholder('Equipamento')
                     ->relationship('equipamento', 'descricao')
@@ -173,7 +177,7 @@ class OrdemServicoResource extends Resource
                     ->required()
                     ->options(function (Forms\Get $get) {
                         return Equipamento::where('parceiro_id', $get('parceiro_id'))
-                                        ->pluck('descricao', 'id');
+                                        ->pluck('descricao_nro_serie', 'id');
                     })
                     ->createOptionForm(function(Form $form){
                         return $form->columns(5)->schema([
@@ -228,6 +232,13 @@ class OrdemServicoResource extends Resource
                 ->prefix('%')
                 ->numeric()
                 ->default(0);
+    } 
+    
+    public static function getStatusFormField(): Forms\Components\TextInput
+    {
+        return Forms\Components\TextInput::make('status')
+                ->columnSpan(1)
+                ->disabled();
     } 
     
 }

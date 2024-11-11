@@ -14,6 +14,8 @@ class ItensOrdensAnterioresRelationManager extends RelationManager
 {
     protected static string $relationship = 'itensOrdensAnteriores';
 
+    protected static ?string $title = 'Histórico Equipamento';
+
     public function form(Form $form): Form
     {
         return $form

@@ -21,6 +21,8 @@ class ItensRelationManager extends RelationManager
 {
     protected static string $relationship = 'itens';
 
+    protected static ?string $title = 'Serviços';
+
     public function form(Form $form): Form
     {
         return $form
@@ -40,7 +42,8 @@ class ItensRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
-                Tables\Columns\TextColumn::make('servico.nome'),
+                Tables\Columns\TextColumn::make('servico.nome')
+                    ->label('Serviço'),
 
                 Tables\Columns\TextColumn::make('quantidade'),
 
@@ -49,6 +52,7 @@ class ItensRelationManager extends RelationManager
                     ->money('BRL'),
 
                 Tables\Columns\TextColumn::make('valor_total')
+                    ->label('Valor Total')
                     ->money('BRL')
                     ->summarize(Sum::make()->money('BRL')->label('Total')),
 

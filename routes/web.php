@@ -8,3 +8,10 @@ Route::get('/', function () {
 
     return view('welcome');
 });
+
+Route::prefix('ordem-servico')->group(function(){
+
+    Route::get('/{id}/pdf', function($id){
+
+    });
+});

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('data_ordem');
             $table->decimal('valor_total', 8, 2)->default(0);
             $table->decimal('desconto', 8, 2)->default(0);
+            $table->string('prioridade');
             $table->string('status')->default('pendente');
             $table->string('path_pdf')->nullable();
             $table->foreignId('created_by')->constrained('users');
