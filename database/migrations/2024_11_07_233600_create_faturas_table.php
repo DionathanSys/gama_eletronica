@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('parceiro_id')->constrained('parceiros');
             $table->decimal('valor_total');
-            $table->decimal('desconto', 2);
+            $table->decimal('desconto', 8,2)->default(0);
             $table->string('status');
             $table->string('path_pdf');
             $table->foreignId('created_by')->constrained('users');

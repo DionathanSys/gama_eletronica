@@ -13,6 +13,7 @@ use App\Models\Parceiro;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -47,6 +48,11 @@ class OrdemServicoResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->label('Nro. OS')
+                    ->numeric()
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('parceiro.nome')
                     ->label('Cliente')
                     ->numeric()
@@ -110,18 +116,17 @@ class OrdemServicoResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    // Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\Action::make('faturar')
-                        ->action(function(Tables\Actions\BulkAction $action, Collection $record){
+                    Tables\Actions\BulkAction::make('faturar')
+                        ->action(function(Collection $record){
                             $fatura = CreateFaturaAction::exec($record);
                             if ($fatura){
                                 return redirect(FaturaResource::getUrl('edit', ['record' => $fatura->id,]));
                             }
-                            $action->cancel();
                         }),
                 ]),
             ])
-            ->poll('5s');
+            // ->poll('5s')
+            ;
     }
 
     public static function getRelations(): array
