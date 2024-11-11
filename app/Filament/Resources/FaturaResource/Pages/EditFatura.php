@@ -11,10 +11,13 @@ class EditFatura extends EditRecord
 {
     protected static string $resource = FaturaResource::class;
 
+    protected static ?string $title = 'Fatura';
+
     protected function getHeaderActions(): array
     {
         return [
             Actions\DeleteAction::make(),
+            Actions\Action::make('confirmar'),
         ];
     }
 
@@ -23,5 +26,10 @@ class EditFatura extends EditRecord
         $data['updated_by'] = Auth::id();
         
         return $data;
+    }
+
+    protected function getFormActions(): array
+    {   
+        return [];
     }
 }

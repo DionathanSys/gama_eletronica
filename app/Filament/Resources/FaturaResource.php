@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -22,22 +23,21 @@ class FaturaResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+            ->columns(4)
             ->schema([
-                Forms\Components\TextInput::make('parceiro_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('parceiro_id')
+                    ->columnSpan(2)
+                    ->label('Parceiro')
+                    ->relationship('parceiro', 'nome'),
+
                 Forms\Components\TextInput::make('valor_total')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('desconto')
-                    ->required()
-                    ->numeric(),
+                    ->columnSpan(1)
+                    ->label('Valor Total')
+                    ->prefix('R$'),
+
                 Forms\Components\TextInput::make('status')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('path_pdf')
-                    ->required()
-                    ->maxLength(255),
+                    ->columnSpan(1),
+                    
             ]);
     }
 
@@ -45,39 +45,51 @@ class FaturaResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('parceiro_id')
+                Tables\Columns\TextColumn::make('parceiro.nome')
+                    ->searchable()
                     ->numeric()
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('valor_total')
-                    ->numeric()
-                    ->sortable(),
+                    ->label('Valor Total')
+                    ->money('BRL')
+                    ->sortable()
+                    ->summarize(Sum::make()->money('BRL')->label('Total')),
+
                 Tables\Columns\TextColumn::make('desconto')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('status')
+                    ->badge()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('path_pdf')
-                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Criado Em')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Atualizado Em')
+                    ->dateTime('d/m/Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('confirmar')
+                    ->label('')
+                    ->icon('heroicon-o-check-circle'),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc')
+            ->defaultSortOptionLabel('Date');
     }
 
     public static function getRelations(): array

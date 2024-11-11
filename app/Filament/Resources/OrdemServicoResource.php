@@ -125,8 +125,7 @@ class OrdemServicoResource extends Resource
                         }),
                 ]),
             ])
-            // ->poll('5s')
-            ;
+            ->poll('5s');
     }
 
     public static function getRelations(): array
