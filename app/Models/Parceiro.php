@@ -38,10 +38,16 @@ class Parceiro extends Model
         return $this->hasMany(Veiculo::class);
     }
 
-    public function ordens_servico(): HasMany
+    public function ordensServico(): HasMany
     {
         return $this->hasMany(OrdemServico::class);
     }
+
+    public function faturas(): HasMany
+    {
+        return $this->hasMany(Fatura::class);
+    }
+
 
 
     /*
