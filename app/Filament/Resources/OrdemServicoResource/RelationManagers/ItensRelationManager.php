@@ -167,7 +167,7 @@ class ItensRelationManager extends RelationManager
                         $valor_total = $get('valor_total') ?? 0.01;
                         $valor_unitario = number_format($valor_total / $quantidade, 2);
 
-                        if($valor_unitario > 0){
+                        if($valor_unitario > 0.01){
                             $set('valor_unitario', $valor_unitario);
                         } else {
                             $set('valor_unitario', 0.01);

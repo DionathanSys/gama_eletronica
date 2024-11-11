@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Actions\Fatura\CreateFaturaAction;
 use App\Filament\Resources\OrdemServicoResource\Pages;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensOrdensAnterioresRelationManager;
@@ -16,6 +17,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
@@ -108,7 +110,15 @@ class OrdemServicoResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    // Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\Action::make('faturar')
+                        ->action(function(Tables\Actions\BulkAction $action, Collection $record){
+                            $fatura = CreateFaturaAction::exec($record);
+                            if ($fatura){
+                                return redirect(FaturaResource::getUrl('edit', ['record' => $fatura->id,]));
+                            }
+                            $action->cancel();
+                        }),
                 ]),
             ])
             ->poll('5s');

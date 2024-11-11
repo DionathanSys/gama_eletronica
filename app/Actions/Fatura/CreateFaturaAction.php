@@ -3,10 +3,10 @@
 namespace App\Actions\Fatura;
 
 use App\Actions\Fatura\CreateContasReceberAction;
-use App\Actions\NotaFiscalServico\RegistraNotas;
 use App\Enums\StatusFaturaEnum;
 use App\Models\ContaReceber;
 use App\Models\Fatura;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Collection;
 
 class CreateFaturaAction
@@ -16,52 +16,65 @@ class CreateFaturaAction
     {
         //Verifica se existe mais de 01 cliente
         if(($ordens->unique('parceiro_id'))->count() > 1){
+            static::notificaFalha();
             return false;
         }
         
         //Valida se todas as ordens estão encerradas e ainda NÃO faturadas
         if (!$ordens->every(function($ordem){
-            return 
-                $ordem->status == 'Encerrada' &&
-                $ordem->fatura_id == null;
-        })){
-            return false;
+                return 
+                    $ordem->status == 'Encerrada' &&
+                    $ordem->fatura_id == null;
+                })){
+                    static::notificaFalha();
+                    return false;
         }
         
         $parceiro_id = ($ordens->first())->parceiro_id;
     
-        $valor_produtos = 0;
-        $valor_servicos = 0;
+        $valor_servicos = $ordens->sum('valor_total');
         
-        $ordens->each(function($ordem) use (&$valor_produtos, &$valor_servicos){
-            
-            if ($ordem->os_servicos){
-                $valor_servicos+= $ordem->valor_total_servicos;
-            }
-            
-            // if ($ordem->produtos){
-            //     $valor_produtos+= $ordem->valor_total_produtos;
-            // }
+        try {
 
-        });
-
-        $fatura = (new Fatura())->create([
-            'parceiro_id' => $parceiro_id,
-            'valor_servicos' => $valor_servicos,
-            'valor_produtos' => $valor_produtos,
-            'status' => StatusFaturaEnum::PENDENTE,
-        ]);
-        
-        $ordens->each(function ($ordem) use ($fatura) {
-            $ordem->update([
-                'fatura_id' => $fatura->id,
+            $fatura = (new Fatura())->create([
+                'parceiro_id' => $parceiro_id,
+                'valor_servicos' => $valor_servicos,
+                'status' => StatusFaturaEnum::PENDENTE,
             ]);
-        });
+            
+            $ordens->each(function ($ordem) use ($fatura) {
+                $ordem->update([
+                    'fatura_id' => $fatura->id,
+                ]);
+            });
 
-        (new RegistraNotas($fatura))->exec();
+            (new RegistraNotas($fatura))->exec();
 
-        CreateContasReceberAction::exec($fatura);
+            CreateContasReceberAction::exec($fatura);
+            
+            static::notificaSucesso();
+            return $fatura;
 
-        return $fatura;
+        } catch (\Throwable $e) {
+            static::notificaFalha();
+            return false;
+        }
+
+    }
+
+    private static function notificaFalha()
+    {
+        Notification::make()
+            ->danger()
+            ->title('Solicitação não concluída!')
+            ->send();
+    }
+
+    private static function notificaSucesso()
+    {
+        Notification::make()
+            ->success()
+            ->title('Fatura criada!')
+            ->send();
     }
 }

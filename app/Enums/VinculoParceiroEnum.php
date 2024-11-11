@@ -4,16 +4,16 @@ namespace App\Enums;
 
 enum VinculoParceiroEnum:string
 {
-    case CLIENTE = 'Cliente';
-    case COLABORADOR = 'Colaborador';
-    case FORNECEDOR = 'Fornecedor';
+    case CLIENTE = 'CLIENTE';
+    case COLABORADOR = 'COLABORADOR';
+    case FORNECEDOR = 'FORNECEDOR';
 
     public function getVinculo ():string
     {
         return match ($this) {
-            self::CLIENTE => 'Cliente',
-            self::COLABORADOR => 'Colaborador',
-            self::FORNECEDOR => 'Fornecedor',
+            self::CLIENTE => 'CLIENTE',
+            self::COLABORADOR => 'COLABORADOR',
+            self::FORNECEDOR => 'FORNECEDOR',
         };
     }
 

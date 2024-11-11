@@ -4,14 +4,14 @@ namespace App\Enums;
 
 enum StatusFaturaEnum:string
 {
-    case PENDENTE = 'Pendente';
-    case CONFIRMADA = 'Confirmada';
+    case PENDENTE = 'PENDENTE';
+    case CONFIRMADA = 'CONFIRMADA';
 
     public function getStatus ():string
     {
         return match ($this) {
-            self::PENDENTE => 'Pendente',
-            self::CONFIRMADA=> 'Confirmada',
+            self::PENDENTE => 'PENDENTE',
+            self::CONFIRMADA=> 'CONFIRMADA',
         };
     }
 }

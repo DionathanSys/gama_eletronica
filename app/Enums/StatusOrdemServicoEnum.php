@@ -4,14 +4,16 @@ namespace App\Enums;
 
 enum StatusOrdemServicoEnum:string
 {
-    case PENDENTE = 'Pendente';
-    case CONFIRMADA = 'Confirmada';
+    case PENDENTE = 'PENDENTE';
+    case CANCELADA = 'CANCELADA';
+    case ENCERRADA = 'ENCERRADA';
 
     public function getStatus ():string
     {
         return match ($this) {
-            self::PENDENTE => 'Pendente',
-            self::CONFIRMADA=> 'Confirmada',
+            self::PENDENTE => 'PENDENTE',
+            self::CANCELADA => 'CANCELADA',
+            self::ENCERRADA=> 'ENCERRADA',
         };
     }
 }

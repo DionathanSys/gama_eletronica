@@ -4,6 +4,7 @@ namespace App\Filament\Resources\OrdemServicoResource\Pages;
 
 use App\Actions\Fatura\CreateFaturaAction;
 use App\Actions\OrdemServico\UpdateStatusOrdemActions;
+use App\Filament\Resources\FaturaResource;
 use App\Filament\Resources\OrdemServicoResource;
 use App\Models\OrdemServico;
 use Filament\Actions;
@@ -22,7 +23,10 @@ class EditOrdemServico extends EditRecord
         return [
             Actions\Action::make('faturar')
                 ->action(function(OrdemServico $record){
-                    CreateFaturaAction::exec();
+                    $fatura = CreateFaturaAction::exec(collect([$record]));
+                    if ($fatura){
+                        return redirect(FaturaResource::getUrl('edit', ['record' => $fatura->id,]));
+                    }
                 }),
 
             Actions\Action::make('encerrar')
