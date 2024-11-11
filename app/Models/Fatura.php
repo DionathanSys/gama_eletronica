@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Fatura extends Model
 {
@@ -13,8 +13,8 @@ class Fatura extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function parceiro(): HasOne
+    public function parceiro(): BelongsTo
     {
-        return $this->hasOne(Parceiro::class);
+        return $this->belongsTo(Parceiro::class);
     }
 }
