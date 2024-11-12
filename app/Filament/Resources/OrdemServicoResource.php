@@ -41,6 +41,7 @@ class OrdemServicoResource extends Resource
                 static::getVeiculoFormField(),
                 static::getDataOrdemFormField(),
                 static::getStatusFormField(),
+                static::getFaturaFormField(),
                     
             ]);
     }
@@ -252,6 +253,14 @@ class OrdemServicoResource extends Resource
     public static function getStatusFormField(): Forms\Components\TextInput
     {
         return Forms\Components\TextInput::make('status')
+                ->columnSpan(1)
+                ->disabled();
+    } 
+    
+    public static function getFaturaFormField(): Forms\Components\TextInput
+    {
+        return Forms\Components\TextInput::make('fatura_id')
+                ->label('Fatura')
                 ->columnSpan(1)
                 ->disabled();
     } 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Fatura;
+namespace App\Actions\ContasReceber;
 
 use App\Enums\StatusFaturaEnum;
 use App\Models\ContaReceber;
@@ -15,6 +15,7 @@ class CreateContasReceberAction
     {
         $contas_receber = ContaReceber::create([
             'parceiro_id' => $fatura->parceiro_id,
+            'fatura_id' => $fatura->id,
             'data_vencimento' => Carbon::now()->addDays(15),
             'valor' => $fatura->valor_total,
             'desdobramento' => 1,

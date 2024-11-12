@@ -24,6 +24,9 @@ class EditOrdemServico extends EditRecord
             Actions\Action::make('faturar')
                 ->action(function(OrdemServico $record){
                     $fatura = CreateFaturaAction::exec(collect([$record]));
+                    $this->refreshFormData([
+                        'fatura_id'
+                    ]);
                     if ($fatura){
                         return redirect(FaturaResource::getUrl('edit', ['record' => $fatura->id,]));
                     }

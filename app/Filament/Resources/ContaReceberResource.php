@@ -131,6 +131,7 @@ class ContaReceberResource extends Resource
     {
         return Forms\Components\DatePicker::make('data_vencimento')
                 ->label('Vencimento')
+                ->date('d/m/Y')
                 ->native(false)
                 ->columnSpan(1);
     } 

@@ -8,6 +8,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -23,8 +24,6 @@ class ContasReceberRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                ContaReceberResource::getParceiroFormField(),
-                ContaReceberResource::getFaturaFormField(),
                 ContaReceberResource::getDataVencimentoFormField(),
                 ContaReceberResource::getValorFormField(),
             ]);
@@ -39,12 +38,14 @@ class ContasReceberRelationManager extends RelationManager
 
                 Tables\Columns\TextColumn::make('data_vencimento')
                     ->label('Vencimento')
-                    ->date()
+                    ->date('d/m/Y')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('valor')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->money('BRL')
+                    ->summarize(Sum::make()->money('BRL')->label('Total')),
 
                 Tables\Columns\TextColumn::make('desdobramento')
                     ->numeric()
