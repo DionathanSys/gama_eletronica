@@ -54,7 +54,7 @@ class CreateFaturaAction
 
             // (new RegistraNotas($fatura))->exec();
 
-            // CreateContasReceberAction::exec($fatura);
+            CreateContasReceberAction::exec($fatura);
             
             static::notificaSucesso();
             return $fatura;

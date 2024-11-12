@@ -2,10 +2,11 @@
 
 namespace App\Actions\Fatura;
 
-use App\Models\Financeiro\ContaReceber;
-use App\Models\Financeiro\Fatura;
-use App\Models\Fiscal\Saida;
+use App\Enums\StatusFaturaEnum;
+use App\Models\ContaReceber;
+use App\Models\Fatura;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class CreateContasReceberAction
 {
@@ -13,14 +14,14 @@ class CreateContasReceberAction
     public static function exec(Fatura $fatura)
     {
         $contas_receber = ContaReceber::create([
-            'empresa_id' => 1,
             'parceiro_id' => $fatura->parceiro_id,
-            'nota_saida_id' => $fatura->notas->first()->id,
             'data_vencimento' => Carbon::now()->addDays(15),
-            'valor' => $fatura->valor_produtos + $fatura->valor_servicos,
+            'valor' => $fatura->valor_total,
             'desdobramento' => 1,
             'desdobramentos' => 1,
-            'status' => 'Pendente',
+            'status' => StatusFaturaEnum::PENDENTE,
+            'created_by' => Auth::id(),
+            'updated_by' => Auth::id(),
         ]);
 
     }
