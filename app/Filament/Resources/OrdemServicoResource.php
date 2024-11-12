@@ -10,6 +10,7 @@ use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensRelationMa
 use App\Models\Equipamento;
 use App\Models\OrdemServico;
 use App\Models\Parceiro;
+use App\Models\Veiculo;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
@@ -221,7 +222,7 @@ class OrdemServicoResource extends Resource
                     ->preload()
                     ->searchable()
                     ->options(function (Forms\Get $get) {
-                        return Equipamento::where('parceiro_id', $get('parceiro_id'))
+                        return Veiculo::where('parceiro_id', $get('parceiro_id'))
                                         ->pluck('descricao', 'id');
                     })
                     ->createOptionForm(function(Form $form){
