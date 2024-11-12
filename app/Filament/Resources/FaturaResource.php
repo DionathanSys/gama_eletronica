@@ -28,7 +28,7 @@ class FaturaResource extends Resource
             ->columns(4)
             ->schema([
                 Forms\Components\Select::make('parceiro_id')
-                    ->disabled()
+                    // ->disabled()
                     ->columnSpan(2)
                     ->label('Parceiro')
                     ->relationship('parceiro', 'nome'),
@@ -50,6 +50,12 @@ class FaturaResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->label('Nro. Fatura')
+                    ->searchable()
+                    ->numeric()
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('parceiro.nome')
                     ->searchable()
                     ->numeric()
@@ -89,7 +95,8 @@ class FaturaResource extends Resource
             ->actions([
                 Tables\Actions\Action::make('confirmar')
                     ->label('')
-                    ->icon('heroicon-o-check-circle'),
+                    ->icon('heroicon-o-check-circle')
+                    ->iconButton(),
             ])
             ->bulkActions([
             ])

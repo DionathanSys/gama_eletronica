@@ -4,8 +4,10 @@ namespace App\Filament\Resources\FaturaResource\RelationManagers;
 
 use App\Enums\StatusFaturaEnum;
 use App\Filament\Resources\ContaReceberResource;
+use App\Models\Fatura;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\Summarizers\Sum;
@@ -84,16 +86,25 @@ class ContasReceberRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make()
                     ->label('Incluir Recebíveis')
                     ->mutateFormDataUsing(function (array $data): array {
+                        $data['parceiro_id'] = $this->getOwnerRecord()->parceiro_id;
                         $data['status'] = StatusFaturaEnum::PENDENTE;
                         $data['created_by'] = Auth::id();
                         $data['updated_by'] = Auth::id();
                  
                         return $data;
-                    }),
+                    })
+                    ->visible(fn()=> $this->getOwnerRecord()->status == StatusFaturaEnum::PENDENTE->value ? true : false),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->mutateFormDataUsing(function (array $data): array {
+                        $data['updated_by'] = Auth::id();
+                        return $data;
+                    })
+                    ->visible(fn($record)=> $record->status == StatusFaturaEnum::PENDENTE->value ? true : false),
+
+                Tables\Actions\DeleteAction::make()
+                    ->visible(fn($record)=> $record->status == StatusFaturaEnum::PENDENTE->value ? true : false),
             ])
             ->bulkActions([
             ]);

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\StatusFaturaEnum;
 use App\Filament\Resources\ContaReceberResource\Pages;
 use App\Filament\Resources\ContaReceberResource\RelationManagers;
 use App\Models\ContaReceber;
@@ -10,6 +11,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -150,4 +152,17 @@ class ContaReceberResource extends Resource
                 ->columnSpan(1)
                 ->disabled();
     } 
+
+    public static function createRegister(): Tables\Actions\CreateAction
+    {
+        return Tables\Actions\CreateAction::make()
+                    ->label('Incluir Recebíveis')
+                    ->mutateFormDataUsing(function (array $data): array {
+                        $data['status'] = StatusFaturaEnum::PENDENTE;
+                        $data['created_by'] = Auth::id();
+                        $data['updated_by'] = Auth::id();
+                
+                        return $data;
+                    });
+    }
 }
