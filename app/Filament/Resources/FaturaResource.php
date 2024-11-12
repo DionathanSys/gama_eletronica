@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\FaturaResource\Pages;
 use App\Filament\Resources\FaturaResource\RelationManagers;
+use App\Filament\Resources\FaturaResource\RelationManagers\ContasReceberRelationManager;
 use App\Filament\Resources\FaturaResource\RelationManagers\OrdensServicoRelationManager;
 use App\Models\Fatura;
 use Filament\Forms;
@@ -77,7 +78,7 @@ class FaturaResource extends Resource
 
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Atualizado Em')
-                    ->dateTime('d/m/Y')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
@@ -100,6 +101,7 @@ class FaturaResource extends Resource
     {
         return [
             OrdensServicoRelationManager::class,
+            ContasReceberRelationManager::class,
         ];
     }
 

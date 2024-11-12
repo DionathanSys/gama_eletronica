@@ -48,6 +48,11 @@ class Parceiro extends Model
         return $this->hasMany(Fatura::class);
     }
 
+    public function contasReceber(): HasMany
+    {
+        return $this->hasMany(ContaReceber::class);
+    }
+
 
 
     /*

@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Fatura extends Model
+class ContaReceber extends Model
 {
-     /*
+    protected $table = 'contas_receber';
+
+    /*
     |--------------------------------------------------------------------------
     | Relacionamentos
     |--------------------------------------------------------------------------
@@ -19,13 +20,8 @@ class Fatura extends Model
         return $this->belongsTo(Parceiro::class);
     }
 
-    public function ordensServico(): HasMany
+    public function fatura(): BelongsTo
     {
-        return $this->hasMany(OrdemServico::class);
-    }
-
-    public function contasReceber(): HasMany
-    {
-        return $this->hasMany(ContaReceber::class);
+        return $this->belongsTo(Fatura::class);
     }
 }
