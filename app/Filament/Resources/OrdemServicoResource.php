@@ -223,14 +223,14 @@ class OrdemServicoResource extends Resource
                     ->searchable()
                     ->options(function (Forms\Get $get) {
                         return Veiculo::where('parceiro_id', $get('parceiro_id'))
-                                        ->pluck('descricao', 'id');
+                                        ->pluck('placa', 'id');
                     })
-                    ->createOptionForm(function(Form $form){
-                        return $form->columns(5)->schema([
-                            EquipamentoResource::getDescricaoFormField()->columnSpan(2),
-                        ]);
-                    }
-                    )
+                    // ->createOptionForm(function(Form $form){
+                    //     return $form->columns(5)->schema([
+                            
+                    //     ]);
+                    // }
+                    // )
                     ->createOptionUsing(function (array $data, Forms\Get $get): int {
                         $data['parceiro_id'] = $get('parceiro_id') ?? null;
                         $data['created_by'] = Auth::id();
