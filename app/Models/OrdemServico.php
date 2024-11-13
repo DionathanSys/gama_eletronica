@@ -11,6 +11,10 @@ class OrdemServico extends Model
 {
     protected $table = 'ordens_servico';
 
+    protected $casts = [
+        'img_equipamento' => 'array',
+    ];
+
     /*
     |--------------------------------------------------------------------------
     | Relacionamentos

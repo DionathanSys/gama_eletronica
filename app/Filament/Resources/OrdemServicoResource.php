@@ -264,6 +264,7 @@ class OrdemServicoResource extends Resource
     {
         return Forms\Components\FileUpload::make('img_equipamento')
             // ->image()
+            ->columnSpanFull()
             ->multiple()
             ->panelLayout('grid');
     }
