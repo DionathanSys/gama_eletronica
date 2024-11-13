@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\StatusContaReceberEnum;
 use App\Enums\StatusFaturaEnum;
 use App\Filament\Resources\ContaReceberResource\Pages;
 use App\Filament\Resources\ContaReceberResource\RelationManagers;
@@ -10,6 +11,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Table;
 use Illuminate\Container\Attributes\Auth;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,11 +32,13 @@ class ContaReceberResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+            ->columns(6)
             ->schema([
                 static::getParceiroFormField(),
                 static::getFaturaFormField(),
                 static::getDataVencimentoFormField(),
                 static::getValorFormField(),
+                static::getStatusFormField(),
             ]);
     }
 
@@ -56,8 +60,9 @@ class ContaReceberResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('valor')
-                    ->numeric()
-                    ->sortable(),
+                    ->money('BRL')
+                    ->sortable()
+                    ->summarize(Sum::make()->money('BRL')->label('Total')),
 
                 Tables\Columns\TextColumn::make('desdobramento')
                     ->numeric()
@@ -93,7 +98,17 @@ class ContaReceberResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->button()
+                    ->color('gray')
+                    ->visible(fn($record)=> $record->status == StatusContaReceberEnum::PENDENTE->value ? true : false),
+
+                Tables\Actions\Action::make('pago')
+                    ->icon('heroicon-o-banknotes')
+                    ->button()
+                    ->color('gray')
+                    ->action(fn($record) => $record->update(['status' => StatusContaReceberEnum::PAGO]))
+                    ->visible(fn($record) => $record->status == StatusContaReceberEnum::CONFIRMADA->value ? true : false),
             ])
             ->bulkActions([
             ]);
@@ -133,7 +148,8 @@ class ContaReceberResource extends Resource
     {
         return Forms\Components\DatePicker::make('data_vencimento')
                 ->label('Vencimento')
-                ->date('d/m/Y')
+                ->displayFormat('d/m/Y')
+                ->closeOnDateSelection()
                 ->native(false)
                 ->columnSpan(1);
     } 
@@ -153,16 +169,4 @@ class ContaReceberResource extends Resource
                 ->disabled();
     } 
 
-    public static function createRegister(): Tables\Actions\CreateAction
-    {
-        return Tables\Actions\CreateAction::make()
-                    ->label('Incluir Recebíveis')
-                    ->mutateFormDataUsing(function (array $data): array {
-                        $data['status'] = StatusFaturaEnum::PENDENTE;
-                        $data['created_by'] = Auth::id();
-                        $data['updated_by'] = Auth::id();
-                
-                        return $data;
-                    });
-    }
 }

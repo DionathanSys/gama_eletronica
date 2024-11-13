@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\FaturaResource\Pages;
 
+use App\Actions\Fatura\ConfirmaFaturaAction;
 use App\Enums\StatusFaturaEnum;
 use App\Filament\Resources\FaturaResource;
 use App\Models\Fatura;
@@ -10,7 +11,7 @@ use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\Auth;
 
 class EditFatura extends EditRecord
-{
+{   
     protected static string $resource = FaturaResource::class;
 
     protected static ?string $title = 'Fatura';
@@ -22,8 +23,13 @@ class EditFatura extends EditRecord
                 Actions\DeleteAction::make(),
                 Actions\Action::make('confirmar')
                     ->action(function(Fatura $record) {
-                        $record->update(['status' => StatusFaturaEnum::CONFIRMADA]);
-                        return redirect(FaturaResource::getUrl('edit', ['record' => $record->id]));
+                    
+                        if((new ConfirmaFaturaAction($record))->exec()){
+                            return redirect(FaturaResource::getUrl('edit', ['record' => $record->id]));
+                        }
+
+                        return ;
+                    
                     }),
             ];
         }

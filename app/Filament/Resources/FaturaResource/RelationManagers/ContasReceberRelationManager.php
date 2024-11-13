@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\FaturaResource\RelationManagers;
 
+use App\Enums\StatusContaReceberEnum;
 use App\Enums\StatusFaturaEnum;
 use App\Filament\Resources\ContaReceberResource;
 use App\Models\Fatura;
@@ -65,6 +66,7 @@ class ContasReceberRelationManager extends RelationManager
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('status')
+                    ->badge()
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('created_at')
@@ -101,10 +103,27 @@ class ContasReceberRelationManager extends RelationManager
                         $data['updated_by'] = Auth::id();
                         return $data;
                     })
-                    ->visible(fn($record)=> $record->status == StatusFaturaEnum::PENDENTE->value ? true : false),
+                    ->visible(fn()=> $this->getOwnerRecord()->status == StatusFaturaEnum::PENDENTE->value ? true : false),
 
                 Tables\Actions\DeleteAction::make()
-                    ->visible(fn($record)=> $record->status == StatusFaturaEnum::PENDENTE->value ? true : false),
+                    ->visible(fn()=> $this->getOwnerRecord()->status == StatusFaturaEnum::PENDENTE->value ? true : false),
+                
+                Tables\Actions\Action::make('pago')
+                    ->icon('heroicon-o-banknotes')
+                    ->button()
+                    ->color('gray')
+                    ->action(fn($record) => $record->update(['status' => StatusContaReceberEnum::PAGO]))
+                    ->visible(fn($record) => $record->status == StatusContaReceberEnum::CONFIRMADA->value ? true : false),
+
+                Tables\Actions\Action::make('pgto_pendente')
+                    ->label('Pgto. Pendente')
+                    ->icon('heroicon-o-banknotes')
+                    ->button()  
+                    ->color('danger')
+                    ->action(function($record){
+                        $record->update(['status' => StatusContaReceberEnum::CONFIRMADA]);
+                    })
+                    ->visible(fn($record) => $record->status == StatusContaReceberEnum::PAGO->value ? true : false),
             ])
             ->bulkActions([
             ]);

@@ -226,12 +226,6 @@ class OrdemServicoResource extends Resource
                         return Veiculo::where('parceiro_id', $get('parceiro_id'))
                                         ->pluck('placa', 'id');
                     })
-                    // ->createOptionForm(function(Form $form){
-                    //     return $form->columns(5)->schema([
-                            
-                    //     ]);
-                    // }
-                    // )
                     ->createOptionUsing(function (array $data, Forms\Get $get): int {
                         $data['parceiro_id'] = $get('parceiro_id') ?? null;
                         $data['created_by'] = Auth::id();
