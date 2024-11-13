@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('prioridade');
             $table->string('status')->default('pendente');
             $table->string('path_pdf')->nullable();
+            $table->string('img_equipamento')->nullable();
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('updated_by')->constrained('users');
             $table->timestamps();

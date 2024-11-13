@@ -42,6 +42,7 @@ class OrdemServicoResource extends Resource
                 static::getDataOrdemFormField(),
                 static::getStatusFormField(),
                 static::getFaturaFormField(),
+                static::getImageEquipamentoFormFiel(),
                     
             ]);
     }
@@ -258,5 +259,12 @@ class OrdemServicoResource extends Resource
                 ->columnSpan(1)
                 ->disabled();
     } 
-    
+
+    public static function getImageEquipamentoFormFiel(): Forms\Components\FileUpload 
+    {
+        return Forms\Components\FileUpload::make('img_equipamento')
+            // ->image()
+            ->multiple()
+            ->panelLayout('grid');
+    }
 }
