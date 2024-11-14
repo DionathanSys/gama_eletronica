@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('ordem_servico_id')->constrained('ordens_servico');
             $table->foreignId('servico_id')->constrained('servicos')->cascadeOnDelete();
-            $table->decimal('quantidade', 2);
+            $table->decimal('quantidade', 8, 2);
             $table->decimal('valor_unitario', 8, 2);
-            $table->decimal('valor_total', 8, );
+            $table->decimal('valor_total', 8, 2);
             $table->decimal('desconto', 8, 2)->default(0);
             $table->string('observacao')->nullable();
             $table->foreignId('created_by')->constrained('users');

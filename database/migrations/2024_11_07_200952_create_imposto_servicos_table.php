@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('codigo_municipio');
             $table->string('municipio');
             $table->string('codigo_servico');
-            $table->decimal('aliq_iss');
+            $table->decimal('aliq_iss', 8, 2);
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('updated_by')->constrained('users');
             $table->timestamps();
