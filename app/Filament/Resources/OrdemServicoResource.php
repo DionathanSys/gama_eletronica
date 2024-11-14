@@ -12,6 +12,7 @@ use App\Models\OrdemServico;
 use App\Models\Parceiro;
 use App\Models\Veiculo;
 use Filament\Forms;
+use Filament\Forms\Components\Tabs;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Notifications\Notification;
@@ -34,16 +35,25 @@ class OrdemServicoResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->columns(5)
             ->schema([
-                static::getParceiroFormField(),
-                static::getEquipamentoFormField(),
-                static::getVeiculoFormField(),
-                static::getDataOrdemFormField(),
-                static::getStatusFormField(),
-                static::getFaturaFormField(),
-                static::getImageEquipamentoFormFiel(),
-                    
+                Tabs::make('Tabs')
+                    ->columnSpanFull()
+                    ->tabs([
+                        Tabs\Tab::make('Geral')
+                            ->columns(5)
+                            ->schema([
+                                static::getParceiroFormField(),
+                                static::getEquipamentoFormField(),
+                                static::getVeiculoFormField(),
+                                static::getDataOrdemFormField(),
+                                static::getStatusFormField(),
+                                static::getFaturaFormField(),
+                            ]),
+                        Tabs\Tab::make('Anexos')
+                            ->schema([
+                                static::getImageEquipamentoFormFiel(),
+                            ])
+                        ])
             ]);
     }
 
@@ -263,7 +273,8 @@ class OrdemServicoResource extends Resource
     public static function getImageEquipamentoFormFiel(): Forms\Components\FileUpload 
     {
         return Forms\Components\FileUpload::make('img_equipamento')
-            // ->image()
+            ->label('Imagens')
+            ->image()
             ->columnSpanFull()
             ->multiple()
             ->panelLayout('grid');
