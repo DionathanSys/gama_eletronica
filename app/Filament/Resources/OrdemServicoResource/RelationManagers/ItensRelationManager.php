@@ -62,7 +62,10 @@ class ItensRelationManager extends RelationManager
                     ->summarize(Sum::make()->money('BRL')->label('Total')),
 
                 Tables\Columns\TextColumn::make('observacao')
-                    ->label('Observação'),
+                    ->words(10)
+                    ->tooltip(fn($record)=> $record->observacao)
+                    ->label('Observação')
+                    ->wrap(),
             ])
             ->filters([
                 //

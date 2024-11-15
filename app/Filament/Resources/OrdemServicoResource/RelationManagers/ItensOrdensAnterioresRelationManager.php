@@ -51,7 +51,10 @@ class ItensOrdensAnterioresRelationManager extends RelationManager
                     ->money('BRL'),
 
                 Tables\Columns\TextColumn::make('observacao')
-                    ->label('Observação'),
+                    ->words(10)
+                    ->tooltip(fn($record)=> $record->observacao)
+                    ->label('Observação')
+                    ->wrap(),
                 
                 Tables\Columns\TextColumn::make('ordemServico.data_ordem')
                     ->label('Data')
