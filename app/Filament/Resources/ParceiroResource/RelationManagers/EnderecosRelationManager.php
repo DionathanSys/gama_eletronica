@@ -15,6 +15,8 @@ class EnderecosRelationManager extends RelationManager
 {
     protected static string $relationship = 'enderecos';
 
+    protected static ?string $title = 'Endereços';
+
     public function form(Form $form): Form
     {
         return $form

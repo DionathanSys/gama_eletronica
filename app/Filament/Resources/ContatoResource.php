@@ -53,7 +53,7 @@ class ContatoResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('telefone_cel')
                     ->searchable(),
-                Tables\Columns\IconColumn::make('envio_ordem')
+                Tables\Columns\ToggleColumn::make('envio_ordem')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

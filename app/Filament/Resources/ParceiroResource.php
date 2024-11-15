@@ -38,6 +38,7 @@ class ParceiroResource extends Resource
                     ->label('Vínculo')
                     ->columnSpan(1)
                     ->required()
+                    ->default(VinculoParceiroEnum::CLIENTE)
                     ->options(VinculoParceiroEnum::class),
 
                 Forms\Components\Select::make('tipo_documento')
@@ -59,10 +60,16 @@ class ParceiroResource extends Resource
 
                         return '99.999.999/9999-99';
                     }),
+                
+                Forms\Components\TextInput::make('inscricao_estadual')
+                    ->label('Inscrição estadual')
+                    ->columnSpan(1)
+                    ->numeric(),
 
                 Forms\Components\Toggle::make('ativo')
                     ->columnSpan(1)
                     ->required()
+                    ->inline(false)
                     ->default(true),
             ]);
     }
