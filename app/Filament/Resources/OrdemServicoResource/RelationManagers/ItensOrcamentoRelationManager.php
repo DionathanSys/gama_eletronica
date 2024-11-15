@@ -23,22 +23,11 @@ class ItensOrcamentoRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Tables\Columns\TextColumn::make('servico.nome')
-                    ->label('Serviço'),
-
-                Tables\Columns\TextColumn::make('quantidade'),
-
-                Tables\Columns\TextColumn::make('valor_unitario')
-                    ->label('Valor Unitário')
-                    ->money('BRL'),
-
-                Tables\Columns\TextColumn::make('valor_total')
-                    ->label('Valor Total')
-                    ->money('BRL')
-                    ->summarize(Sum::make()->money('BRL')->label('Total')),
-
-                Tables\Columns\TextColumn::make('observacao')
-                    ->label('Observação'),
+                ItensRelationManager::getServicoFormField(),
+                ItensRelationManager::getQuantidadeFormField(),
+                ItensRelationManager::getValorUnitarioFormField(),
+                ItensRelationManager::getValorTotalFormField(),
+                ItensRelationManager::getObservacaoFormField(),
             ]);
     }
 
