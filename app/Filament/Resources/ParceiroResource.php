@@ -30,6 +30,7 @@ class ParceiroResource extends Resource
             ->columns(5)
             ->schema([
                 Forms\Components\TextInput::make('nome')
+                    ->autocomplete(false)
                     ->columnSpan(2)
                     ->required()
                     ->maxLength(255),
@@ -50,6 +51,7 @@ class ParceiroResource extends Resource
                     ->default('CNPJ'),
 
                 Forms\Components\TextInput::make('nro_documento')
+                    ->autocomplete(false)
                     ->columnSpan(1)
                     ->required()
                     ->length(fn(Get $get) => $get('tipo_documento') == 'CPF' ? 14 : 18)
@@ -140,8 +142,6 @@ class ParceiroResource extends Resource
                     ->label('Filtros'))
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
                 ]),
             ])
             ->paginated([10, 25, 50, 100]);
