@@ -100,13 +100,13 @@ class EnderecosRelationManager extends RelationManager
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Criado Em')
-                    ->dateTime()
+                    ->dateTime('d/m/Y h:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Atualizado Em')
-                    ->dateTime()
+                    ->dateTime('d/m/Y h:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

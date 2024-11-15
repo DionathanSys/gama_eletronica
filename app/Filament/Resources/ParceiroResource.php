@@ -78,7 +78,11 @@ class ParceiroResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('nome')
+                    ->sortable()
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('tipo_vinculo')
@@ -97,19 +101,19 @@ class ParceiroResource extends Resource
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Criado Em')
-                    ->dateTime()
+                    ->dateTime('d/m/Y h:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Atualizado Em')
-                    ->dateTime()
+                    ->dateTime('d/m/Y h:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->label('Exluído Em')
-                    ->dateTime()
+                    ->dateTime('d/m/Y h:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -126,7 +130,8 @@ class ParceiroResource extends Resource
                     ->default(true),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->iconButton(),
             ])
             ->filtersTriggerAction(
                 fn (Tables\Actions\Action $action) => $action
@@ -138,7 +143,8 @@ class ParceiroResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->paginated([10, 25, 50, 100]);
     }
 
     public static function getRelations(): array

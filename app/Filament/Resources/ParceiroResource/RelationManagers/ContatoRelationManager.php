@@ -48,6 +48,17 @@ class ContatoRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('telefone_fixo'),
                 Tables\Columns\TextColumn::make('telefone_cel'),
                 Tables\Columns\ToggleColumn::make('envio_ordem'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Criado Em')
+                    ->dateTime('d/m/Y h:i')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Atualizado Em')
+                    ->dateTime('d/m/Y h:i')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
