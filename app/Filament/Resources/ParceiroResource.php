@@ -115,10 +115,24 @@ class ParceiroResource extends Resource
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
+                Tables\Filters\SelectFilter::make('tipo_vinculo')
+                    ->options(VinculoParceiroEnum::class)
+                    ->label('Vinculo'),
+                Tables\Filters\SelectFilter::make('status')
+                    ->options([
+                        true => 'Ativo',
+                        false => 'Inativo'
+                    ])
+                    ->default(true),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
+            ->filtersTriggerAction(
+                fn (Tables\Actions\Action $action) => $action
+                    ->button()
+                    ->slideOver()
+                    ->label('Filtros'))
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
