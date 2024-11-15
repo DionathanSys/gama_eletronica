@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\OrdemServicoResource\RelationManagers;
 
+use App\Enums\StatusOrdemServicoEnum;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -36,29 +37,35 @@ class ItensOrcamentoRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
-                Tables\Columns\TextColumn::make('id'),
+                Tables\Columns\TextColumn::make('id')
+                    ->formatStateUsing(fn($state)=> str_pad($state, 5, '0', STR_PAD_LEFT)),
+
+                Tables\Columns\TextColumn::make('servico.nome')
+                    ->label('Serviço'),
+
+                Tables\Columns\TextColumn::make('quantidade')
+                    ->numeric(2 , ',', '.'),
+
+                Tables\Columns\TextColumn::make('valor_unitario')
+                    ->label('Valor Unitário')
+                    ->money('BRL'),
+
+                Tables\Columns\TextColumn::make('valor_total')
+                    ->label('Valor Total')
+                    ->money('BRL')
+                    ->summarize(Sum::make()->money('BRL')->label('Total')),
+
+                Tables\Columns\TextColumn::make('observacao')
+                    ->label('Observação'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->label('+ Item Orçamento')
-                    ->beforeFormFilled(function(Tables\Actions\CreateAction $action){
-                        
-                        //Verifica o status da ordem de serviço
-                        
-                        if($this->getOwnerRecord()->status != 'pendente') {
-                            Notification::make()
-                                ->warning()
-                                ->title('Inclusão Bloqueada')
-                                ->body('Não é permitido a inclusão de itens, com o status atual da ordem de serviço.')
-                                ->send();
-                                $action->cancel();
-                                return;
-                        }
-                    
-                    })
+                    ->label('Serviço')
+                    ->icon('heroicon-o-plus')
+                    ->visible(fn()=>$this->getOwnerRecord()->status == StatusOrdemServicoEnum::PENDENTE->value ? true : false)
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['created_by'] = Auth::id();
                         $data['updated_by'] = Auth::id();
@@ -67,14 +74,10 @@ class ItensOrcamentoRelationManager extends RelationManager
                     }),
             ])
             ->actions([
-                // Tables\Actions\EditAction::make()
-                //     ->after(function(ItemOrdemServico $record){
-                //         return UpdateValorOrdemActions::exec($this->getOwnerRecord());
-                // }),
-                // Tables\Actions\DeleteAction::make()
-                //     ->after(function(ItemOrdemServico $record){
-                //         return UpdateValorOrdemActions::exec($this->getOwnerRecord());
-                // }),
+                Tables\Actions\EditAction::make()
+                    ->iconButton(),
+                Tables\Actions\DeleteAction::make()
+                    ->iconButton(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

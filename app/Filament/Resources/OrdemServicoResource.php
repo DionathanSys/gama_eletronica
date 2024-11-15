@@ -53,6 +53,11 @@ class OrdemServicoResource extends Resource
                         Tabs\Tab::make('Anexos')
                             ->schema([
                                 static::getImageEquipamentoFormFiel(),
+                            ]),
+                        Tabs\Tab::make('NF-e')
+                            ->schema([
+                                static::getParceiroFormField(),
+                                static::getEquipamentoFormField(),
                             ])
                         ])
             ]);
@@ -226,26 +231,12 @@ class OrdemServicoResource extends Resource
                     });
     }
 
-    public static function getVeiculoFormField(): Forms\Components\Select
+    public static function getVeiculoFormField(): Forms\Components\TextInput
     {
-        return Forms\Components\Select::make('veiculo_id')      
+        return Forms\Components\TextInput::make('placa')      
                     ->columnSpan(1)
-                    ->label('Veículo')
-                    ->relationship('veiculo', 'placa')
-                    ->placeholder('Placa')
-                    ->preload()
-                    ->searchable()
-                    ->options(function (Forms\Get $get) {
-                        return Veiculo::where('parceiro_id', $get('parceiro_id'))
-                                        ->pluck('placa', 'id');
-                    })
-                    ->createOptionUsing(function (array $data, Forms\Get $get): int {
-                        $data['parceiro_id'] = $get('parceiro_id') ?? null;
-                        $data['created_by'] = Auth::id();
-                        $data['updated_by'] = Auth::id();
-                        $equipamento = Equipamento::create($data);
-                        return $equipamento->id;
-                    });
+                    ->length(7)
+                    ->placeholder('Placa');
     }
 
     public static function getDescontoFormField(): Forms\Components\TextInput

@@ -43,10 +43,14 @@ class ItensRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->formatStateUsing(fn($state)=> str_pad($state, 5, '0', STR_PAD_LEFT)),
+
                 Tables\Columns\TextColumn::make('servico.nome')
                     ->label('Serviço'),
 
-                Tables\Columns\TextColumn::make('quantidade'),
+                Tables\Columns\TextColumn::make('quantidade')
+                    ->numeric(2 , ',', '.'),
 
                 Tables\Columns\TextColumn::make('valor_unitario')
                     ->label('Valor Unitário')
@@ -65,7 +69,8 @@ class ItensRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->label('Adicionar Serviço')
+                    ->label('Serviço')
+                    ->icon('heroicon-o-plus')
                     ->visible(fn()=>$this->getOwnerRecord()->status == StatusOrdemServicoEnum::PENDENTE->value ? true : false)
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['created_by'] = Auth::id();
@@ -94,6 +99,7 @@ class ItensRelationManager extends RelationManager
     public static function getServicoFormField(): Forms\Components\Select
     {
         return Forms\Components\Select::make('servico_id')
+                    ->label('Serviço')
                     ->columnSpan(4)
                     ->relationship('servico', 'nome')
                     ->preload()
@@ -101,7 +107,7 @@ class ItensRelationManager extends RelationManager
                     ->required()
                     ->live()
                     ->afterStateUpdated(function(Forms\Set $set, Forms\Get $get){
-                        $valorUnitarioServico = (Servico::find($get('servico_id')))->valor_unitario;
+                        $valorUnitarioServico = (Servico::find($get('servico_id')))->valor_unitario ?? 1;
                         $set('valor_unitario', $valorUnitarioServico ?? 0.01);
                         $set('valor_total', $valorUnitarioServico * $get('quantidade'));
                     });
@@ -118,13 +124,14 @@ class ItensRelationManager extends RelationManager
                     ->afterStateUpdated(function(Forms\Set $set, Forms\Get $get){
                         $quantidade = $get('quantidade') ?? 1;
                         $valor_unitario = $get('valor_unitario') ?? 0.01;
-                        $set('valor_total', $quantidade * $valor_unitario);
+                        $set('valor_total', number_format(($quantidade * $valor_unitario), 2));
                     });
     }
    
     public static function getValorUnitarioFormField(): Forms\Components\TextInput
     {
         return Forms\Components\TextInput::make('valor_unitario')
+                    ->label('Valor Unitário')
                     ->columnSpan(1)
                     ->prefix('R$')
                     ->minValue(0.01)
@@ -133,13 +140,14 @@ class ItensRelationManager extends RelationManager
                     ->afterStateUpdated(function(Forms\Set $set, Forms\Get $get){
                         $quantidade = $get('quantidade') ?? 1;
                         $valor_unitario = $get('valor_unitario') ?? 0.01;
-                        $set('valor_total', $quantidade * $valor_unitario);
+                        $set('valor_total', number_format(($quantidade * $valor_unitario), 2));
                     });
     }
 
     public static function getValorTotalFormField(): Forms\Components\TextInput
     {
         return Forms\Components\TextInput::make('valor_total')
+                    ->label('Valor Total')
                     ->columnSpan(1)
                     ->prefix('R$')
                     ->minValue(0.01)
@@ -147,8 +155,8 @@ class ItensRelationManager extends RelationManager
                     ->live(onBlur: true)
                     ->afterStateUpdated(function(Forms\Set $set, Forms\Get $get){
                         $quantidade = $get('quantidade') ?? 1;
-                        $valor_total = $get('valor_total') ?? 0.01;
-                        $valor_unitario = number_format($valor_total / $quantidade, 2);
+                        $valor_total = number_format(($get('valor_total') ?? 0.01), 2);
+                        $valor_unitario = number_format(($valor_total / $quantidade), 2);
 
                         if($valor_unitario > 0.01){
                             $set('valor_unitario', $valor_unitario);

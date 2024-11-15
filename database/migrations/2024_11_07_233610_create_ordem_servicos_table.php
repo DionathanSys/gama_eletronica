@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('parceiro_id')->constrained('parceiros');
             $table->foreignId('equipamento_id')->constrained('equipamentos');
-            $table->foreignId('veiculo_id')->nullable()->constrained('veiculos');
+            $table->string('placa')->nullable();
             $table->foreignId('fatura_id')->nullable()->constrained('faturas');
             $table->date('data_ordem');
             $table->decimal('valor_total', 8, 2)->default(0);

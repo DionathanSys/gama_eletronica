@@ -40,7 +40,8 @@ class ItensOrdensAnterioresRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('servico.nome')
                     ->label('Serviço'),
 
-                Tables\Columns\TextColumn::make('quantidade'),
+                Tables\Columns\TextColumn::make('quantidade')
+                    ->numeric(2 , ',', '.'),
 
                 Tables\Columns\TextColumn::make('valor_unitario')
                     ->label('Valor Unitário')
@@ -57,7 +58,13 @@ class ItensOrdensAnterioresRelationManager extends RelationManager
                     ->date('d/m/Y'),
             ])
             ->filters([
-                //
+                //! Ajustar o método 'options'
+                // Tables\Filters\SelectFilter::make('servico_id')
+                //     ->label('Serviço')
+                //     ->searchable()
+                //     ->preload()
+                //     ->relationship('servico', 'nome')
+                //     ->options(fn()=> ItemOrdemServico::query()->where('equipamento_id', $this->getOwnerRecord()->equipamento_id)->pluck('nome', 'id')),
             ])
             ->headerActions([
                 // Tables\Actions\CreateAction::make(),
@@ -74,6 +81,12 @@ class ItensOrdensAnterioresRelationManager extends RelationManager
             ->bulkActions([
                
             ])
+            ->filtersTriggerAction(
+                fn(Tables\Actions\Action $action) => $action
+                    ->button()
+                    ->slideOver()
+                    ->label('Filtros')
+            )
             ->paginated([10, 25, 50, 100])
             ->striped()
             ;

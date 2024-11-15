@@ -4,6 +4,7 @@ namespace App\Filament\Resources\OrdemServicoResource\Pages;
 
 use App\Actions\Fatura\CreateFaturaAction;
 use App\Actions\OrdemServico\UpdateStatusOrdemActions;
+use App\Enums\StatusOrdemServicoEnum;
 use App\Filament\Resources\FaturaResource;
 use App\Filament\Resources\OrdemServicoResource;
 use App\Models\OrdemServico;
@@ -83,7 +84,7 @@ class EditOrdemServico extends EditRecord
     protected function getFormActions(): array
     {   
 
-        if($this->data['status'] == 'pendente'){
+        if($this->data['status'] == StatusOrdemServicoEnum::PENDENTE->value){
             return [
                 ...parent::getFormActions(),
             ];

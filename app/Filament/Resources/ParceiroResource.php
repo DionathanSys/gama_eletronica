@@ -47,7 +47,7 @@ class ParceiroResource extends Resource
                     ->required()
                     ->options(['CPF' => 'CPF', 'CNPJ' => 'CNPJ'])
                     ->live()
-                    ->afterStateUpdated(fn (Set $set) => $set('nro_documento', null))
+                    ->afterStateUpdated(fn(Set $set) => $set('nro_documento', null))
                     ->default('CNPJ'),
 
                 Forms\Components\TextInput::make('nro_documento')
@@ -55,14 +55,14 @@ class ParceiroResource extends Resource
                     ->columnSpan(1)
                     ->required()
                     ->length(fn(Get $get) => $get('tipo_documento') == 'CPF' ? 14 : 18)
-                    ->mask(function(Get $get) {
-                        if ($get('tipo_documento') == 'CPF'){
+                    ->mask(function (Get $get) {
+                        if ($get('tipo_documento') == 'CPF') {
                             return '999.999.999-99';
                         }
 
                         return '99.999.999/9999-99';
                     }),
-                
+
                 Forms\Components\TextInput::make('inscricao_estadual')
                     ->label('Inscrição estadual')
                     ->columnSpan(1)
@@ -79,7 +79,7 @@ class ParceiroResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(function ($query){
+            ->modifyQueryUsing(function ($query) {
                 return $query->with('creator', 'updater');
             })
             ->columns([
@@ -139,17 +139,17 @@ class ParceiroResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->iconButton(),
-                    
+
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                ])
+                Tables\Actions\BulkActionGroup::make([])
+            ])
             ->filtersTriggerAction(
-                fn (Tables\Actions\Action $action) => $action
+                fn(Tables\Actions\Action $action) => $action
                     ->button()
                     ->slideOver()
-                    ->label('Filtros'))
-            ])
+                    ->label('Filtros')
+            )
             ->paginated([10, 25, 50, 100])
             ->striped();
     }
