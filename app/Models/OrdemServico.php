@@ -40,6 +40,11 @@ class OrdemServico extends Model
     {
         return $this->hasMany(ItemOrdemServico::class);
     }
+    
+    public function itens_orcamento(): HasMany
+    {
+        return $this->hasMany(Orcamento::class);
+    }
 
     public function itensOrdensAnteriores()
     {

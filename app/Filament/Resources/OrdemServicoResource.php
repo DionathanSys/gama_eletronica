@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Actions\Fatura\CreateFaturaAction;
 use App\Filament\Resources\OrdemServicoResource\Pages;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers;
+use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensOrcamentoRelationManager;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensOrdensAnterioresRelationManager;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensRelationManager;
 use App\Models\Equipamento;
@@ -144,6 +145,7 @@ class OrdemServicoResource extends Resource
     public static function getRelations(): array
     {
         return [
+            ItensOrcamentoRelationManager::class,
             ItensRelationManager::class,
             ItensOrdensAnterioresRelationManager::class,
         ];

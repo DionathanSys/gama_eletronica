@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\OrdemServicoResource\RelationManagers;
 
+use App\Filament\Resources\OrdemServicoResource;
+use App\Models\ItemOrdemServico;
+use App\Models\OrdemServico;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -62,9 +65,17 @@ class ItensOrdensAnterioresRelationManager extends RelationManager
             ->actions([
                 // Tables\Actions\EditAction::make(),
                 // Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('visualizar')
+                    ->iconButton()
+                    ->icon('heroicon-o-eye')
+                    ->url(fn(ItemOrdemServico $record) => OrdemServicoResource::getUrl('edit', ['record' => $record->ordem_servico_id]))
+                    ->openUrlInNewTab(),
             ])
             ->bulkActions([
                
-            ]);
+            ])
+            ->paginated([10, 25, 50, 100])
+            ->striped()
+            ;
     }
 }

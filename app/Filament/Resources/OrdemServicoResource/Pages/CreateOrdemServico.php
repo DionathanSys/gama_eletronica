@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\OrdemServicoResource\Pages;
 
+use App\Enums\StatusOrdemServicoEnum;
 use App\Filament\Resources\OrdemServicoResource;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
@@ -19,6 +20,7 @@ class CreateOrdemServico extends CreateRecord
     {   
         $data['created_by'] = Auth::id();
         $data['updated_by'] = Auth::id();
+        $data['status'] = StatusOrdemServicoEnum::PENDENTE;
         
         return $data;
     }

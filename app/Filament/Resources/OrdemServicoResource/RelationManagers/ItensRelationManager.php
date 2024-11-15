@@ -4,6 +4,7 @@ namespace App\Filament\Resources\OrdemServicoResource\RelationManagers;
 
 use App\Actions\OrdemServico\CreateItemOrdemActions;
 use App\Actions\OrdemServico\UpdateValorOrdemActions;
+use App\Enums\StatusOrdemServicoEnum;
 use App\Models\ItemOrdemServico;
 use App\Models\Servico;
 use Filament\Forms;
@@ -65,41 +66,23 @@ class ItensRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->label('Adicionar Serviço')
-                    ->beforeFormFilled(function(Tables\Actions\CreateAction $action){
-                        
-                        //Verifica o status da ordem de serviço
-                        
-                        if($this->getOwnerRecord()->status != 'pendente') {
-                            Notification::make()
-                                ->warning()
-                                ->title('Inclusão Bloqueada')
-                                ->body('Não é permitido a inclusão de itens, com o status atual da ordem de serviço.')
-                                ->send();
-                                $action->cancel();
-                                return;
-                        }
-                    
-                    })
+                    ->visible(fn()=>$this->getOwnerRecord()->status == StatusOrdemServicoEnum::PENDENTE->value ? true : false)
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['created_by'] = Auth::id();
                         $data['updated_by'] = Auth::id();
                  
                         return $data;
-                    })
-                    ->after(function(){
-                        return UpdateValorOrdemActions::exec($this->getOwnerRecord());
                     }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->after(function(ItemOrdemServico $record){
-                        return UpdateValorOrdemActions::exec($this->getOwnerRecord());
-                }),
+                    ->iconButton()
+                    ->visible(fn()=>$this->getOwnerRecord()->status == StatusOrdemServicoEnum::PENDENTE->value ? true : false),
                 
                 Tables\Actions\DeleteAction::make()
-                    ->after(function(ItemOrdemServico $record){
-                        return UpdateValorOrdemActions::exec($this->getOwnerRecord());
-                }),
+                    ->iconButton()
+                    ->visible(fn()=>$this->getOwnerRecord()->status == StatusOrdemServicoEnum::PENDENTE->value ? true : false),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
