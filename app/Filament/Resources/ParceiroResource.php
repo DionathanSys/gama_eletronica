@@ -118,7 +118,7 @@ class ParceiroResource extends Resource
                 Tables\Filters\SelectFilter::make('tipo_vinculo')
                     ->options(VinculoParceiroEnum::class)
                     ->label('Vinculo'),
-                Tables\Filters\SelectFilter::make('status')
+                Tables\Filters\SelectFilter::make('ativo')
                     ->options([
                         true => 'Ativo',
                         false => 'Inativo'
