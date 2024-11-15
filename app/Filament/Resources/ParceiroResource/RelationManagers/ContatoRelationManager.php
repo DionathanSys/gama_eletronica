@@ -41,7 +41,8 @@ class ContatoRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('id')
+            // ->recordTitleAttribute('id')
+            ->recordTitle('Contato')
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('email'),

@@ -44,23 +44,28 @@ class ContatoResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('parceiro_id')
+                Tables\Columns\TextColumn::make('parceiro.nome')
                     ->numeric()
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('telefone_fixo')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('telefone_cel')
-                    ->searchable(),
-                Tables\Columns\ToggleColumn::make('envio_ordem')
-                    ->boolean(),
+
+                Tables\Columns\TextColumn::make('telefone_fixo'),
+
+                Tables\Columns\TextColumn::make('telefone_cel'),
+
+                Tables\Columns\ToggleColumn::make('envio_ordem'),
+
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Criado Em')
+                    ->dateTime('d/m/Y h:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Atualizado Em')
+                    ->dateTime('d/m/Y h:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -68,13 +73,15 @@ class ContatoResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->iconButton(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->striped();
     }
 
     public static function getRelations(): array
