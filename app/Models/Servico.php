@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Servico extends Model
 {
@@ -25,4 +26,16 @@ class Servico extends Model
     {
         return $this->hasMany(ImpostoServico::class, 'id', 'imposto_servico_id');
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Atributos
+    |--------------------------------------------------------------------------
+    */
+
+    public function setNomeAttribute($value)
+    {
+        $this->attributes['nome'] = strtoupper(Str::ascii($value));
+    }
+
 }

@@ -79,6 +79,9 @@ class ParceiroResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function ($query){
+                return $query->with('creator', 'updater');
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                     ->sortable(),
@@ -125,7 +128,7 @@ class ParceiroResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
                 Tables\Filters\SelectFilter::make('tipo_vinculo')
                     ->options(VinculoParceiroEnum::class)
-                    ->label('Vinculo'),
+                    ->label('Vínculo'),
                 Tables\Filters\SelectFilter::make('ativo')
                     ->options([
                         true => 'Ativo',
@@ -136,15 +139,16 @@ class ParceiroResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->iconButton(),
+                    
             ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                ])
             ->filtersTriggerAction(
                 fn (Tables\Actions\Action $action) => $action
                     ->button()
                     ->slideOver()
                     ->label('Filtros'))
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                ]),
             ])
             ->paginated([10, 25, 50, 100])
             ->striped();

@@ -58,10 +58,12 @@ class ServicoResource extends Resource
 
                 Tables\Columns\TextColumn::make('descricao')
                     ->label('Descrição')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('valor_unitario')
                     ->label('Valor Unitário')
+                    ->money('BRL')
                     ->searchable(),
 
                 Tables\Columns\ToggleColumn::make('ativo'),
@@ -70,7 +72,8 @@ class ServicoResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->iconButton(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

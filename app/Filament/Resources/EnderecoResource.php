@@ -77,7 +77,7 @@ class EnderecoResource extends Resource
                 return $query->with('parceiro');
             })
             ->columns([
-                Tables\Columns\TextColumn::make('parceiro_id')
+                Tables\Columns\TextColumn::make('parceiro.nome')
                     ->numeric()
                     ->sortable(),
 
@@ -85,6 +85,7 @@ class EnderecoResource extends Resource
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('numero')
+                    ->label('Nro.')
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('complemento')
@@ -94,6 +95,7 @@ class EnderecoResource extends Resource
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('codigo_municipio')
+                    ->label('Código Município')
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('cidade')
@@ -107,6 +109,7 @@ class EnderecoResource extends Resource
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('pais')
+                    ->label('País')
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('created_at')
@@ -125,7 +128,8 @@ class EnderecoResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->iconButton(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

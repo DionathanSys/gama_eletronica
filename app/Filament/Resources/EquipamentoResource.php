@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\VinculoParceiroEnum;
 use App\Filament\Resources\EquipamentoResource\Pages;
 use App\Filament\Resources\EquipamentoResource\RelationManagers;
 use App\Models\Equipamento;
@@ -41,30 +42,37 @@ class EquipamentoResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function ($query){
+                return $query->with('parceiro', 'creator', 'updater');
+            })
             ->columns([
-                Tables\Columns\TextColumn::make('parceiro.id')
+                Tables\Columns\TextColumn::make('parceiro.nome')
                     ->numeric()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('descricao')
+                    ->label('Descrição')
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('nro_serie')
+                    ->label('Nro. Série')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('modelo')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('modelo'),
 
-                Tables\Columns\TextColumn::make('marca')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('marca'),
 
-                Tables\Columns\TextColumn::make('created_by')
+                Tables\Columns\TextColumn::make('creator.name')
+                    ->label('Criado por')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
-                Tables\Columns\TextColumn::make('updated_by')
+                Tables\Columns\TextColumn::make('updater.name')
+                    ->label('Atualizado por')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Criado Em')
@@ -85,16 +93,28 @@ class EquipamentoResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\TrashedFilter::make(),
+                Tables\Filters\SelectFilter::make('tipo_vinculo')
+                    ->options(VinculoParceiroEnum::class)
+                    ->label('Vínculo'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->iconButton(),
+                Tables\Actions\RestoreAction::make()
+                    ->iconButton(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->filtersTriggerAction(
+                fn (Tables\Actions\Action $action) => $action
+                    ->button()
+                    ->slideOver()
+                    ->label('Filtros'))
+            ->paginated([10, 25, 50, 100])
+            ->striped();
     }
 
     public static function getRelations(): array
