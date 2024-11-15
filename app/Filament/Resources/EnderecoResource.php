@@ -73,6 +73,9 @@ class EnderecoResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function ($query){
+                return $query->with('parceiro');
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('parceiro_id')
                     ->numeric()
@@ -128,7 +131,9 @@ class EnderecoResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->paginated([10, 25, 50, 100])
+            ->striped();
     }
 
     public static function getRelations(): array

@@ -95,6 +95,8 @@ class ParceiroResource extends Resource
                 Tables\Columns\TextColumn::make('nro_documento')
                     ->searchable(),
 
+                Tables\Columns\TextColumn::make('inscricao_estadual'),
+
                 Tables\Columns\ToggleColumn::make('ativo')
                     ->toggleable()
                     ->beforeStateUpdated(function ($record, $state) {
@@ -144,7 +146,8 @@ class ParceiroResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                 ]),
             ])
-            ->paginated([10, 25, 50, 100]);
+            ->paginated([10, 25, 50, 100])
+            ->striped();
     }
 
     public static function getRelations(): array

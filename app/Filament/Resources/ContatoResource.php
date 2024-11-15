@@ -43,6 +43,9 @@ class ContatoResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function ($query){
+                return $query->with('parceiro');
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('parceiro.nome')
                     ->numeric()
@@ -81,6 +84,7 @@ class ContatoResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
+            ->paginated([10, 25, 50, 100])
             ->striped();
     }
 
