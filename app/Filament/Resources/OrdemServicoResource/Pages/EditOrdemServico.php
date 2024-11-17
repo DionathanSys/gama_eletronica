@@ -11,6 +11,7 @@ use App\Models\OrdemServico;
 use Filament\Actions;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Support\Enums\ActionSize;
 use Illuminate\Support\Facades\Auth;
 
 class EditOrdemServico extends EditRecord
@@ -22,74 +23,102 @@ class EditOrdemServico extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\Action::make('faturar')
-                ->action(function(OrdemServico $record){
-                    $fatura = CreateFaturaAction::exec(collect([$record]));
-                    $this->refreshFormData([
-                        'fatura_id'
-                    ]);
-                    if ($fatura){
-                        return redirect(FaturaResource::getUrl('edit', ['record' => $fatura->id,]));
-                    }
-                }),
+            Actions\ActionGroup::make([
+                Actions\ActionGroup::make([
+                    Actions\Action::make('pdf-os')
+                        ->label('Ordem de Serviço')
+                        ->icon('heroicon-o-clipboard-document-list')
+                        ->openUrlInNewTab()
+                        ->action(function (OrdemServico $record) {
+                            if ($record->toPdf) {
+                                return redirect("/ordem-servico/{$record->id}/pdf");
+                            }
+                            Notification::make()
+                                ->warning()
+                                ->title('Solicitação não concluída!')
+                                ->send();
+                        }),
 
-            Actions\Action::make('encerrar')
-                ->icon('heroicon-o-check-circle')
-                ->color('gray')
-                ->action(function(OrdemServico $record) {
-                    if ((new UpdateStatusOrdemActions($record))->encerrar()){
-                        return redirect(OrdemServicoResource::getUrl('edit', ['record' => $this->getRecord()]));
-                    }
-                }),
+                    Actions\Action::make('pdf-orcamento')
+                        ->label('Orçamento')
+                        ->icon('heroicon-o-clipboard-document-list')
+                        ->openUrlInNewTab()
+                        ->action(function (OrdemServico $record) {
+                            if ($record->toPdf) {
+                                return redirect("/ordem-servico/{$record->id}/orcamento/pdf");
+                            }
+                            Notification::make()
+                                ->warning()
+                                ->title('Solicitação não concluída!')
+                                ->send();
+                        }),
+                ])->dropdown(false),
 
-            Actions\Action::make('reabrir')
-                ->icon('heroicon-o-arrow-uturn-left')
-                ->color('gray')
-                ->tooltip('Reabrir OS')
-                ->label('')
-                ->action(function(OrdemServico $record) {
-                    if ((new UpdateStatusOrdemActions($record))->reabrir()){
-                        return redirect(OrdemServicoResource::getUrl('edit', ['record' => $this->getRecord()]));
-                    }
-                }),
+                Actions\ActionGroup::make([
+                    Actions\Action::make('encerrar')
+                        ->label('Encerar OS')
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
+                        ->action(function (OrdemServico $record) {
+                            if ((new UpdateStatusOrdemActions($record))->encerrar()) {
+                                return redirect(OrdemServicoResource::getUrl('edit', ['record' => $this->getRecord()]));
+                            }
+                        }),
 
-            Actions\Action::make('pdf')
-                ->label('PDF')
-                ->icon('heroicon-o-document-text')
-                ->color('gray')
-                ->openUrlInNewTab()
-                ->action(function(OrdemServico $record){
-                    if($record->toPdf){
-                        return redirect("/ordem-servico/{$record->id}/pdf");
-                    }
-                    Notification::make()
-                        ->warning()
-                        ->title('Solicitação não concluída!')
-                        ->send();
-                }),
+                    Actions\Action::make('reabrir')
+                        ->label('Reabrir OS')
+                        ->icon('heroicon-o-arrow-uturn-left')
+                        ->color('primary')
+                        ->tooltip('Reabrir OS')
+                        ->action(function (OrdemServico $record) {
+                            if ((new UpdateStatusOrdemActions($record))->reabrir()) {
+                                return redirect(OrdemServicoResource::getUrl('edit', ['record' => $this->getRecord()]));
+                            }
+                        }),
+                    Actions\DeleteAction::make(),
+                ])->dropdown(false),
 
-            Actions\Action::make('email'),
+                Actions\ActionGroup::make([
+                    Actions\Action::make('faturar')
+                        ->icon('heroicon-o-document-currency-dollar')
+                        ->color('success')
+                        ->action(function (OrdemServico $record) {
+                            $fatura = CreateFaturaAction::exec(collect([$record]));
+                            $this->refreshFormData([
+                                'fatura_id'
+                            ]);
+                            if ($fatura) {
+                                return redirect(FaturaResource::getUrl('edit', ['record' => $fatura->id,]));
+                            }
+                        }),
+                    Actions\Action::make('email')
+                        ->label('Enviar OS via Email')
+                        ->color('info')
+                        ->icon('heroicon-o-paper-airplane'),
+                ])->dropdown(false),
 
-            Actions\DeleteAction::make(),
+            ])->label('Ações')->color('gray')->icon('heroicon-m-ellipsis-vertical')->button(),
+
+
         ];
     }
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
         $data['updated_by'] = Auth::id();
-        
+
         return $data;
     }
 
     protected function getFormActions(): array
-    {   
+    {
 
-        if($this->data['status'] == StatusOrdemServicoEnum::PENDENTE->value){
+        if ($this->data['status'] == StatusOrdemServicoEnum::PENDENTE->value) {
             return [
                 ...parent::getFormActions(),
             ];
         }
-        
+
         return [];
     }
 }

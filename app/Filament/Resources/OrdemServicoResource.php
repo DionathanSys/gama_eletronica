@@ -41,7 +41,7 @@ class OrdemServicoResource extends Resource
                     ->columnSpanFull()
                     ->tabs([
                         Tabs\Tab::make('Geral')
-                            ->columns(5)
+                            ->columns(10)
                             ->schema([
                                 static::getParceiroFormField(),
                                 static::getEquipamentoFormField(),
@@ -54,11 +54,7 @@ class OrdemServicoResource extends Resource
                             ->schema([
                                 static::getImageEquipamentoFormFiel(),
                             ]),
-                        Tabs\Tab::make('NF-e')
-                            ->schema([
-                                static::getParceiroFormField(),
-                                static::getEquipamentoFormField(),
-                            ])
+                        
                         ])
             ]);
     }
@@ -131,7 +127,8 @@ class OrdemServicoResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->iconButton(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -168,7 +165,7 @@ class OrdemServicoResource extends Resource
     public static function getParceiroFormField(): Forms\Components\Select
     {
         return Forms\Components\Select::make('parceiro_id')
-                    ->columnSpan(2)
+                    ->columnSpan(4)
                     ->label('Parceiro')
                     ->relationship('parceiro', 'nome')
                     ->preload()
@@ -202,7 +199,7 @@ class OrdemServicoResource extends Resource
     public static function getEquipamentoFormField(): Forms\Components\Select
     {
         return Forms\Components\Select::make('equipamento_id')
-                    ->columnSpan(2)
+                    ->columnSpan(4)
                     ->label('Equipamento')
                     ->placeholder('Equipamento')
                     ->relationship('equipamento', 'descricao')
@@ -234,7 +231,7 @@ class OrdemServicoResource extends Resource
     public static function getVeiculoFormField(): Forms\Components\TextInput
     {
         return Forms\Components\TextInput::make('placa')      
-                    ->columnSpan(1)
+                    ->columnSpan(2)
                     ->length(7)
                     ->placeholder('Placa');
     }
@@ -251,7 +248,7 @@ class OrdemServicoResource extends Resource
     public static function getStatusFormField(): Forms\Components\TextInput
     {
         return Forms\Components\TextInput::make('status')
-                ->columnSpan(1)
+                ->columnSpan(2)
                 ->disabled();
     } 
     

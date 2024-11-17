@@ -25,7 +25,7 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->topNavigation()
             ->sidebarCollapsibleOnDesktop()
-            ->brandName('Sierra.Soft | Gama Eletrônica')
+            ->brandName('Gamma Eletrônica')
             // ->databaseNotifications()
             ->default()
             ->id('admin')

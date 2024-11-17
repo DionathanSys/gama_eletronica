@@ -66,8 +66,10 @@ class ItensOrcamentoRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
+                    ->modalHeading('Adicionar Serviço')
                     ->label('Serviço')
                     ->icon('heroicon-o-plus')
+                    ->color('info')
                     ->visible(fn()=>$this->getOwnerRecord()->status == StatusOrdemServicoEnum::PENDENTE->value ? true : false)
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['created_by'] = Auth::id();

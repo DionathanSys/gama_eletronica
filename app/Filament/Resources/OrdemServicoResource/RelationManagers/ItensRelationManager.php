@@ -72,8 +72,10 @@ class ItensRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
+                    ->modalHeading('Adicionar Serviço')
                     ->label('Serviço')
                     ->icon('heroicon-o-plus')
+                    ->color('info')
                     ->visible(fn()=>$this->getOwnerRecord()->status == StatusOrdemServicoEnum::PENDENTE->value ? true : false)
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['created_by'] = Auth::id();
@@ -112,7 +114,7 @@ class ItensRelationManager extends RelationManager
                     ->afterStateUpdated(function(Forms\Set $set, Forms\Get $get){
                         $valorUnitarioServico = (Servico::find($get('servico_id')))->valor_unitario ?? 1;
                         $set('valor_unitario', $valorUnitarioServico ?? 0.01);
-                        $set('valor_total', $valorUnitarioServico * $get('quantidade'));
+                        $set('valor_total', number_format($valorUnitarioServico * $get('quantidade')));
                     });
     }
 
