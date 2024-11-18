@@ -34,5 +34,7 @@ class AprovarOrcamentoAction
 
             }
         });
+
+        UpdateValorOrdemActions::exec($ordemServico);
     }
 }

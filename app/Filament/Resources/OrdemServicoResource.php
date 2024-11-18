@@ -148,8 +148,8 @@ class OrdemServicoResource extends Resource
     public static function getRelations(): array
     {
         return [
-            ItensOrcamentoRelationManager::class,
             ItensRelationManager::class,
+            ItensOrcamentoRelationManager::class,
             ItensOrdensAnterioresRelationManager::class,
         ];
     }

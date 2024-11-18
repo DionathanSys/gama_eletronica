@@ -6,6 +6,7 @@ use App\Actions\OrdemServico\CreateItemOrdemActions;
 use App\Actions\OrdemServico\UpdateValorOrdemActions;
 use App\Enums\StatusOrdemServicoEnum;
 use App\Models\ItemOrdemServico;
+use App\Models\OrdemServico;
 use App\Models\Servico;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -82,16 +83,19 @@ class ItensRelationManager extends RelationManager
                         $data['updated_by'] = Auth::id();
                  
                         return $data;
-                    }),
+                    })
+                    ->after(fn(OrdemServico $record)=> UpdateValorOrdemActions::exec($record)),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->iconButton()
-                    ->visible(fn()=>$this->getOwnerRecord()->status == StatusOrdemServicoEnum::PENDENTE->value ? true : false),
+                    ->visible(fn()=>$this->getOwnerRecord()->status == StatusOrdemServicoEnum::PENDENTE->value ? true : false)
+                    ->after(fn(OrdemServico $record)=> UpdateValorOrdemActions::exec($record)),
                 
                 Tables\Actions\DeleteAction::make()
                     ->iconButton()
-                    ->visible(fn()=>$this->getOwnerRecord()->status == StatusOrdemServicoEnum::PENDENTE->value ? true : false),
+                    ->visible(fn()=>$this->getOwnerRecord()->status == StatusOrdemServicoEnum::PENDENTE->value ? true : false)
+                    ->after(fn(OrdemServico $record)=> UpdateValorOrdemActions::exec($record)),
 
             ])
             ->bulkActions([
