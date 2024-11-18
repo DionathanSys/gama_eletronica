@@ -18,7 +18,7 @@ class UpdateStatusOrdemActions
         }
 
         $this->ordemServico->update([
-            'status' => 'encerrada'
+            'status' => StatusOrdemServicoEnum::ENCERRADA
         ]);
 
         $this->notificaSucesso();
@@ -34,7 +34,7 @@ class UpdateStatusOrdemActions
         }
 
         $this->ordemServico->update([
-            'status' => 'pendente'
+            'status' => StatusOrdemServicoEnum::PENDENTE
         ]);
 
         $this->notificaSucesso();
