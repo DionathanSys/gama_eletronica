@@ -4,6 +4,7 @@ namespace App\Actions\Fatura;
 
 use App\Actions\ContasReceber\CreateContasReceberAction;
 use App\Enums\StatusFaturaEnum;
+use App\Enums\StatusOrdemServicoEnum;
 use App\Models\ContaReceber;
 use App\Models\Fatura;
 use Filament\Notifications\Notification;
@@ -25,7 +26,7 @@ class CreateFaturaAction
         //Valida se todas as ordens estão encerradas e ainda NÃO faturadas
         if (!$ordens->every(function ($ordem) {
             return
-                $ordem->status == 'encerrada' &&
+                $ordem->status == StatusOrdemServicoEnum::ENCERRADA->value &&
                 $ordem->fatura_id == null;
         })) {
             static::notificaFalha('Existem ordens não encerradas');
