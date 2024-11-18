@@ -84,18 +84,18 @@ class ItensRelationManager extends RelationManager
                  
                         return $data;
                     })
-                    ->after(fn(OrdemServico $record)=> UpdateValorOrdemActions::exec($record)),
+                    ->after(fn()=> UpdateValorOrdemActions::exec($this->getOwnerRecord())),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->iconButton()
                     ->visible(fn()=>$this->getOwnerRecord()->status == StatusOrdemServicoEnum::PENDENTE->value ? true : false)
-                    ->after(fn(OrdemServico $record)=> UpdateValorOrdemActions::exec($record)),
+                    ->after(fn()=> UpdateValorOrdemActions::exec($this->getOwnerRecord())),
                 
                 Tables\Actions\DeleteAction::make()
                     ->iconButton()
                     ->visible(fn()=>$this->getOwnerRecord()->status == StatusOrdemServicoEnum::PENDENTE->value ? true : false)
-                    ->after(fn(OrdemServico $record)=> UpdateValorOrdemActions::exec($record)),
+                    ->before(fn()=> UpdateValorOrdemActions::exec($this->getOwnerRecord())),
 
             ])
             ->bulkActions([
