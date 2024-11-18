@@ -60,6 +60,10 @@ class ItensOrcamentoRelationManager extends RelationManager
                     ->tooltip(fn($record)=> $record->observacao)
                     ->label('Observação')
                     ->wrap(),
+                
+                Tables\Columns\IconColumn::make('aprovado')
+                    ->boolean(),
+                    
             ])
             ->filters([
                 //

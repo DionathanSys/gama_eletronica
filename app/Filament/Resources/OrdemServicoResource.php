@@ -173,7 +173,7 @@ class OrdemServicoResource extends Resource
                     ->preload()
                     ->searchable()
                     ->options(function () {
-                        return Parceiro::where('tipo_vinculo', 'cliente')
+                        return Parceiro::where('tipo_vinculo', 'CLIENTE')
                                         ->where('ativo', true)
                                         ->pluck('nome', 'id');
                     })

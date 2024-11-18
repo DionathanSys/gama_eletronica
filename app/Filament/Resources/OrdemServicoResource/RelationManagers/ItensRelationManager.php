@@ -98,7 +98,8 @@ class ItensRelationManager extends RelationManager
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->poll('5s');
     }
 
     public static function getServicoFormField(): Forms\Components\Select

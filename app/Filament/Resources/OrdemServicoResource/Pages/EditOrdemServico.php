@@ -9,7 +9,9 @@ use App\Enums\StatusOrdemServicoEnum;
 use App\Filament\Resources\FaturaResource;
 use App\Filament\Resources\OrdemServicoResource;
 use App\Models\OrdemServico;
+use App\Actions\NotaFiscalMercadoria\VinculaNfRemessaAction;
 use Filament\Actions;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Support\Enums\ActionSize;
@@ -107,7 +109,15 @@ class EditOrdemServico extends EditRecord
                     Actions\Action::make('nf_remessa')
                         ->label('Vinc. NF-e de Remessa')
                         ->color('info')
-                        ->icon('heroicon-o-document-arrow-down'),
+                        ->icon('heroicon-o-document-arrow-down')
+                        ->form([
+                            TextInput::make('chave_nota')
+                                ->label('Chave de Acesso NF-e')
+                                ->length(44)
+                                ->required(),
+                        ])
+                        ->action(fn(OrdemServico $record, $data) => VinculaNfRemessaAction::vinculaOrdem($record, $data['chave_nota'])),
+
                 ])->dropdown(false),
 
             ])->label('Ações')->color('gray')->icon('heroicon-m-ellipsis-vertical')->button(),
