@@ -82,7 +82,6 @@ class OrdemServicoResource extends Resource
                 
                 Tables\Columns\TextColumn::make('equipamento.nro_serie')
                     ->label('Nro. Série')
-                    ->numeric()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('veiculo.placa')
