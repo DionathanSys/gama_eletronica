@@ -2,6 +2,7 @@
 
 namespace App\Actions\OrdemServico;
 
+use App\Enums\StatusOrdemServicoEnum;
 use App\Models\OrdemServico;
 use Filament\Notifications\Notification;
 
@@ -11,7 +12,7 @@ class UpdateStatusOrdemActions
 
     public function encerrar(): bool
     {
-        if ($this->ordemServico->status != 'pendente' || $this->ordemServico->itens->isEmpty()) {
+        if ($this->ordemServico->status != StatusOrdemServicoEnum::PENDENTE->value || $this->ordemServico->itens->isEmpty()) {
             $this->notificaFalha('encerrar');
             return false;
         }
@@ -27,7 +28,7 @@ class UpdateStatusOrdemActions
 
     public function reabrir() 
     {
-        if ($this->ordemServico->status != 'encerrada' || $this->ordemServico->fatura_id != null){
+        if ($this->ordemServico->status != StatusOrdemServicoEnum::ENCERRADA->value || $this->ordemServico->fatura_id != null){
             $this->notificaFalha('reabrir');
             return false;
         }
