@@ -95,7 +95,7 @@ class ItensRelationManager extends RelationManager
                 Tables\Actions\DeleteAction::make()
                     ->iconButton()
                     ->visible(fn()=>$this->getOwnerRecord()->status == StatusOrdemServicoEnum::PENDENTE->value ? true : false)
-                    ->before(fn()=> UpdateValorOrdemActions::exec($this->getOwnerRecord())),
+                    ->after(fn()=> UpdateValorOrdemActions::exec($this->getOwnerRecord())),
 
             ])
             ->bulkActions([
