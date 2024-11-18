@@ -13,10 +13,15 @@ class UpdateValorOrdemActions
     {   
         $itensOrdemServico = ItemOrdemServico::where('ordem_servico_id', $ordemServico->id)->get();
 
+        // dump($itensOrdemServico->sum('valor_total'));
+
         $ordemServico->update([
             'valor_total' => $itensOrdemServico->sum('valor_total')
             ]
         );
+
+        $ordemServico->refresh();
+        // dd($ordemServico);
 
     }
 }
