@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\OrdemServicoResource\Pages;
 
 use App\Actions\Fatura\CreateFaturaAction;
+use App\Actions\OrdemServico\AprovarOrcamentoAction;
 use App\Actions\OrdemServico\UpdateStatusOrdemActions;
 use App\Enums\StatusOrdemServicoEnum;
 use App\Filament\Resources\FaturaResource;
@@ -75,6 +76,14 @@ class EditOrdemServico extends EditRecord
                                 return redirect(OrdemServicoResource::getUrl('edit', ['record' => $this->getRecord()]));
                             }
                         }),
+                    Actions\Action::make('aprovar')
+                        ->label('Aprovar Orçamento')
+                        ->icon('heroicon-o-document-check')
+                        ->color('primary')
+                        ->tooltip('Reabrir OS')
+                        ->action(function (OrdemServico $record) {
+                            AprovarOrcamentoAction::exec($record);
+                        }),
                     Actions\DeleteAction::make(),
                 ])->dropdown(false),
 
@@ -95,6 +104,10 @@ class EditOrdemServico extends EditRecord
                         ->label('Enviar OS via Email')
                         ->color('info')
                         ->icon('heroicon-o-paper-airplane'),
+                    Actions\Action::make('nf_remessa')
+                        ->label('Vinc. NF-e de Remessa')
+                        ->color('info')
+                        ->icon('heroicon-o-document-arrow-down'),
                 ])->dropdown(false),
 
             ])->label('Ações')->color('gray')->icon('heroicon-m-ellipsis-vertical')->button(),

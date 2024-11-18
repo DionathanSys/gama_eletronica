@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\OrdemServicoResource\Pages;
 
+use App\Enums\PrioridadeOrdemServicoEnum;
 use App\Enums\StatusOrdemServicoEnum;
 use App\Filament\Resources\OrdemServicoResource;
 use Filament\Actions;

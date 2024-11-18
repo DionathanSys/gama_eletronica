@@ -154,6 +154,7 @@ class EquipamentoResource extends Resource
         return Forms\Components\TextInput::make('descricao')
                     ->columnSpan(2)
                     ->label('Descrição')
+                    ->autocomplete(false)
                     ->maxLength(255);
     }
     
@@ -162,6 +163,7 @@ class EquipamentoResource extends Resource
         return Forms\Components\TextInput::make('nro_serie')
                     ->columnSpan(1)
                     ->label('Nro. Série')
+                    ->autocomplete(false)
                     ->maxLength(255);
     }
     
@@ -169,6 +171,7 @@ class EquipamentoResource extends Resource
     {
         return Forms\Components\TextInput::make('modelo')
                     ->columnSpan(1)
+                    ->autocomplete(false)
                     ->maxLength(255);
     }
     
@@ -176,6 +179,7 @@ class EquipamentoResource extends Resource
     {
         return Forms\Components\TextInput::make('marca')
                     ->columnSpan(1)
+                    ->autocomplete(false)
                     ->maxLength(255);
     }
 }

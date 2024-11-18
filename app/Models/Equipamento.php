@@ -31,4 +31,26 @@ class Equipamento extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+
+        /*
+    |--------------------------------------------------------------------------
+    | Atributos
+    |--------------------------------------------------------------------------
+    */
+
+    public function setDescricaoAttribute($value)
+    {
+        $this->attributes['descricao'] = strtoupper($value);
+    }
+  
+    public function setMarcaAttribute($value)
+    {
+        $this->attributes['marca'] = strtoupper($value);
+    }
+  
+    public function setModeloAttribute($value)
+    {
+        $this->attributes['modelo'] = strtoupper($value);
+    }
+
 }

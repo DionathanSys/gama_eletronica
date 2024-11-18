@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Actions\Fatura\CreateFaturaAction;
+use App\Enums\PrioridadeOrdemServicoEnum;
 use App\Filament\Resources\OrdemServicoResource\Pages;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensOrcamentoRelationManager;
@@ -47,6 +48,7 @@ class OrdemServicoResource extends Resource
                                 static::getEquipamentoFormField(),
                                 static::getVeiculoFormField(),
                                 static::getDataOrdemFormField(),
+                                static::getPrioridadeFormField(),
                                 static::getStatusFormField(),
                                 static::getFaturaFormField(),
                             ]),
@@ -223,6 +225,7 @@ class OrdemServicoResource extends Resource
                         $data['parceiro_id'] = $get('parceiro_id') ?? null;
                         $data['created_by'] = Auth::id();
                         $data['updated_by'] = Auth::id();
+                        $data['nro_serie'] = $data['nro_serie'] ?? $data['parceiro_id'] . 'SN' . now()->timestamp;
                         $equipamento = Equipamento::create($data);
                         return $equipamento->id;
                     });
@@ -251,6 +254,14 @@ class OrdemServicoResource extends Resource
                 ->columnSpan(2)
                 ->disabled();
     } 
+
+    public static function getPrioridadeFormField(): Forms\Components\Select
+    {
+        return Forms\Components\Select::make('prioridade')
+            ->columnSpan(2)
+            ->options(PrioridadeOrdemServicoEnum::class)
+            ->default(PrioridadeOrdemServicoEnum::BAIXA);
+    }
     
     public static function getFaturaFormField(): Forms\Components\TextInput
     {

@@ -19,7 +19,6 @@ class DatabaseSeeder extends Seeder
             ContatoSeeder::class,
             EnderecoSeeder::class,
             EquipamentoSeeder::class,
-            VeiculoSeeder::class,
         ]);
     }
 }

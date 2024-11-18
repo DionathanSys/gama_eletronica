@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('parceiro_id')->constrained('parceiros');
             $table->string('descricao')->nullable();
-            $table->string('nro_serie')->unique()->nullable();
+            $table->string('nro_serie')->nullable();
             $table->string('modelo')->nullable();
             $table->string('marca')->nullable();
             $table->foreignId('created_by')->constrained('users');

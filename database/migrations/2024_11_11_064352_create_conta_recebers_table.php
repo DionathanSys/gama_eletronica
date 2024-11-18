@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('desdobramento')->default(1);
             $table->integer('desdobramentos')->default(1);
             $table->string('descricao')->nullable();
-            $table->string('metodo_pagamento');
+            $table->string('metodo_pagamento')->nullable();
             $table->string('status');
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('updated_by')->constrained('users');
