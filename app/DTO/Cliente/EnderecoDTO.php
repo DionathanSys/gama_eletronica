@@ -23,7 +23,7 @@ class EnderecoDTO
         $this->numero = $cliente->numero ?? '';
         $this->complemento = $cliente->complemento ?? '';
         $this->bairro = $cliente->bairro ?? '';
-        $this->nome_municipio = $cliente->nome_municipio;
+        $this->nome_municipio = $cliente->cidade;
         $this->codigo_municipio = $cliente->codigo_municipio;
         $this->uf = $cliente->estado;
         $this->nome_pais = null;
@@ -38,6 +38,7 @@ class EnderecoDTO
             "numero" => $this->numero,
             "complemento" => $this->complemento,
             "bairro" => $this->bairro,
+            "nome_municipio" => $this->nome_municipio,
             "codigo_municipio" => $this->codigo_municipio,
             "uf" => $this->uf,
             "codigo_pais" => $this->codigo_pais,

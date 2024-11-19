@@ -15,7 +15,7 @@ class ClienteDTO
     public $email;
     public $endereco;
     public $inscricao_estadual;
-    public $indicador_inscricao_estadual = '1 - Contribuinte ICMS (informar a IE do destinatário)';
+    public $indicador_inscricao_estadual = 1;
 
     public function __construct(Parceiro $cliente)
     {
@@ -25,8 +25,10 @@ class ClienteDTO
         $this->razao_social = $cliente->nome;
         $this->nome = $cliente->nome;
         $this->inscricao_estadual = $cliente->inscricao_estadual ?? null;
-        $this->telefone = ($cliente->contato)->first()->telefone_cel ?? ($cliente->contato)->first()->telefone_fixo;
-        $this->email = ($cliente->contato)->first()->email ?? '';
+        $this->telefone = optional($cliente->contato)->telefone_cel 
+                            ?? optional($cliente->contato)->telefone_fixo 
+                            ?? '';
+        $this->email = ($cliente->contato)->email ?? '';
         $this->endereco = (new EnderecoDTO(($cliente->enderecos)->first()))->toArray();
     }
 
@@ -41,6 +43,7 @@ class ClienteDTO
             "telefone" => null,
             "email" => $this->email,
             "endereco" => $this->endereco,
+            "inscricao_estadual" => $this->inscricao_estadual,
             "indicador_inscricao_estadual" => $this->indicador_inscricao_estadual,
         ];
     }

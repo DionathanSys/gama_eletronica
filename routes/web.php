@@ -5,6 +5,7 @@ use App\Models\OrdemServico;
 use App\Models\Parceiro;
 use App\Models\Servico;
 use App\Services\BuscaCNPJ;
+use App\Services\NfeService;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -44,15 +45,23 @@ Route::get('/', function () {
     // ]);
 });
 
-Route::prefix('ordem-servico')->group(function(){
-
-    Route::get('/{id}/pdf', function($id){
-
-    });
-});
-
 
 Route::get('/teste', function (){
     $var = OrdemServico::find(2);
     dd($var->notaRemessa->chave_nota);
 });
+
+Route::get('nf/{chave}/preview', function($chave){
+    
+    $resp = (new NfeService())->consulta($chave);
+    dd($resp,$chave);
+    if($resp->sucesso){
+        $pdf = base64_decode($resp->pdf);
+
+    }
+    
+    return response($pdf)
+        ->header('Content-Type', 'application/pdf')
+        ->header('Content-Disposition', 'inline; filename="documento.pdf"');
+        
+})->name('nfe.preview.pdf');

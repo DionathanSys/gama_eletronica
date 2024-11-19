@@ -9,8 +9,7 @@ use App\Filament\Resources\OrdemServicoResource\RelationManagers;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensOrcamentoRelationManager;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensOrdensAnterioresRelationManager;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensRelationManager;
-use App\Fiscal\CreateNfRemessaAction;
-use App\Fiscal\CreateNfRetornoAction;
+use App\Actions\Fiscal\CreateNfRetornoAction;
 use App\Models\Equipamento;
 use App\Models\OrdemServico;
 use App\Models\Parceiro;
@@ -130,8 +129,8 @@ class OrdemServicoResource extends Resource
                 Tables\Filters\TernaryFilter::make('email_verified_at')
                     ->label('Com NF-e Remessa')
                     ->placeholder('Todas')
-                    ->trueLabel('Possui')
-                    ->falseLabel('Não possui')
+                    ->trueLabel('Sim')
+                    ->falseLabel('Não')
                     ->queries(
                         true: fn (Builder $query) => $query->whereNotNull('nota_entrada_id'),
                         false: fn (Builder $query) => $query->whereNull('nota_entrada_id'),
@@ -154,9 +153,9 @@ class OrdemServicoResource extends Resource
                     Tables\Actions\BulkAction::make('nf_retorno')
                         ->label('Emitir NF-e Retorno')
                         ->action(function(Collection $record){
-                            $notaRetorno = (new CreateNfRetornoAction($record));
+                            $notaRetorno = (new CreateNfRetornoAction($record))->exec();
                             if ($notaRetorno){
-                                return redirect(FaturaResource::getUrl('edit', ['record' => $fatura->id,]));
+                                return redirect()->route('nfe.preview.pdf', ['chave' => $notaRetorno->chave]);
                             }
                         }),
                 ]),
@@ -167,6 +166,14 @@ class OrdemServicoResource extends Resource
 
             ])
             ->defaultGroup('parceiro.nome')
+            ->filtersTriggerAction(
+                fn(Tables\Actions\Action $action) => $action
+                    ->button()
+                    ->slideOver()
+                    ->label('Filtros')
+            )
+            ->paginated([10, 25, 50, 100])
+            ->striped()
             ->poll('5s');
     }
 

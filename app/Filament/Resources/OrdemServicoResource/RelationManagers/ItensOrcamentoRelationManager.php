@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\OrdemServicoResource\RelationManagers;
 
+use App\Actions\OrdemServico\UpdateValorOrdemActions;
 use App\Enums\StatusOrdemServicoEnum;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -84,14 +85,19 @@ class ItensOrcamentoRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->iconButton(),
+                    ->iconButton()
+                    ->visible(fn()=>$this->getOwnerRecord()->status == StatusOrdemServicoEnum::PENDENTE->value ? true : false),
+            
                 Tables\Actions\DeleteAction::make()
-                    ->iconButton(),
+                    ->iconButton()
+                    ->visible(fn()=>$this->getOwnerRecord()->status == StatusOrdemServicoEnum::PENDENTE->value ? true : false),
+                    
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->poll('5s');
     }
 }

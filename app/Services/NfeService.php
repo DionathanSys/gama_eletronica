@@ -2,30 +2,29 @@
 
 namespace App\Services;
 
-use App\Models\OrdemServico;
-use CloudDfe\SdkPHP\Nfse;
+use CloudDfe\SdkPHP\Nfe;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Http;
 
 class NfeService
 {
-    protected   Nfse    $nfe;
+    protected   Nfe    $nfe;
     protected   array   $params;
     
     public function __construct()
     {
-        $url = "https://hom-api.integranotas.com.br/v1/soft/emitente/45790457000185"; //Homologação
-        // $url = "https://api.integranotas.com.br/v1/soft/emitente/45790457000185";     //Produção
+        // $url = "https://hom-api.integranotas.com.br/v1/soft/emitente/45790457000185"; //Homologação
+        // // $url = "https://api.integranotas.com.br/v1/soft/emitente/45790457000185";     //Produção
 
-        $dadosEmitente = Http::withToken(env('TOKEN_INTEGRA_NOTAS_SOFTHOUSE'))->get($url);
+        // $dadosEmitente = Http::withToken(env('TOKEN_INTEGRA_NOTAS_SOFTHOUSE'))->get($url);
 
-        if ($dadosEmitente->emitente()->sucesso()){
-            $token = $dadosEmitente()->token;
-        }
+        // if ($dadosEmitente->emitente()->sucesso()){
+        //     $token = $dadosEmitente()->token;
+        // }
 
         $this->params = [
-            "token" => $token,
-            "ambiente" => 1,
+            "token" => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbXAiOjIwMTcsInVzciI6NTAwLCJ0cCI6MiwiaWF0IjoxNzMxMDMzOTczfQ.B21Dp8XbkbnW7MTEAWrsi1yodnm810Bq70fNv0zKkmc',
+            "ambiente" => 2,
             "options" => [
                 "debug" => false,
                 "timeout" => 60,
@@ -34,16 +33,23 @@ class NfeService
             ]
         ];
         
-        $this->nfe = new Nfse($this->params);
+        $this->nfe = new Nfe($this->params);
     }
-    public function cria(Collection $ordensServico)
+    public function cria($payload)
     {
-        
+        $resp = $this->nfe->cria($payload);
+        return $resp;
     }
 
     public function consulta(string $chave)
     {
+        $payload = [
+            "chave" => $chave,
+        ];
 
+        return $this->nfe->pdf($payload);
+    
+        
     }
 
 }
