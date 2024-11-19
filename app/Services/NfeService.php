@@ -13,17 +13,11 @@ class NfeService
     
     public function __construct()
     {
-        // $url = "https://hom-api.integranotas.com.br/v1/soft/emitente/45790457000185"; //Homologação
-        // // $url = "https://api.integranotas.com.br/v1/soft/emitente/45790457000185";     //Produção
-
-        // $dadosEmitente = Http::withToken(env('TOKEN_INTEGRA_NOTAS_SOFTHOUSE'))->get($url);
-
-        // if ($dadosEmitente->emitente()->sucesso()){
-        //     $token = $dadosEmitente()->token;
-        // }
 
         $this->params = [
-            "token" => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbXAiOjIwMTcsInVzciI6NTAwLCJ0cCI6MiwiaWF0IjoxNzMxMDMzOTczfQ.B21Dp8XbkbnW7MTEAWrsi1yodnm810Bq70fNv0zKkmc',
+            //Wp impl
+            "token" => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbXAiOjE5NTIsInVzciI6NTAwLCJ0cCI6MiwiaWF0IjoxNzI3NTE3OTQ4fQ.OxOzaFpxkanEYrwXrVEQIGBQcFxidWWs9clnmC-m8kI',
+            // "token" => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbXAiOjIwMTcsInVzciI6NTAwLCJ0cCI6MiwiaWF0IjoxNzMxMDMzOTczfQ.B21Dp8XbkbnW7MTEAWrsi1yodnm810Bq70fNv0zKkmc',
             "ambiente" => 2,
             "options" => [
                 "debug" => false,
@@ -37,8 +31,7 @@ class NfeService
     }
     public function cria($payload)
     {
-        $resp = $this->nfe->cria($payload);
-        return $resp;
+        return $this->nfe->cria($payload);
     }
 
     public function consulta(string $chave)
@@ -47,7 +40,7 @@ class NfeService
             "chave" => $chave,
         ];
 
-        return $this->nfe->pdf($payload);
+        return $this->nfe->consulta($payload);
     
         
     }

@@ -46,22 +46,25 @@ Route::get('/', function () {
 });
 
 
-Route::get('/teste', function (){
+Route::get('/teste', function () {
     $var = OrdemServico::find(2);
     dd($var->notaRemessa->chave_nota);
 });
 
-Route::get('nf/{chave}/preview', function($chave){
-    
+Route::get('nf/{chave}/preview', function ($chave) {
+
     $resp = (new NfeService())->consulta($chave);
-    dd($resp,$chave);
-    if($resp->sucesso){
+
+    if ($resp->sucesso) {
         $pdf = base64_decode($resp->pdf);
 
+        return response($pdf)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="documento.pdf"');
     }
-    
-    return response($pdf)
-        ->header('Content-Type', 'application/pdf')
-        ->header('Content-Disposition', 'inline; filename="documento.pdf"');
-        
 })->name('nfe.preview.pdf');
+
+Route::get('/cnpj', function(){
+    $resp = (new BuscaCNPJ('36286501000123'))->getInfo();
+    dd($resp);
+});

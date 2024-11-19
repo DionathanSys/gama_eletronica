@@ -154,7 +154,9 @@ class OrdemServicoResource extends Resource
                         ->label('Emitir NF-e Retorno')
                         ->action(function(Collection $record){
                             $notaRetorno = (new CreateNfRetornoAction($record))->exec();
+                            
                             if ($notaRetorno){
+                                sleep(3);
                                 return redirect()->route('nfe.preview.pdf', ['chave' => $notaRetorno->chave]);
                             }
                         }),

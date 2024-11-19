@@ -45,7 +45,7 @@ class NfeDTO
         $this->natureza_operacao = $natureza_operacao;
         $this->destinatario = (new ClienteDTO($cliente))->toArray();
 
-        $this->numero = 1;
+        $this->numero = 4;
         $this->serie = 1;
 
         $this->tipo_operacao = 1;
