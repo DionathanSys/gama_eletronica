@@ -110,12 +110,16 @@ class EditOrdemServico extends EditRecord
                         ->label('Vinc. NF-e de Remessa')
                         ->color('info')
                         ->icon('heroicon-o-document-arrow-down')
+                        ->fillForm(fn (OrdemServico $record): array => [
+                            'chave_nota' => $record->notaRemessa->chave_nota ?? '',
+                        ])
                         ->form([
                             TextInput::make('chave_nota')
                                 ->label('Chave de Acesso NF-e')
                                 ->length(44)
                                 ->required(),
                         ])
+                        ->requiresConfirmation(fn(OrdemServico $record)=> $record->notaRemessa ? true : false)
                         ->action(fn(OrdemServico $record, $data) => VinculaNfRemessaAction::vinculaOrdem($record, $data['chave_nota'])),
 
                 ])->dropdown(false),

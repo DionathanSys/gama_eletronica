@@ -17,7 +17,7 @@ return new class extends Migration
             $table->decimal('valor_total', 8, 2);
             $table->decimal('desconto', 8,2)->default(0);
             $table->string('status');
-            $table->string('path_pdf');
+            $table->string('path_pdf')->nullable();
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('updated_by')->constrained('users');
             $table->timestamps();

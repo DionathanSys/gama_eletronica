@@ -9,6 +9,8 @@ use App\Filament\Resources\OrdemServicoResource\RelationManagers;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensOrcamentoRelationManager;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensOrdensAnterioresRelationManager;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensRelationManager;
+use App\Fiscal\CreateNfRemessaAction;
+use App\Fiscal\CreateNfRetornoAction;
 use App\Models\Equipamento;
 use App\Models\OrdemServico;
 use App\Models\Parceiro;
@@ -125,7 +127,16 @@ class OrdemServicoResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\TernaryFilter::make('email_verified_at')
+                    ->label('Com NF-e Remessa')
+                    ->placeholder('Todas')
+                    ->trueLabel('Possui')
+                    ->falseLabel('Não possui')
+                    ->queries(
+                        true: fn (Builder $query) => $query->whereNotNull('nota_entrada_id'),
+                        false: fn (Builder $query) => $query->whereNull('nota_entrada_id'),
+                        blank: fn (Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
+                    )
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
@@ -140,8 +151,22 @@ class OrdemServicoResource extends Resource
                                 return redirect(FaturaResource::getUrl('edit', ['record' => $fatura->id,]));
                             }
                         }),
+                    Tables\Actions\BulkAction::make('nf_retorno')
+                        ->label('Emitir NF-e Retorno')
+                        ->action(function(Collection $record){
+                            $notaRetorno = (new CreateNfRetornoAction($record));
+                            if ($notaRetorno){
+                                return redirect(FaturaResource::getUrl('edit', ['record' => $fatura->id,]));
+                            }
+                        }),
                 ]),
             ])
+            ->groups([
+                Tables\Grouping\Group::make('parceiro.nome')
+                    ->collapsible(),
+
+            ])
+            ->defaultGroup('parceiro.nome')
             ->poll('5s');
     }
 
