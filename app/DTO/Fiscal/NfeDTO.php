@@ -48,10 +48,10 @@ class NfeDTO
         $this->natureza_operacao = $natureza_operacao;
         $this->destinatario = (new ClienteDTO($cliente))->toArray();
 
-        $nroNotaAtual = NumeroNotaSaida::where('serie_nota', 6)->max('nro_nota');
+        $nroNotaAtual = NumeroNotaSaida::where('serie_nota', 5)->max('nro_nota');
 
         $this->numero = $nroNotaAtual ? $nroNotaAtual + 1 : 1;;
-        $this->serie = 6;
+        $this->serie = 5;
 
         $this->tipo_operacao = 1;
         $this->finalidade_emissao = 1;
@@ -68,7 +68,7 @@ class NfeDTO
 
         $this->pagamento['formas_pagamento'] = array(['meio_pagamento' => 90, 'valor' => 0]);
 
-        $this->informacoes_adicionais_contribuinte = 'Retorno de mercadoria ref. NF-e 400 - 06/11/2024';
+        $this->informacoes_adicionais_contribuinte = 'Retorno de mercadoria ref. NF-e 414 - 18/11/2024, NF-e 325 - 02/08/2024, NF-e 335 - 14/08/2024';
 
         $i = 0;
         $ordensServico->each(function($ordem) use(&$i, $cliente) {
