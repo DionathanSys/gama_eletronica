@@ -30,17 +30,17 @@ class CreateNfRetornoAction
         }
 
         //Valida se as ordens ainda não tiveram vinculo com NF-e de Retorno
-        if (!$this->ordensServico->every(fn($ordem) => $ordem->nota_retorno_id == null)) {
+        if ($this->ordensServico->every(fn($ordem) => $ordem->nota_entrada_id != null)) {
             $this->notificaErro('Ordem já está vinculada a uma NF-e de retorno');
             return false;
         }
         
         //Valida se as ordens possuem vinculo com NF-e de Remessa
-        if (!$this->ordensServico->every(fn($ordem) => $ordem->itemNotaRemessa != null)) {
+        if ($this->ordensServico->every(fn($ordem) => $ordem->itemNotaRemessa == null)) {
             $this->notificaErro('Ordem sem vinculo com NF-e de remessa');
             return false;
         }
-
+        
         $chavesNota = $this->ordensServico
                         ->map(fn($ordem) => $ordem->itemNotaRemessa?->chave_nota) // Obter o campo 'chave_nota' do relacionamento
                         ->filter() // Remover valores nulos
