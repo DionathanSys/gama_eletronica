@@ -3,8 +3,10 @@
 namespace App\DTO\Fiscal;
 
 use App\DTO\Cliente\ClienteDTO;
+use App\Models\NumeroNotaSaida;
 use App\Models\Parceiro;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Session;
 
 class NfeDTO
@@ -41,12 +43,14 @@ class NfeDTO
     public $informacoes_adicionais_contribuinte;
 
 
-    public function __construct(Parceiro $cliente, array $notas_referenciadas, array $itens, string $natureza_operacao)
+    public function __construct(Parceiro $cliente, array $notas_referenciadas, Collection $ordensServico, string $natureza_operacao)
     {
         $this->natureza_operacao = $natureza_operacao;
         $this->destinatario = (new ClienteDTO($cliente))->toArray();
 
-        $this->numero = 1;
+        $nroNotaAtual = NumeroNotaSaida::where('serie_nota', 5)->max('nro_nota');
+
+        $this->numero = $nroNotaAtual ? $nroNotaAtual + 1 : 1;;
         $this->serie = 5;
 
         $this->tipo_operacao = 1;
@@ -66,19 +70,20 @@ class NfeDTO
 
         $this->informacoes_adicionais_contribuinte = 'Retorno de mercadoria ref. NF-e 400 - 06/11/2024';
 
-        foreach ($itens as $key => $value){
+        $i = 0;
+        $ordensServico->each(function($ordem) use(&$i, $cliente) {
 
             $this->itens[] = [
-                'numero_item' => $key + 1,
-                'codigo_produto' => 90,
+                'numero_item' => ++$i,
+                'codigo_produto' => $ordem->itemNotaRemessa->codigo_item,
                 'origem' => 0,
-                'descricao' => 'PLACA DE NUCLEO 1520 VJ', 
-                'codigo_ncm' => '84439929',
-                'cfop' => 6916,
+                'descricao' => $ordem->equipamento->descricao, 
+                'codigo_ncm' => $ordem->itemNotaRemessa->ncm_item,
+                'cfop' => $cliente->enderecos->first()->estado == 'SC' ? 5916 : 6916,
                 'unidade_comercial' => 'UN',
                 'quantidade_comercial' => 1, 
-                'valor_unitario_comercial' => 100, 
-                'valor_bruto' => 100, 
+                'valor_unitario_comercial' => $ordem->itemNotaRemessa->valor, 
+                'valor_bruto' => $ordem->itemNotaRemessa->valor, 
                 'inclui_no_total' => 1,
                 'imposto' => [
                     'icms' => (object) ['situacao_tributaria' => 400],
@@ -86,7 +91,30 @@ class NfeDTO
                     'cofins' => (object) ['situacao_tributaria' => '08'],
                 ],
             ];
-        }   
+        });
+
+
+        // foreach ($itens as $key => $value){
+
+            //     $this->itens[] = [
+            //         'numero_item' => $key + 1,
+            //         'codigo_produto' => 90,
+            //         'origem' => 0,
+            //         'descricao' => 'PLACA DE NUCLEO 1520 VJ', 
+            //         'codigo_ncm' => '84439929',
+            //         'cfop' => 6916,
+            //         'unidade_comercial' => 'UN',
+            //         'quantidade_comercial' => 1, 
+            //         'valor_unitario_comercial' => 100, 
+            //         'valor_bruto' => 100, 
+            //         'inclui_no_total' => 1,
+            //         'imposto' => [
+            //             'icms' => (object) ['situacao_tributaria' => 400],
+            //             'pis' => (object) ['situacao_tributaria' => '08'],
+            //             'cofins' => (object) ['situacao_tributaria' => '08'],
+            //         ],
+            //     ];
+            // }   
 
     }
 

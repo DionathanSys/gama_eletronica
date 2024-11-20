@@ -36,34 +36,43 @@ class CreateNfRetornoAction
         }
         
         //Valida se as ordens possuem vinculo com NF-e de Remessa
-        if (!$this->ordensServico->every(fn($ordem) => $ordem->nota_entrada_id != null)) {
+        if (!$this->ordensServico->every(fn($ordem) => $ordem->itemNotaRemessa != null)) {
             $this->notificaErro('Ordem sem vinculo com NF-e de remessa');
             return false;
         }
 
-        $idNotasRemessa = $this->ordensServico
-                            ->unique('nota_entrada_id')
-                            ->pluck('nota_entrada_id')
-                            ->toArray();
+        $chavesNota = $this->ordensServico
+                        ->map(fn($ordem) => $ordem->itemNotaRemessa?->chave_nota) // Obter o campo 'chave_nota' do relacionamento
+                        ->filter() // Remover valores nulos
+                        ->unique() // Remover duplicados
+                        ->values() // Reindexar a collection
+                        ->toArray();
 
-        $chaveNotasRemessa = NotaEntrada::whereIn('id', $idNotasRemessa)->pluck('chave_nota')->toArray();
-
-        $idEquipamentos = $this->ordensServico->pluck('equipamento_id')->toArray();
-        $equipamentos = Equipamento::whereIn('id', $idEquipamentos)->pluck('descricao')->toArray();
-    
         $payload = new NfeDTO(
             $this->cliente, 
-            $chaveNotasRemessa,
-            $equipamentos,
+            $chavesNota,
+            $this->ordensServico,
             NaturezaOperacaoEnum::RETORNO_MERCADORIA->description(), 
         );
+        
+        $resp = (new NfeService())->cria($payload->toArray());
 
-        dd($payload,$this->cliente, 
-        $chaveNotasRemessa,
-        $equipamentos,);
-        // $resp = (new NfeService())->cria($payload->toArray());
+        sleep(4);
 
-        sleep(3);
+        if ($resp->sucesso){
+
+            $notaRemessa = NotaEntrada::create([
+                'parceiro_id' => $this->ordensServico->first()->parceiro_id,
+                'natureza_operacao' => NaturezaOperacaoEnum::RETORNO_MERCADORIA->description(),
+                'chave_nota' => $resp->chave,
+            ]);
+
+            $this->ordensServico->each(function($ordem) use($notaRemessa) {
+                $ordem->update([
+                    'nota_entrada_id' => $notaRemessa->id,
+                ]);
+            });
+        }
 
         return $resp;
     }
