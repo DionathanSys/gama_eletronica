@@ -48,10 +48,10 @@ class NfeDTO
         $this->natureza_operacao = $natureza_operacao;
         $this->destinatario = (new ClienteDTO($cliente))->toArray();
 
-        $nroNotaAtual = NumeroNotaSaida::where('serie_nota', 5)->max('nro_nota');
+        $nroNotaAtual = NumeroNotaSaida::where('serie_nota', 6)->max('nro_nota');
 
         $this->numero = $nroNotaAtual ? $nroNotaAtual + 1 : 1;;
-        $this->serie = 5;
+        $this->serie = 6;
 
         $this->tipo_operacao = 1;
         $this->finalidade_emissao = 1;
