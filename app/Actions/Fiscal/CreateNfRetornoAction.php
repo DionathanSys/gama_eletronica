@@ -10,7 +10,7 @@ use App\Models\OrdemServico;
 use App\Models\Parceiro;
 use App\Services\NfeService;
 use Filament\Notifications\Notification;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Collection; 
 
 class CreateNfRetornoAction
 {
@@ -58,7 +58,10 @@ class CreateNfRetornoAction
             NaturezaOperacaoEnum::RETORNO_MERCADORIA->description(), 
         );
 
-        $resp = (new NfeService())->cria($payload->toArray());
+        dd($payload,$this->cliente, 
+        $chaveNotasRemessa,
+        $equipamentos,);
+        // $resp = (new NfeService())->cria($payload->toArray());
 
         sleep(3);
 

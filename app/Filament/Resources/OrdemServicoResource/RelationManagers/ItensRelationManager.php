@@ -119,7 +119,7 @@ class ItensRelationManager extends RelationManager
                     ->afterStateUpdated(function(Forms\Set $set, Forms\Get $get){
                         $valorUnitarioServico = (Servico::find($get('servico_id')))->valor_unitario ?? 1;
                         $set('valor_unitario', $valorUnitarioServico ?? 0.01);
-                        $set('valor_total', number_format($valorUnitarioServico * $get('quantidade')));
+                        $set('valor_total', $valorUnitarioServico * $get('quantidade'));
                     });
     }
 
@@ -134,7 +134,7 @@ class ItensRelationManager extends RelationManager
                     ->afterStateUpdated(function(Forms\Set $set, Forms\Get $get){
                         $quantidade = $get('quantidade') ?? 1;
                         $valor_unitario = $get('valor_unitario') ?? 0.01;
-                        $set('valor_total', number_format(($quantidade * $valor_unitario), 2));
+                        $set('valor_total', ($quantidade * $valor_unitario));
                     });
     }
    
@@ -150,7 +150,8 @@ class ItensRelationManager extends RelationManager
                     ->afterStateUpdated(function(Forms\Set $set, Forms\Get $get){
                         $quantidade = $get('quantidade') ?? 1;
                         $valor_unitario = $get('valor_unitario') ?? 0.01;
-                        $set('valor_total', number_format(($quantidade * $valor_unitario), 2));
+                        // dd($valor_unitario, number_format(($quantidade * $valor_unitario), 2));
+                        $set('valor_total', ($quantidade * $valor_unitario));
                     });
     }
 
@@ -165,8 +166,8 @@ class ItensRelationManager extends RelationManager
                     ->live(onBlur: true)
                     ->afterStateUpdated(function(Forms\Set $set, Forms\Get $get){
                         $quantidade = $get('quantidade') ?? 1;
-                        $valor_total = number_format(($get('valor_total') ?? 0.01), 2);
-                        $valor_unitario = number_format(($valor_total / $quantidade), 2);
+                        $valor_total = $get('valor_total');
+                        $valor_unitario = ($valor_total / $quantidade);
 
                         if($valor_unitario > 0.01){
                             $set('valor_unitario', $valor_unitario);

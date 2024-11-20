@@ -38,6 +38,7 @@ class NfeDTO
 
     public $frete;
     public $pagamento;
+    public $informacoes_adicionais_contribuinte;
 
 
     public function __construct(Parceiro $cliente, array $notas_referenciadas, array $itens, string $natureza_operacao)
@@ -45,8 +46,8 @@ class NfeDTO
         $this->natureza_operacao = $natureza_operacao;
         $this->destinatario = (new ClienteDTO($cliente))->toArray();
 
-        $this->numero = 4;
-        $this->serie = 1;
+        $this->numero = 1;
+        $this->serie = 5;
 
         $this->tipo_operacao = 1;
         $this->finalidade_emissao = 1;
@@ -63,19 +64,21 @@ class NfeDTO
 
         $this->pagamento['formas_pagamento'] = array(['meio_pagamento' => 90, 'valor' => 0]);
 
+        $this->informacoes_adicionais_contribuinte = 'Retorno de mercadoria ref. NF-e 400 - 06/11/2024';
+
         foreach ($itens as $key => $value){
 
             $this->itens[] = [
                 'numero_item' => $key + 1,
-                'codigo_produto' => $key + 1, // Ajuste conforme necessário
+                'codigo_produto' => 90,
                 'origem' => 0,
-                'descricao' => 0, // Ajuste conforme necessário
-                'codigo_ncm' => '85389010',
-                'cfop' => 5916,
+                'descricao' => 'PLACA DE NUCLEO 1520 VJ', 
+                'codigo_ncm' => '84439929',
+                'cfop' => 6916,
                 'unidade_comercial' => 'UN',
-                'quantidade_comercial' => 1, // Ajuste conforme necessário
-                'valor_unitario_comercial' => 0, // Ajuste conforme necessário
-                'valor_bruto' => 0, // Ajuste conforme necessário
+                'quantidade_comercial' => 1, 
+                'valor_unitario_comercial' => 100, 
+                'valor_bruto' => 100, 
                 'inclui_no_total' => 1,
                 'imposto' => [
                     'icms' => (object) ['situacao_tributaria' => 400],
@@ -84,8 +87,6 @@ class NfeDTO
                 ],
             ];
         }   
-
-        // $this->itens = [$this->itens];
 
     }
 
@@ -106,6 +107,7 @@ class NfeDTO
             "frete" => $this->frete,
             "pagamento" => $this->pagamento,
             "itens" => $this->itens,
+            "informacoes_adicionais_contribuinte" => $this->informacoes_adicionais_contribuinte,
         ];
     }
 }

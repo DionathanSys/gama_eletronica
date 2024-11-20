@@ -12,6 +12,7 @@ use App\Models\OrdemServico;
 use App\Actions\NotaFiscalMercadoria\VinculaNfRemessaAction;
 use Filament\Actions;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Support\Enums\ActionSize;
@@ -111,16 +112,37 @@ class EditOrdemServico extends EditRecord
                         ->color('info')
                         ->icon('heroicon-o-document-arrow-down')
                         ->fillForm(fn (OrdemServico $record): array => [
-                            'chave_nota' => $record->notaRemessa->chave_nota ?? '',
+                            'chave_nota' => $record->itemNotaRemessa->chave_nota ?? '',
+                            'codigo_item' => $record->itemNotaRemessa->codigo_item ?? '',
+                            'ncm_item' => $record->itemNotaRemessa->ncm_item ?? '',
+                            'valor' => $record->itemNotaRemessa->valor ?? '',
                         ])
-                        ->form([
-                            TextInput::make('chave_nota')
-                                ->label('Chave de Acesso NF-e')
-                                ->length(44)
-                                ->required(),
-                        ])
-                        ->requiresConfirmation(fn(OrdemServico $record)=> $record->notaRemessa ? true : false)
-                        ->action(fn(OrdemServico $record, $data) => VinculaNfRemessaAction::vinculaOrdem($record, $data['chave_nota'])),
+                        ->form(function(Form $form){
+                            return $form->columns(6)->schema([
+                                TextInput::make('chave_nota')
+                                    ->columnSpan(6)
+                                    ->label('Chave de Acesso NF-e')
+                                    ->length(44)
+                                    ->required(),
+                                TextInput::make('codigo_item')
+                                    ->columnSpan(2)
+                                    ->label('Cód. Item')
+                                    ->maxLength(15)
+                                    ->required(),
+                                TextInput::make('ncm_item')
+                                    ->columnSpan(2)
+                                    ->label('NCM Item NF')
+                                    ->maxLength(15)
+                                    ->required(),
+                                TextInput::make('valor')
+                                    ->columnSpan(2)
+                                    ->label('Valor Item')
+                                    ->numeric()
+                                    ->required(),
+                            ]);
+                        })
+                        ->requiresConfirmation(fn(OrdemServico $record)=> $record->itemNotaRemessa ? true : false)
+                        ->action(fn(OrdemServico $record, $data) => VinculaNfRemessaAction::vinculaOrdem($record, $data)),
 
                 ])->dropdown(false),
 

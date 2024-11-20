@@ -53,9 +53,9 @@ class OrdemServico extends Model
 
     }
 
-    public function notaRemessa(): BelongsTo
+    public function itemNotaRemessa(): HasOne
     {
-        return $this->BelongsTo(NotaEntrada::class, 'nota_entrada_id', 'id');
+        return $this->HasOne(ItemNotaRemessa::class);
     }
 
     /*

@@ -8,7 +8,7 @@ use App\Services\BuscaCNPJ;
 use App\Services\NfeService;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
+/* Route::get('/', function () {
 
     // Servico::insert([
     //     ['nome' => 'Manutenção do sensor de temperatura', 'valor_unitario' => 150.00, 'created_by' => 1, 'updated_by' => 1],
@@ -43,7 +43,7 @@ Route::get('/', function () {
     //     ['nome' => 'Troca de módulo de controle remoto', 'valor_unitario' => 360.00, 'created_by' => 1, 'updated_by' => 1],
     //     ['nome' => 'Instalação de novo sensor de pressão', 'valor_unitario' => 240.00, 'created_by' => 1, 'updated_by' => 1],
     // ]);
-});
+}); */
 
 
 Route::get('/teste', function () {
@@ -56,6 +56,9 @@ Route::get('nf/{chave}/preview', function ($chave) {
     $resp = (new NfeService())->consulta($chave);
 
     if ($resp->sucesso) {
+
+        if($resp->pdf == null){sleep(3);}
+        
         $pdf = base64_decode($resp->pdf);
 
         return response($pdf)
