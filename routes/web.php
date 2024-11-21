@@ -69,5 +69,7 @@ Route::get('nf/{chave}/preview', function ($chave) {
 
 Route::get('/cnpj/{cnpj}', function($cnpj){
     $resp = (new BuscaCNPJ($cnpj))->getInfo();
-    dd($resp,$resp->inscricoes_estaduais[0]->inscricao_estadual);
+    if ($resp){
+        dd($resp,$resp->inscricoes_estaduais[0]->inscricao_estadual);
+    }
 });
