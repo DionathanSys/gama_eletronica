@@ -5,6 +5,7 @@ namespace App\Filament\Resources\OrdemServicoResource\RelationManagers;
 use App\Actions\OrdemServico\CreateItemOrdemActions;
 use App\Actions\OrdemServico\UpdateValorOrdemActions;
 use App\Enums\StatusOrdemServicoEnum;
+use App\Filament\Resources\ServicoResource;
 use App\Models\ItemOrdemServico;
 use App\Models\OrdemServico;
 use App\Models\Servico;
@@ -120,6 +121,38 @@ class ItensRelationManager extends RelationManager
                         $valorUnitarioServico = (Servico::find($get('servico_id')))->valor_unitario ?? 1;
                         $set('valor_unitario', $valorUnitarioServico ?? 0.01);
                         $set('valor_total', $valorUnitarioServico * $get('quantidade'));
+                    })
+                    ->createOptionForm(function(Form $form){
+                        return $form->columns(5)->schema([
+                            Forms\Components\TextInput::make('nome')
+                                ->columnSpan(2)
+                                ->required()
+                                ->autocomplete(false)
+                                ->maxLength(170),
+
+                            Forms\Components\TextInput::make('descricao')
+                                ->columnSpan(2)
+                                ->label('Descrição')
+                                ->autocomplete(false)
+                                ->maxLength(250),
+                            
+                            Forms\Components\TextInput::make('valor_unitario')
+                                ->columnSpan(1)
+                                ->label('Vlr. Unitário')
+                                ->numeric()
+                                ->minValue(0.01)
+                                ->prefix('R$'),
+                        ]);
+                    }
+                    )
+                    ->createOptionUsing(function (array $data, Forms\Get $get): int {
+                        $data['nome'] = $data['nome'];
+                        $data['descricao'] = $data['descricao'];
+                        $data['valor_unitario'] = $data['valor_unitario'];
+                        $data['created_by'] = Auth::id();
+                        $data['updated_by'] = Auth::id();
+                        $servico = Servico::create($data);
+                        return $servico->id;
                     });
     }
 

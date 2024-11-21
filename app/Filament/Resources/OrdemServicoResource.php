@@ -53,6 +53,7 @@ class OrdemServicoResource extends Resource
                                 static::getStatusFormField(),
                                 static::getFaturaFormField(),
                                 static::getRelatoClienteFormField(),
+                                static::getItensRecebidosFormField(),
                             ]),
                         Tabs\Tab::make('Anexos')
                             ->schema([
@@ -308,6 +309,11 @@ class OrdemServicoResource extends Resource
     public static function getRelatoClienteFormField(): Forms\Components\Textarea
     {
         return Forms\Components\Textarea::make('relato_cliente')
+                ->columnSpanFull();
+    } 
+    public static function getItensRecebidosFormField(): Forms\Components\Textarea
+    {
+        return Forms\Components\Textarea::make('itens_recebidos')
                 ->columnSpanFull();
     } 
 
