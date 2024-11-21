@@ -32,7 +32,13 @@ class CreateEnderecoAction
                             'pais' => Str::ascii($info_endereco->pais->nome),
                             'created_by' => Auth::id(),
                             'updated_by' => Auth::id(),
+
+                        ]);
+
+            $ie = $this->parceiro->update([
+                'inscricao_estadual' => $info_endereco->inscricoes_estaduais[0]->inscricao_estadual ?? null,
             ]);
+                
             
             return $endereco ?? false;
         }

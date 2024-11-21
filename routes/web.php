@@ -67,7 +67,7 @@ Route::get('nf/{chave}/preview', function ($chave) {
     }
 })->name('nfe.preview.pdf');
 
-Route::get('/cnpj', function(){
-    $resp = (new BuscaCNPJ('36286501000123'))->getInfo();
-    dd($resp);
+Route::get('/cnpj/{cnpj}', function($cnpj){
+    $resp = (new BuscaCNPJ($cnpj))->getInfo();
+    dd($resp,$resp->inscricoes_estaduais[0]->inscricao_estadual);
 });

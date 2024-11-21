@@ -29,7 +29,7 @@ class BuscaCNPJ
 
         // Decodifica a resposta JSON
         $resp = json_decode($resp);
-
+        
         return $resp->estabelecimento;
 
     }
