@@ -144,6 +144,7 @@ class ParceiroResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([])
             ])
+            ->defaultSort('id', 'desc')
             ->filtersTriggerAction(
                 fn(Tables\Actions\Action $action) => $action
                     ->button()

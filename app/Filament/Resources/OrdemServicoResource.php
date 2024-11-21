@@ -52,6 +52,7 @@ class OrdemServicoResource extends Resource
                                 static::getPrioridadeFormField(),
                                 static::getStatusFormField(),
                                 static::getFaturaFormField(),
+                                static::getRelatoClienteFormField(),
                             ]),
                         Tabs\Tab::make('Anexos')
                             ->schema([
@@ -234,7 +235,7 @@ class OrdemServicoResource extends Resource
     public static function getEquipamentoFormField(): Forms\Components\Select
     {
         return Forms\Components\Select::make('equipamento_id')
-                    ->columnSpan(4)
+                    ->columnSpan(5)
                     ->label('Equipamento')
                     ->placeholder('Equipamento')
                     ->relationship('equipamento', 'descricao')
@@ -302,6 +303,12 @@ class OrdemServicoResource extends Resource
                 ->label('Fatura')
                 ->columnSpan(1)
                 ->disabled();
+    } 
+
+    public static function getRelatoClienteFormField(): Forms\Components\Textarea
+    {
+        return Forms\Components\Textarea::make('relato_cliente')
+                ->columnSpanFull();
     } 
 
     public static function getImageEquipamentoFormFiel(): Forms\Components\FileUpload 
