@@ -10,7 +10,9 @@
         "filament/filament": "^3.2",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
-        "power-components/livewire-powergrid": "^6.1"
+        "power-components/livewire-powergrid": "^6.1",
+        "spatie/browsershot": "^4.3",
+        "spatie/laravel-pdf": "^1.5"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

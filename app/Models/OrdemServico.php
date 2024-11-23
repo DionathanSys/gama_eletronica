@@ -21,6 +21,16 @@ class OrdemServico extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function userCreate()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function userUpdate()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
     public function parceiro(): BelongsTo
     {
         return $this->BelongsTo(Parceiro::class);

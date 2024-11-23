@@ -7,6 +7,8 @@ use App\Models\Servico;
 use App\Services\BuscaCNPJ;
 use App\Services\NfeService;
 use Illuminate\Support\Facades\Route;
+use Spatie\Browsershot\Browsershot;
+use Spatie\LaravelPdf\Facades\Pdf;
 
 /* Route::get('/', function () {
 
@@ -72,4 +74,13 @@ Route::get('/cnpj/{cnpj}', function($cnpj){
     if ($resp){
         dd($resp,$resp->inscricoes_estaduais[0]->inscricao_estadual);
     }
+});
+
+Route::get('/pdf', function (){
+   
+    $ordem = OrdemServico::find(752);
+    return Pdf::view('padrao', [
+        'ordem' => $ordem,
+        'logo' => storage_path('app\public\logo.png')
+        ])->save(storage_path('app\public\ordem.pdf')); 
 });

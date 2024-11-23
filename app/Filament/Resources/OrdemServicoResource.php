@@ -115,6 +115,12 @@ class OrdemServicoResource extends Resource
                     ->badge()
                     ->searchable(),
 
+                Tables\Columns\TextColumn::make('userCreate.name')
+                    ->label('Criado Por'),
+                
+                Tables\Columns\TextColumn::make('userUpdate.name')
+                    ->label('Atualizado Por'),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Criado Em')
                     ->dateTime('d/m/Y')
@@ -223,7 +229,7 @@ class OrdemServicoResource extends Resource
     public static function getDataOrdemFormField(): Forms\Components\DatePicker
     {
         return  Forms\Components\DatePicker::make('data_ordem')
-                    ->columnSpan(1)
+                    ->columnSpan(2)
                     ->date('d/m/Y')
                     ->displayFormat('d/m/Y')
                     ->closeOnDateSelection()
