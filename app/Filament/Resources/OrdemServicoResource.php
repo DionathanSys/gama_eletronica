@@ -266,7 +266,7 @@ class OrdemServicoResource extends Resource
                         $data['parceiro_id'] = $get('parceiro_id') ?? null;
                         $data['created_by'] = Auth::id();
                         $data['updated_by'] = Auth::id();
-                        $data['nro_serie'] = $data['nro_serie'] ?? $data['parceiro_id'] . 'SN' . now()->timestamp;
+                        $data['nro_serie'] = $data['nro_serie'] ?? 'SN';
                         $equipamento = Equipamento::create($data);
                         return $equipamento->id;
                     });
