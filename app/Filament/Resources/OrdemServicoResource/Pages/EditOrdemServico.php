@@ -10,6 +10,7 @@ use App\Filament\Resources\FaturaResource;
 use App\Filament\Resources\OrdemServicoResource;
 use App\Models\OrdemServico;
 use App\Actions\NotaFiscalMercadoria\VinculaNfRemessaAction;
+use App\Services\DownloadPdf;
 use Filament\Actions;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -34,14 +35,23 @@ class EditOrdemServico extends EditRecord
                         ->icon('heroicon-o-clipboard-document-list')
                         ->openUrlInNewTab()
                         ->action(function (OrdemServico $record) {
-                            if ($record->toPdf) {
-                                return redirect("/ordem-servico/{$record->id}/pdf");
-                            }
-                            Notification::make()
-                                ->warning()
-                                ->title('Solicitação não concluída!')
-                                ->send();
+                            $dados = [
+                                'ordem' => $record->toArray(),
+                                'logo' => storage_path('app\public\logo.png'),
+                            ];
+
+                            return dd((new DownloadPdf())($dados, 'ordem_servico.padrao', 'testeOS'));
+                            
                         }),
+                        // ->action(function (OrdemServico $record) {
+                        //     if ($record->toPdf) {
+                        //         return redirect("/ordem-servico/{$record->id}/pdf");
+                        //     }
+                        //     Notification::make()
+                        //         ->warning()
+                        //         ->title('Solicitação não concluída!')
+                        //         ->send();
+                        // }),
 
                     Actions\Action::make('pdf-orcamento')
                         ->label('Orçamento')

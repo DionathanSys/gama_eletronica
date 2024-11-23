@@ -26,14 +26,3 @@ class CreateOrdemPdf
 
     }
 }
-
-
-namespace App\Actions;
-
-use Barryvdh\DomPDF\Facade as PDF; // Ou a biblioteca de sua preferência
-use App\Models\OrdemServico;
-
-class GerarPdfOrdemServico
-{
-    
-}

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Route;
 use Spatie\Browsershot\Browsershot;
 use Spatie\LaravelPdf\Facades\Pdf;
 
+use function Spatie\LaravelPdf\Support\pdf;
+
 /* Route::get('/', function () {
 
     // Servico::insert([
@@ -78,9 +80,15 @@ Route::get('/cnpj/{cnpj}', function($cnpj){
 
 Route::get('/pdf', function (){
    
-    $ordem = OrdemServico::find(752);
-    return Pdf::view('ordem_servico.padrao', [
-        'ordem' => $ordem,
-        'logo' => storage_path('app\public\logo.png')
-        ])->save(storage_path('app\public\ordem.pdf')); 
+    // $ordem = OrdemServico::find(752);
+    // return Pdf::view('ordem_servico.padrao', [
+    //     'ordem' => $ordem,
+    //     'logo' => storage_path('app\public\logo.png')
+    //     ])->save(storage_path('app\public\ordem.pdf')); 
+
+    return pdf()
+        ->view('ordem_servico.padrao',['logo' => storage_path('app\public\logo.png')])
+        ->name('teste.pdf')
+        ->download();
+
 });
