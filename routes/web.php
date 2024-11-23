@@ -79,7 +79,7 @@ Route::get('/cnpj/{cnpj}', function($cnpj){
 Route::get('/pdf', function (){
    
     $ordem = OrdemServico::find(752);
-    return Pdf::view('padrao', [
+    return Pdf::view('ordem_servico.padrao', [
         'ordem' => $ordem,
         'logo' => storage_path('app\public\logo.png')
         ])->save(storage_path('app\public\ordem.pdf')); 
