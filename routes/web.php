@@ -94,7 +94,12 @@ Route::get('/pdf', function (){
 });
 
 Route::get('/teste-pdf', function (){
-    return Browsershot::html('<h1>Teste</h1>')
-        ->setChromePath('/usr/bin/google-chrome') // Substitua pelo caminho do Chrome instalado
-        ->save('output.pdf');
+
+        return Browsershot::html('<h1>Teste</h1>')
+            ->setChromePath('/usr/bin/chromium-browser')
+            ->setIncludePath('$PATH:/usr/local/bin')
+            ->setNodeBinary(env('AMBIENTE') == 'windows' ? 'C:\Program Files\nodejs\node.exe' : '/usr/local/bin/node') 
+            ->setNpmBinary(env('AMBIENTE') == 'windows' ? 'C:\Program Files\nodejs\npm.cmd' : '/usr/local/bin/npm')
+            ->save('output.pdf');
+
 });
