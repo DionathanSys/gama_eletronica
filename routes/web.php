@@ -100,6 +100,6 @@ Route::get('/teste-pdf', function (){
             ->setIncludePath('$PATH:/usr/local/bin')
             ->setNodeBinary(env('AMBIENTE') == 'windows' ? 'C:\Program Files\nodejs\node.exe' : '/usr/local/bin/node') 
             ->setNpmBinary(env('AMBIENTE') == 'windows' ? 'C:\Program Files\nodejs\npm.cmd' : '/usr/local/bin/npm')
-            ->save('output.pdf');
+            ->save(storage_path('app\public\banana.pdf'));
 
 });
