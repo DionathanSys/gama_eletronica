@@ -25,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
 
         Browsershot::html('Foo')
             // ->setChromePath('/usr/local/bin/chromium-browser')
+            ->setChromePath('/usr/bin/google-chrome') 
             ->setNodeBinary(env('AMBIENTE') == 'windows' ? 'C:\Program Files\nodejs\node.exe' : '/usr/local/bin/node') 
             ->setNpmBinary(env('AMBIENTE') == 'windows' ? 'C:\Program Files\nodejs\npm.cmd' : '/usr/local/bin/node');
     }
