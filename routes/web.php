@@ -92,3 +92,9 @@ Route::get('/pdf', function (){
         ->download();
 
 });
+
+Route::get('/teste-pdf', function (){
+    return Browsershot::html('<h1>Teste</h1>')
+        ->setChromePath('/usr/bin/google-chrome') // Substitua pelo caminho do Chrome instalado
+        ->save('output.pdf');
+});
