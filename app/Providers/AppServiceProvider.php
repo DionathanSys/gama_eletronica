@@ -23,16 +23,17 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::unguard();
 
-        // Browsershot::html('Foo')
-        //     // ->setChromePath('/usr/local/bin/chromium-browser')
-        //     ->setChromePath('/usr/bin/google-chrome') 
-        //     ->setNodeBinary(env('AMBIENTE') == 'windows' ? 'C:\Program Files\nodejs\node.exe' : '/usr/local/bin/node') 
-        //     ->setNpmBinary(env('AMBIENTE') == 'windows' ? 'C:\Program Files\nodejs\npm.cmd' : '/usr/local/bin/node');
+        Browsershot::html('Foo')
+            // ->setChromePath('/usr/local/bin/chromium-browser')
+            ->setIncludePath('$PATH:/usr/local/bin')
+            ->setChromePath('/usr/bin/google-chrome') 
+            ->setNodeBinary(env('AMBIENTE') == 'windows' ? 'C:\Program Files\nodejs\node.exe' : '/usr/local/bin/node') 
+            ->setNpmBinary(env('AMBIENTE') == 'windows' ? 'C:\Program Files\nodejs\npm.cmd' : '/usr/local/bin/node');
 
-        Browsershot::url('http://example.com')
-            ->setOption('no-sandbox', true)
-            ->setOption('args', ['--no-sandbox'])
-            ->chromePath('/usr/bin/chromium-browser') // Caminho do Chromium no Ubuntu
-            ->save('example.pdf');
+        // Browsershot::url('http://example.com')
+        //     ->setOption('no-sandbox', true)
+        //     ->setOption('args', ['--no-sandbox'])
+        //     ->chromePath('/usr/bin/chromium-browser') // Caminho do Chromium no Ubuntu
+        //     ->save('example.pdf');
     }
 }
