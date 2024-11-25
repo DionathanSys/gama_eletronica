@@ -24,10 +24,9 @@ class AppServiceProvider extends ServiceProvider
         Model::unguard();
 
         Browsershot::html('Foo')
-            ->setChromePath('/usr/bin/chromium-browser')
-            ->setIncludePath('$PATH:/usr/local/bin')
-            ->setNodeBinary(env('AMBIENTE') == 'windows' ? 'C:\Program Files\nodejs\node.exe' : '/usr/local/bin/node') 
-            ->setNpmBinary(env('AMBIENTE') == 'windows' ? 'C:\Program Files\nodejs\npm.cmd' : '/usr/local/bin/npm');
+            // ->setChromePath('/usr/bin/chromium-browser')
+            ->setNodeBinary(env('AMBIENTE') == 'windows' ? 'C:\Program Files\nodejs\node.exe' : '/usr/bin/node') 
+            ->setNpmBinary(env('AMBIENTE') == 'windows' ? 'C:\Program Files\nodejs\npm.cmd' : '/usr/bin/npm');
 
         // Browsershot::url('http://example.com')
         //     ->setOption('no-sandbox', true)
