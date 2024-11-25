@@ -33,39 +33,14 @@ class EditOrdemServico extends EditRecord
                     Actions\Action::make('pdf-os')
                         ->label('Ordem de Serviço')
                         ->icon('heroicon-o-clipboard-document-list')
-                        ->openUrlInNewTab()
-                        ->action(function (OrdemServico $record) {
-                            $dados = [
-                                'ordem' => $record->toArray(),
-                                'logo' => storage_path('app\public\logo.png'),
-                            ];
+                        ->url(fn(OrdemServico $record) => route('ordem-pdf', ['id' => $record->id]))                        
+                        ->openUrlInNewTab(),
 
-                            return dd((new DownloadPdf())($dados, 'ordem_servico.padrao', 'testeOS'));
-                            
-                        }),
-                        // ->action(function (OrdemServico $record) {
-                        //     if ($record->toPdf) {
-                        //         return redirect("/ordem-servico/{$record->id}/pdf");
-                        //     }
-                        //     Notification::make()
-                        //         ->warning()
-                        //         ->title('Solicitação não concluída!')
-                        //         ->send();
-                        // }),
-
-                    Actions\Action::make('pdf-orcamento')
-                        ->label('Orçamento')
-                        ->icon('heroicon-o-clipboard-document-list')
-                        ->openUrlInNewTab()
-                        ->action(function (OrdemServico $record) {
-                            if ($record->toPdf) {
-                                return redirect("/ordem-servico/{$record->id}/orcamento/pdf");
-                            }
-                            Notification::make()
-                                ->warning()
-                                ->title('Solicitação não concluída!')
-                                ->send();
-                        }),
+                    // Actions\Action::make('pdf-orcamento')
+                    //     ->label('Orçamento')
+                    //     ->icon('heroicon-o-clipboard-document-list')
+                    //     ->openUrlInNewTab()
+                    //     ->url(route('download-pdf')),
                 ])->dropdown(false),
 
                 Actions\ActionGroup::make([

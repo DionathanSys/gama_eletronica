@@ -1,16 +1,11 @@
 <?php
 
-use App\Models\ImpostoServico;
 use App\Models\OrdemServico;
-use App\Models\Parceiro;
-use App\Models\Servico;
 use App\Services\BuscaCNPJ;
 use App\Services\NfeService;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
-use Spatie\Browsershot\Browsershot;
-use Spatie\LaravelPdf\Facades\Pdf;
-
-use function Spatie\LaravelPdf\Support\pdf;
+use HeadlessChromium\BrowserFactory;
 
 /* Route::get('/', function () {
 
@@ -76,38 +71,49 @@ Route::get('/cnpj/{cnpj}', function($cnpj){
     if ($resp){
         dd($resp,$resp->inscricoes_estaduais[0]->inscricao_estadual);
     }
+});    
+
+Route::get('/pdf', function () {
+    try {
+        // Cria a instância do navegador
+        $browserFactory = new BrowserFactory('C:/Program Files/Google/Chrome/Application/chrome.exe');
+        $browser = $browserFactory->createBrowser();
+
+        // Gera o HTML para o PDF
+        $html = view('ordem_servico.padrao')->render();
+
+        // Abre uma nova página no navegador headless
+        $page = $browser->createPage();
+        $page->navigate('data:text/html,' . $html)->waitForNavigation();
+
+        // Gera o PDF
+        $pdf = $page->pdf([
+            'printBackground' => true,
+            'format' => 'A4',
+            'marginTop' => 20,
+            'marginRight' => 20,
+            'marginBottom' => 40,
+            'marginLeft' => 20,
+        ]);
+
+        // Fecha o navegador
+        $browser->close();
+
+        // Retorna o PDF para o navegador
+        return response($pdf, 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="relatorio.pdf"');
+
+    } catch (\Exception $e) {
+        return response('Erro ao gerar o PDF: ' . $e->getMessage(), 500);
+    }
 });
 
-Route::get('/pdf', function (){
-   
-    $ordem = OrdemServico::find(752);
-    $param = [
-        'ordem' => $ordem,
-        'logo' => storage_path('app\public\logo.png')
-    ];
-
-    return Pdf::view('ordem_servico.padrao', $param)
-        ->withBrosershot(function (Browsershot $browsershot) {
-            $browsershot->setCustomTempPath('/tmp')
-            ->setChromePath('/snap/bin/chromium')
-            ->newHeadless();
-        })
-        ->save(storage_path('app\public\ordem.pdf')); 
-
-    // return pdf()
-    //     ->view('ordem_servico.padrao',['logo' => storage_path('app\public\logo.png')])
-    //     ->name('teste.pdf')
-    //     ->download();
-
-});
-
-Route::get('/teste-pdf', function (){
-
-        return Browsershot::html('<h1>Teste</h1>')
-            ->setChromePath('/usr/bin/chromium-browser')
-            ->setIncludePath('$PATH:/usr/local/bin')
-            ->setNodeBinary(env('AMBIENTE') == 'windows' ? 'C:\Program Files\nodejs\node.exe' : '/usr/local/bin/node') 
-            ->setNpmBinary(env('AMBIENTE') == 'windows' ? 'C:\Program Files\nodejs\npm.cmd' : '/usr/local/bin/npm')
-            ->save(storage_path('app\public\banana.pdf'));
-
+Route::prefix('os')->group(function() {
+    Route::get('{id}/html', function ($id){
+    
+        $ordemServico = OrdemServico::find($id);
+        
+        return view('ordem_servico.padrao', ['ordem_servico' => $ordemServico->toArray()]);
+    });
 });

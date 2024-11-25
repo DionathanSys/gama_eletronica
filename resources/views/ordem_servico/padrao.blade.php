@@ -19,7 +19,7 @@
 
       <!-- Logo e Informações da Empresa -->
       <div class="basis-1/6 mt-2">
-        <img src="{{$logo}}" alt="Logo" class="h-18 w-h-18 px-3">
+        <img src="{{storage_path('app\public\logo.png')}}" alt="Logo" class="h-18 w-h-18 px-3">
       </div>
       <div class="basis-2/6 mt-2 ms-3 text-xs">
         <p class="font-semibold">THERMO KING & CARRIER TRANSICOLD</p>
@@ -32,14 +32,14 @@
       {{-- Espaço em Branco --}}
       <div class="basis-1/6 mt-2">
       </div>
-
+     
       <!-- Ordem de Serviço e Detalhes -->
       <div class="basis-2/6 text-right mt-2">
         <div class="text-left">
           <p class="text-xs font-bold uppercase">Ordem de Serviço</p>
-          <p class="text-xl font-bold my-2">0744</p>
+          <p class="text-xl font-bold my-2">{{$ordem_servico['id']}}</p>
           <p class="font-semibold text-[7px]">TIPO: CORRETIVA</p>
-          <p class="font-semibold text-[7px]">STATUS: PENDENTE</p>
+          <p class="font-semibold text-[7px]">{{$ordem_servico['status']}}</p>
         </div>
       </div>
     </div>
@@ -153,7 +153,7 @@
 
         <!-- Logo e Informações da Empresa -->
         <div class="basis-1/6 mt-2">
-          <img src="{{$logo}}" alt="Logo" class="h-18 w-h-18 px-3">
+          <img src="{{storage_path('app\public\logo.png')}}" alt="Logo" class="h-18 w-h-18 px-3">
         </div>
         <div class="basis-2/6 mt-2 ms-3 text-xs">
           <p class="font-semibold">THERMO KING & CARRIER TRANSICOLD</p>
