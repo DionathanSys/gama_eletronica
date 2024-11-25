@@ -24,10 +24,9 @@ class AppServiceProvider extends ServiceProvider
         Model::unguard();
 
         Browsershot::html('Foo')
-            // ->setChromePath('/usr/bin/chromium-browser')
-            ->noSandbox()
-            ->setNodeBinary(env('AMBIENTE') == 'windows' ? 'C:\Program Files\nodejs\node.exe' : '/usr/bin/node') 
-            ->setNpmBinary(env('AMBIENTE') == 'windows' ? 'C:\Program Files\nodejs\npm.cmd' : '/usr/bin/npm');
+            ->setOption('executablePath', '/usr/bin/chromium') // Substitua pelo caminho correto
+            ->setOption('args', ['--no-sandbox', '--disable-setuid-sandbox']) // Evita problemas de permissões
+            ->save(storage_path('app/public/ordem.pdf'));
 
         // Browsershot::url('http://example.com')
         //     ->setOption('no-sandbox', true)

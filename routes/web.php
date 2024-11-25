@@ -81,10 +81,18 @@ Route::get('/cnpj/{cnpj}', function($cnpj){
 Route::get('/pdf', function (){
    
     $ordem = OrdemServico::find(752);
-    return Pdf::view('ordem_servico.padrao', [
+    $param = [
         'ordem' => $ordem,
         'logo' => storage_path('app\public\logo.png')
-        ])->save(storage_path('app\public\ordem.pdf')); 
+    ];
+
+    return Pdf::view('ordem_servico.padrao', $param)
+        ->withBrosershot(function (Browsershot $browsershot) {
+            $browsershot->setCustomTempPath('/tmp')
+            ->setChromePath('/usr/bin/google-chrome')
+            ->newHeadless();
+        })
+        ->save(storage_path('app\public\ordem.pdf')); 
 
     // return pdf()
     //     ->view('ordem_servico.padrao',['logo' => storage_path('app\public\logo.png')])
