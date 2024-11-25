@@ -89,7 +89,7 @@ Route::get('/pdf', function (){
     return Pdf::view('ordem_servico.padrao', $param)
         ->withBrosershot(function (Browsershot $browsershot) {
             $browsershot->setCustomTempPath('/tmp')
-            ->setChromePath('/usr/bin/google-chrome')
+            ->setChromePath('/snap/bin/chromium')
             ->newHeadless();
         })
         ->save(storage_path('app\public\ordem.pdf')); 
