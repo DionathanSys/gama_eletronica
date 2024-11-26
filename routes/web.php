@@ -124,4 +124,17 @@ Route::prefix('os')->group(function() {
         ]);
 
     })->name('os.html');
+
+    Route::get('{id}/orcamento/html', function ($id){
+    
+        $ordemServico = OrdemServico::with(['itens.servico', 'parceiro.enderecos', 'equipamento'])->findOrFail($id);
+
+        return view('ordem_servico.orcamento', [
+            'ordem_servico' => $ordemServico,
+            'itens' => $ordemServico->itens_orcamento,
+            'cliente' => $ordemServico->parceiro,
+            'equipamento' => $ordemServico->equipamento,
+        ]);
+
+    })->name('os.orcamento.html');
 });

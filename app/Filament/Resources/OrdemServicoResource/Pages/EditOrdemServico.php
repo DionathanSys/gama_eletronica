@@ -36,11 +36,12 @@ class EditOrdemServico extends EditRecord
                         ->url(fn(OrdemServico $record) => route('os.html', ['id' => $record->id]))                        
                         ->openUrlInNewTab(),
 
-                    // Actions\Action::make('pdf-orcamento')
-                    //     ->label('Orçamento')
-                    //     ->icon('heroicon-o-clipboard-document-list')
-                    //     ->openUrlInNewTab()
-                    //     ->url(route('download-pdf')),
+                    Actions\Action::make('pdf-orcamento')
+                        ->label('Orçamento')
+                        ->icon('heroicon-o-clipboard-document-list')
+                        ->url(fn(OrdemServico $record) => route('os.orcamento.html', ['id' => $record->id]))
+                        ->openUrlInNewTab(),
+
                 ])->dropdown(false),
 
                 Actions\ActionGroup::make([

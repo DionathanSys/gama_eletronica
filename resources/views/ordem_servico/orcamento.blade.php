@@ -18,7 +18,12 @@
 </head>
 <body class="">
   <div class="p-4 mt-10 mx-8">
-
+    <div class="flex items-center justify-center mb-5">
+      <div class="text-center w-full">
+        <h1 class="text-gray-700 font-bold text-3xl">ORÇAMENTO</h1>
+      </div>
+    </div>
+    
     <!-- Seção Superior -->
     <div class="flex flex-row items-start border p-4 border-black">
 
@@ -147,7 +152,7 @@
       <p class="text-center font-semibold text-sm">AS REFRIGERAÇÃO LTDA</p>
     </div>
   </div>
-
+  
   
 </div>
 </body>
