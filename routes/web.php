@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Endereco;
 use App\Models\OrdemServico;
 use App\Services\BuscaCNPJ;
 use App\Services\NfeService;
@@ -110,10 +111,17 @@ Route::get('/pdf', function () {
 });
 
 Route::prefix('os')->group(function() {
+
     Route::get('{id}/html', function ($id){
     
-        $ordemServico = OrdemServico::find($id);
-        
-        return view('ordem_servico.padrao', ['ordem_servico' => $ordemServico->toArray()]);
-    });
+        $ordemServico = OrdemServico::with(['itens.servico', 'parceiro.enderecos', 'equipamento'])->findOrFail($id);
+
+        return view('ordem_servico.padrao', [
+            'ordem_servico' => $ordemServico,
+            'itens' => $ordemServico->itens,
+            'cliente' => $ordemServico->parceiro,
+            'equipamento' => $ordemServico->equipamento,
+        ]);
+
+    })->name('os.html');
 });

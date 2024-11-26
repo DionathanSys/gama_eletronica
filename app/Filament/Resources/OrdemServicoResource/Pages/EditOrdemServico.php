@@ -33,7 +33,7 @@ class EditOrdemServico extends EditRecord
                     Actions\Action::make('pdf-os')
                         ->label('Ordem de Serviço')
                         ->icon('heroicon-o-clipboard-document-list')
-                        ->url(fn(OrdemServico $record) => route('ordem-pdf', ['id' => $record->id]))                        
+                        ->url(fn(OrdemServico $record) => route('os.html', ['id' => $record->id]))                        
                         ->openUrlInNewTab(),
 
                     // Actions\Action::make('pdf-orcamento')

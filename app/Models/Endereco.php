@@ -27,6 +27,11 @@ class Endereco extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function __toString()
+    {
+        return "Rua {$this->rua}, {$this->numero} {$this->complemento}\n{$this->bairro}, {$this->estado}";        
+    }
+
     public function setRuaAttribute($value)
     {
         $this->attributes['rua'] = strtoupper($value);
