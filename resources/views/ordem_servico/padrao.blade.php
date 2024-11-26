@@ -9,7 +9,12 @@
     <!-- <link rel="preconnect" href="https://fonts.googleapis.com"> -->
     <!-- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
     <!-- <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet"> -->
-    
+    <script>
+      // Função para abrir a caixa de diálogo de impressão assim que a página carregar
+      window.onload = function() {
+          window.print();
+      };
+  </script>
 </head>
 <body class="">
   <div class="p-4 mt-10 mx-8">
@@ -19,7 +24,7 @@
 
       <!-- Logo e Informações da Empresa -->
       <div class="basis-1/6 mt-2">
-        <img src="{{storage_path('app\public\logo.png')}}" alt="Logo" class="h-18 w-h-18 px-3">
+        <img src="{{ asset('storage/logo.png') }}" alt="Logo" class="h-18 w-h-18 px-3">
       </div>
       <div class="basis-2/6 mt-2 ms-3 text-xs">
         <p class="font-semibold">THERMO KING & CARRIER TRANSICOLD</p>
@@ -46,10 +51,10 @@
   
   <div class="flex justify-between mx-10">
     <!-- Seção de Dados do Cliente -->
-    <div class="p-4">
+    <div class="p-4 w-42">
       <h2 class="text-sm font-semibold mb-2">CLIENTE</h2>
       <p class="text-xs font-medium">{{$cliente->nome}}</p>
-      <p class="text-xs font-thin">{{$cliente->enderecos->first()}}</p>
+      <p class="text-xs font-thin whitespace-pre-line">{{$cliente->enderecos->first()}}</p>
       <p class="text-xs font-thin">Telefone: {{$contato->telefone_cel ?? ($contato->telefone_fixo ?? '')}}</p>
     </div>
   
@@ -121,7 +126,7 @@
       Autorizo a execução dos serviços discriminados e assumo a responsabilidade pelos dados fornecidos, bem como a responsabilidade da cobrança e/ou pagamento em caso de inadimplência por parte do referido cliente.
     </p>
     <h2 class="font-semibold mt-4">
-      CHAPECÓ, 19 DE NOVEMBRO DE 2024
+      {{$ordem_servico->getDataFormated()}}
     </h2>
   </div>
 
@@ -143,37 +148,7 @@
     </div>
   </div>
 
-  <div class="mt-10">
-      <!-- Seção Superior -->
-      <div class="flex flex-row items-start border p-4 border-black">
-
-        <!-- Logo e Informações da Empresa -->
-        <div class="basis-1/6 mt-2">
-          <img src="{{storage_path('app\public\logo.png')}}" alt="Logo" class="h-18 w-h-18 px-3">
-        </div>
-        <div class="basis-2/6 mt-2 ms-3 text-xs">
-          <p class="font-semibold">THERMO KING & CARRIER TRANSICOLD</p>
-          <p class="font-thin">Rua Guimorvam Moura, Travessa E, 98</p>
-          <p class="font-thin">Efapi 89809-562 - Chapecó - SC</p>
-          <p class="font-thin">Telefone: (49) 98821-2687</p>
-          <p class="font-thin">CNPJ: 45.790.457/0001-85</p>
-        </div>
-
-        {{-- Espaço em Branco --}}
-        <div class="basis-1/6 mt-2">
-        </div>
-
-        <!-- Ordem de Serviço e Detalhes -->
-        <div class="basis-2/6 text-right mt-2">
-          <div class="text-left">
-            <p class="text-xs font-bold uppercase">Ordem de Serviço</p>
-            <p class="text-xl font-bold my-2">0744</p>
-            <p class="font-semibold text-[7px]">TIPO: CORRETIVA</p>
-            <p class="font-semibold text-[7px]">STATUS: PENDENTE</p>
-          </div>
-        </div>
-      </div>
-    </div>
+  
 </div>
 </body>
 </html>

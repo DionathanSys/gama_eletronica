@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Carbon\Carbon;
 
 class OrdemServico extends Model
 {
@@ -77,5 +78,21 @@ class OrdemServico extends Model
     public function toPdf(): string|false
     {
         return false;
+    }
+
+    public function getDataFormated()
+    {
+        // Definindo a data
+        $date = Carbon::createFromFormat('Y-m-d', $this->data_ordem);
+
+        // Formatando a data no formato desejado
+        $formattedDate = $date->locale('pt_BR')->isoFormat('dddd, DD [de] MMMM [de] YYYY');
+
+        // Colocando em maiúsculas
+        $formattedDate = strtoupper($formattedDate);
+
+        // Exibindo a data
+        return 'CHAPECÓ, ' . $formattedDate;
+
     }
 }
