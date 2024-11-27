@@ -20,7 +20,7 @@
   <div class="p-4 mt-10 mx-8">
     <div class="flex items-center justify-center mb-5">
       <div class="text-center w-full">
-        <h1 class="text-gray-700 font-bold text-3xl">ORÇAMENTO</h1>
+        <h1 class="font-bold text-3xl text-red-800">ORÇAMENTO</h1>
       </div>
     </div>
     
@@ -82,8 +82,8 @@
   </div>
 
   <div class="mt-2 border border-black ">
-    <h2 class="text-sm font-semibold m-2">
-      SERVIÇOS
+    <h2 class="text-sm font-semibold m-2 text-red-800">
+      SERVIÇOS ORÇADOS
     </h2>
     <ul class="m-2">
       <li class="flex flex-row text-xs font-semibold mb-2">
@@ -100,11 +100,6 @@
           <p class="basis-1/4">{{'R$ '.number_format($item->valor_unitario, 2, '.', ',')}}</p>
           <p class="basis-1/4">{{'R$ '.number_format($item->valor_total, 2, '.', ',')}}</p>
         </li>
-        {{-- @if ($item->observacao)
-          <p class="break-words  basis-1/4">
-            <li>Obs.: {{$item->observacao}}</li>
-          </p>
-          @endif --}}
       @endforeach
     </ul>
 
@@ -116,14 +111,13 @@
       <li class="flex flex-row font-semibold text-sm">
         <p class="basis-3/4"></p>
         <p class="basis-2/4">Total em Serviços</p>
-        <p class="basis-1/4">{{'R$ '.number_format($ordem_servico->valor_total, 2, '.', ',')}}</p>
+        <p class="basis-1/4">{{'R$ '.number_format($itens->sum('valor_total'), 2, '.', ',')}}</p>
       </li>
     </ul>
   </div>
 
   <div class="grid justify-end mt-3">
     <h3 class="font-bold">VALOR DESTA FATURA {{'R$ '.number_format($ordem_servico->valor_total, 2, '.', ',')}}</h3>
-    <p class="text-xs font-thin">Dinheiro - à Vista</p>
   </div>
 
   <div class="grid justify-items-center my-10">

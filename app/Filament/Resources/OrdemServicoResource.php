@@ -315,12 +315,12 @@ class OrdemServicoResource extends Resource
     public static function getRelatoClienteFormField(): Forms\Components\Textarea
     {
         return Forms\Components\Textarea::make('relato_cliente')
-                ->columnSpanFull();
+                ->columnSpan(5);
     } 
     public static function getItensRecebidosFormField(): Forms\Components\Textarea
     {
         return Forms\Components\Textarea::make('itens_recebidos')
-                ->columnSpanFull();
+                ->columnSpan(5);
     } 
 
     public static function getImageEquipamentoFormFiel(): Forms\Components\FileUpload 

@@ -95,11 +95,6 @@
           <p class="basis-1/4">{{'R$ '.number_format($item->valor_unitario, 2, '.', ',')}}</p>
           <p class="basis-1/4">{{'R$ '.number_format($item->valor_total, 2, '.', ',')}}</p>
         </li>
-        {{-- @if ($item->observacao)
-          <p class="break-words  basis-1/4">
-            <li>Obs.: {{$item->observacao}}</li>
-          </p>
-          @endif --}}
       @endforeach
     </ul>
 
@@ -118,7 +113,6 @@
 
   <div class="grid justify-end mt-3">
     <h3 class="font-bold">VALOR DESTA FATURA {{'R$ '.number_format($ordem_servico->valor_total, 2, '.', ',')}}</h3>
-    <p class="text-xs font-thin">Dinheiro - à Vista</p>
   </div>
 
   <div class="grid justify-items-center my-10">
