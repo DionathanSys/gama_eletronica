@@ -47,6 +47,7 @@ class OrdemServicoResource extends Resource
                         Tabs\Tab::make('Geral')
                             ->columns(10)
                             ->schema([
+                                static::getIdFormField(),
                                 static::getParceiroFormField(),
                                 static::getEquipamentoFormField(),
                                 static::getVeiculoFormField(),
@@ -208,6 +209,13 @@ class OrdemServicoResource extends Resource
             'edit' => Pages\EditOrdemServico::route('/{record}/edit'),
         ];
     }
+
+    public static function getIdFormField(): Forms\Components\TextInput
+    {
+        return Forms\Components\TextInput::make('id')
+                ->columnSpan(1)
+                ->visible(fn() => Auth::id() == 1 ? true : false);
+    } 
 
     public static function getParceiroFormField(): Forms\Components\Select
     {
