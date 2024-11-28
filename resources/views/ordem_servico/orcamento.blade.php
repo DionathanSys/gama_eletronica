@@ -117,7 +117,7 @@
   </div>
 
   <div class="grid justify-end mt-3">
-    <h3 class="font-bold">VALOR DESTA FATURA {{'R$ '.number_format($ordem_servico->valor_total, 2, '.', ',')}}</h3>
+    <h3 class="font-bold">VALOR DESTA FATURA {{'R$ '.number_format($itens->sum('valor_total'), 2, '.', ',')}}</h3>
   </div>
 
   <div class="grid justify-items-center my-10">
