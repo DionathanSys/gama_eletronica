@@ -19,7 +19,7 @@ trait Notifica
     {
         Notification::make()
             ->success()
-            ->title('Falha na solicitação.')
+            ->title('Solicitação concluída.')
             ->body($body)
             ->send();
     }

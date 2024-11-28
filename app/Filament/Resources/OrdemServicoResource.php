@@ -11,6 +11,7 @@ use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensOrdensAnte
 use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensRelationManager;
 use App\Actions\Fiscal\CreateNfRetornoAction;
 use App\Enums\StatusProcessoOrdemServicoEnum;
+use App\Enums\TipoManutencaoOrdemServicoEnum;
 use App\Models\Equipamento;
 use App\Models\OrdemServico;
 use App\Models\Parceiro;
@@ -52,10 +53,11 @@ class OrdemServicoResource extends Resource
                                 static::getDataOrdemFormField(),
                                 static::getStatusProcessoFormField(),
                                 static::getPrioridadeFormField(),
-                                static::getStatusFormField(),
+                                static::getTipoManutencaoFormField(),
                                 static::getFaturaFormField(),
                                 static::getRelatoClienteFormField(),
                                 static::getItensRecebidosFormField(),
+                                static::getStatusFormField(),
                             ]),
                         Tabs\Tab::make('Anexos')
                             ->schema([
@@ -144,7 +146,7 @@ class OrdemServicoResource extends Resource
                     ->queries(
                         true: fn (Builder $query) => $query->whereNotNull('nota_entrada_id'),
                         false: fn (Builder $query) => $query->whereNull('nota_entrada_id'),
-                        blank: fn (Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
+                        blank: fn (Builder $query) => $query,
                     )
             ])
             ->actions([
@@ -244,7 +246,7 @@ class OrdemServicoResource extends Resource
     public static function getEquipamentoFormField(): Forms\Components\Select
     {
         return Forms\Components\Select::make('equipamento_id')
-                    ->columnSpan(5)
+                    ->columnSpan(4)
                     ->label('Equipamento')
                     ->placeholder('Equipamento')
                     ->relationship('equipamento', 'descricao')
@@ -313,6 +315,15 @@ class OrdemServicoResource extends Resource
             ->columnSpan(2)
             ->options(PrioridadeOrdemServicoEnum::class)
             ->default(PrioridadeOrdemServicoEnum::BAIXA);
+    }
+    
+    public static function getTipoManutencaoFormField(): Forms\Components\Select
+    {
+        return Forms\Components\Select::make('tipo_manutencao')
+            ->label('Tipo Manutenção')
+            ->columnSpan(2)
+            ->options(TipoManutencaoOrdemServicoEnum::class)
+            ->default(TipoManutencaoOrdemServicoEnum::CORRETIVA);
     }
     
     public static function getFaturaFormField(): Forms\Components\TextInput

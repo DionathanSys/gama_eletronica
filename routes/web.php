@@ -48,8 +48,10 @@ use HeadlessChromium\BrowserFactory;
 
 
 Route::get('/teste/{id}', function ($id) {
-    $ordem = OrdemServico::find($id);
-    dd($ordem->notaEntrada);
+    $ordem = OrdemServico::with(['notaEntrada', 'itemNotaRemessa'])->find($id);
+    // dd($ordem->notaEntrada);
+    dump($ordem,$ordem->notaEntrada);
+    dd($ordem->itemNotaRemessa);
 
 
 

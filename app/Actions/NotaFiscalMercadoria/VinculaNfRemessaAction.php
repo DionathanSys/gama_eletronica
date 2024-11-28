@@ -22,9 +22,11 @@ class VinculaNfRemessaAction
             return false;
         }
         
-        if ($data['chave_nota'] != $ordemServico->notaEntrada->chave_nota) {
-            self::notificaErro('É necessário excluir o vínculo, para poder alterar a chave de acesso');
-            return false;
+        if ($ordemServico->notaEntrada) {
+            if ($data['chave_nota'] != $ordemServico->notaEntrada->chave_nota) {
+                self::notificaErro('É necessário excluir o vínculo, para poder alterar a chave de acesso');
+                return false;
+            }
         }
 
         $data['serie'] = $infoChaveAcesso->serie;

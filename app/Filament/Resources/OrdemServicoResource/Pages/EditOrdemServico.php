@@ -10,6 +10,8 @@ use App\Filament\Resources\FaturaResource;
 use App\Filament\Resources\OrdemServicoResource;
 use App\Models\OrdemServico;
 use App\Actions\NotaFiscalMercadoria\VinculaNfRemessaAction;
+use App\Actions\OrdemServico\DeleteOrdemServico;
+use App\Actions\OrdemServico\DeleteOrdemServicoAction;
 use App\Services\DownloadPdf;
 use Filament\Actions;
 use Filament\Forms\Components\DatePicker;
@@ -76,11 +78,12 @@ class EditOrdemServico extends EditRecord
                         ->label('Aprovar Orçamento')
                         ->icon('heroicon-o-document-check')
                         ->color('primary')
-                        ->tooltip('Reabrir OS')
                         ->action(function (OrdemServico $record) {
                             AprovarOrcamentoAction::exec($record);
                         }),
-                    Actions\DeleteAction::make(),
+                    Actions\DeleteAction::make()
+                        ->action(fn(OrdemServico $record)=>DeleteOrdemServicoAction::exec($record))
+                        ->after(fn()=>redirect(OrdemServicoResource::getUrl('index'))),
                 ])->dropdown(false),
 
                 Actions\ActionGroup::make([
