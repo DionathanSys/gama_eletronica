@@ -13,4 +13,9 @@ class ItemNotaRemessa extends Model
     {
         return $this->BelongsTo(OrdemServico::class);
     }
+
+    public function notaEntrada():BelongsTo
+    {
+        return $this->belongsTo(NotaEntrada::class, 'nota_entrada_id', 'id');
+    }
 }

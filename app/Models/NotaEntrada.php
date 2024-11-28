@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class NotaEntrada extends Model
 {
@@ -14,5 +15,8 @@ class NotaEntrada extends Model
     |--------------------------------------------------------------------------
     */
 
-    
+    public function itensRemessa():HasMany
+    {
+        return $this->hasMany(ItemNotaRemessa::class);
+    }
 }

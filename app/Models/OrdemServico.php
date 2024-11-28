@@ -69,6 +69,17 @@ class OrdemServico extends Model
         return $this->HasOne(ItemNotaRemessa::class);
     }
 
+    public function notaEntrada()
+    {
+        return $this->hasOneThrough(
+            NotaEntrada::class,         //Modelo que deve retornar
+            ItemNotaRemessa::class,     //Modelo que realiza a ligação
+            'ordem_servico_id',         //Chave na tabela de ligação
+            'id',                       //Chave que relaciona a tabela fim com a de ligação
+            'id',                       //Chave PAI na tabela atual
+            'nota_entrada_id');         //chave que relaciona a tabela ligação com a fim
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Helpers

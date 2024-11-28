@@ -10,6 +10,7 @@ use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensOrcamentoR
 use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensOrdensAnterioresRelationManager;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensRelationManager;
 use App\Actions\Fiscal\CreateNfRetornoAction;
+use App\Enums\StatusProcessoOrdemServicoEnum;
 use App\Models\Equipamento;
 use App\Models\OrdemServico;
 use App\Models\Parceiro;
@@ -49,6 +50,7 @@ class OrdemServicoResource extends Resource
                                 static::getEquipamentoFormField(),
                                 static::getVeiculoFormField(),
                                 static::getDataOrdemFormField(),
+                                static::getStatusProcessoFormField(),
                                 static::getPrioridadeFormField(),
                                 static::getStatusFormField(),
                                 static::getFaturaFormField(),
@@ -293,7 +295,16 @@ class OrdemServicoResource extends Resource
     {
         return Forms\Components\TextInput::make('status')
                 ->columnSpan(2)
-                ->disabled();
+                ->disabled()
+                ->visible(fn() => Auth::id() == 1 ? true : false);
+    } 
+    
+    public static function getStatusProcessoFormField(): Forms\Components\Select
+    {
+        return Forms\Components\Select::make('status_processo')
+                ->columnSpan(2)
+                ->options(fn() => StatusProcessoOrdemServicoEnum::class)
+                ->default(StatusProcessoOrdemServicoEnum::PENDENTE->value);
     } 
 
     public static function getPrioridadeFormField(): Forms\Components\Select

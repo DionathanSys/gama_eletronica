@@ -2,43 +2,77 @@
 
 namespace App\Actions\NotaFiscalMercadoria;
 
+use App\Actions\Fiscal\ValidaChaveAcessoNfAction;
 use App\Models\ItemNotaRemessa;
 use App\Models\NotaEntrada;
 use App\Models\OrdemServico;
+use App\Traits\Notifica;
 use Illuminate\Database\Eloquent\Collection;
 
 class VinculaNfRemessaAction
 {
+    use Notifica;
+
     public static function vinculaOrdem(OrdemServico $ordemServico, array $data)
     {
-        $itemNotaRemessa = static::registraNota($ordemServico, $data);
-     
-        // $ordemServico->update([
-        //     'nota_entrada_id' => $itemNotaRemessa->id,
-        // ]);
+        $infoChaveAcesso = (new ValidaChaveAcessoNfAction($data['chave_nota']))->getInfo();
 
-    } 
+        if (!$infoChaveAcesso->status) {
+            self::notificaErro('Chave de acesso inválida');
+            return false;
+        }
+        
+        if ($data['chave_nota'] != $ordemServico->notaEntrada->chave_nota) {
+            self::notificaErro('É necessário excluir o vínculo, para poder alterar a chave de acesso');
+            return false;
+        }
 
-    private static function registraNota(OrdemServico $ordemServico, array $data): ItemNotaRemessa
-    {
-        // return ItemNotaRemessa::query()->firstOrCreate(
-            //         [
-            //             'chave_nota' => $chaveNf
-            //         ],
-            //         [
-            //             'parceiro_id' => $parceiro_id,
-            //             'natureza_operacao' => 'REMESSA DE MERCADORIA OU BEM PARA CONSERTO OU REPARO',
-            //             'chave_nota' => $chaveNf,
-            //         ]
-            //         );
-    
-        return ItemNotaRemessa::create([
-            'parceiro_id' => $ordemServico->parceiro_id,
-            'ordem_servico_id' => $ordemServico->id,
-            'chave_nota' => $data['chave_nota'],
-            'codigo_item' => $data['codigo_item'],
-            'ncm_item' => $data['ncm_item'],
-            'valor' => $data['valor'],
+        $data['serie'] = $infoChaveAcesso->serie;
+        $data['nro_nota'] = $infoChaveAcesso->nroNota;
+
+        $notaRemessa = static::registraNota($ordemServico, $data);
+
+        $ordemServico->update([
+            'nota_entrada_id' => $notaRemessa->id,
         ]);
     }
+
+    private static function registraNota(OrdemServico $ordemServico, array $data): NotaEntrada
+    {
+        $notaEntrada = NotaEntrada::query()->firstOrCreate(
+            [
+                'chave_nota' => $data['chave_nota']
+            ],
+            [
+                'parceiro_id' => $ordemServico->parceiro_id,
+                'natureza_operacao' => 'REMESSA DE MERCADORIA OU BEM PARA CONSERTO OU REPARO',
+                'chave_nota' => $data['chave_nota'],
+                'nro_nota' => $data['nro_nota'],
+                'serie' => $data['serie'],
+                'data_fatura' => $data['data_fatura'],
+                'data_entrada' => now(),
+            ]
+        );
+
+        $itemNotaRemessa = ItemNotaRemessa::query()->updateOrCreate(
+            [
+                'ordem_servico_id' => $ordemServico->id,
+            ],
+            [
+                'parceiro_id' => $ordemServico->parceiro_id,
+                'nota_entrada_id' => $notaEntrada->id,
+                'ordem_servico_id' => $ordemServico->id,
+                'codigo_item' => $data['codigo_item'],
+                'ncm_item' => $data['ncm_item'],
+                'valor' => $data['valor'],
+            ]
+        );
+
+        $notaEntrada->update([
+            'total' => $notaEntrada->itensRemessa->sum('valor'),
+        ]);
+
+        return $notaEntrada;
+    }
+
 }

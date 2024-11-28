@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Endereco;
+use App\Models\NotaEntrada;
 use App\Models\OrdemServico;
 use App\Services\BuscaCNPJ;
 use App\Services\NfeService;
@@ -46,9 +47,13 @@ use HeadlessChromium\BrowserFactory;
 }); */
 
 
-Route::get('/teste', function () {
-    $var = OrdemServico::find(2);
-    dd($var->notaRemessa->chave_nota);
+Route::get('/teste/{id}', function ($id) {
+    $ordem = OrdemServico::find($id);
+    dd($ordem->notaEntrada);
+
+
+
+
 });
 
 Route::get('nf/{chave}/preview', function ($chave) {

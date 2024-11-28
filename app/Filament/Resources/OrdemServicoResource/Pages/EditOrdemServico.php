@@ -12,6 +12,7 @@ use App\Models\OrdemServico;
 use App\Actions\NotaFiscalMercadoria\VinculaNfRemessaAction;
 use App\Services\DownloadPdf;
 use Filament\Actions;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -28,6 +29,12 @@ class EditOrdemServico extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('nova_os')
+                    ->icon('heroicon-o-plus')
+                    ->color('info')
+                    ->label('O. S.')
+                    ->action(fn() => redirect(OrdemServicoResource::getUrl('create'))),
+
             Actions\ActionGroup::make([
                 Actions\ActionGroup::make([
                     Actions\Action::make('pdf-os')
@@ -98,7 +105,10 @@ class EditOrdemServico extends EditRecord
                         ->color('info')
                         ->icon('heroicon-o-document-arrow-down')
                         ->fillForm(fn (OrdemServico $record): array => [
-                            'chave_nota' => $record->itemNotaRemessa->chave_nota ?? '',
+                            'nro_nota' => $record->notaEntrada->nro_nota ?? '',
+                            'serie_nota' => $record->notaEntrada->serie_nota ?? '',
+                            'data_fatura' => $record->notaEntrada->data_fatura ?? '',
+                            'chave_nota' => $record->notaEntrada->chave_nota ?? '',
                             'codigo_item' => $record->itemNotaRemessa->codigo_item ?? '',
                             'ncm_item' => $record->itemNotaRemessa->ncm_item ?? '',
                             'valor' => $record->itemNotaRemessa->valor ?? '',
@@ -106,24 +116,35 @@ class EditOrdemServico extends EditRecord
                         ->form(function(Form $form){
                             return $form->columns(6)->schema([
                                 TextInput::make('chave_nota')
+                                    ->autocomplete(false)
                                     ->columnSpan(6)
                                     ->label('Chave de Acesso NF-e')
                                     ->length(44)
                                     ->required(),
+                                DatePicker::make('data_fatura')
+                                    ->displayFormat('d/m/Y')
+                                    ->native(false)
+                                    ->columnSpan(2)
+                                    ->label('Data Emissão')
+                                    ->required(),
                                 TextInput::make('codigo_item')
+                                    ->autocomplete(false)
                                     ->columnSpan(2)
                                     ->label('Cód. Item')
                                     ->maxLength(15)
                                     ->required(),
                                 TextInput::make('ncm_item')
+                                    ->autocomplete(false)
                                     ->columnSpan(2)
                                     ->label('NCM Item NF')
                                     ->maxLength(15)
                                     ->required(),
                                 TextInput::make('valor')
-                                    ->columnSpan(2)
-                                    ->label('Valor Item')
+                                    ->autocomplete(false)
+                                    ->columnSpan(3)
+                                    ->label('Valor Unitário')
                                     ->numeric()
+                                    ->prefix('R$')
                                     ->required(),
                             ]);
                         })
