@@ -37,12 +37,12 @@ Route::get('nf/{chave}/preview', function ($chave) {
     if ($resp->sucesso) {
 
         $tentativa = 0;
-        while ($resp->pdf == null) {
+        while ($resp?->pdf) {
             $tentativa++;
             if ($tentativa > 5) {
-                break;
+                break; // Sai do loop após 5 tentativas
             }
-            sleep(2); 
+            sleep(2); // Aguarda 2 segundos
         }
         
         $pdf = base64_decode($resp->pdf);
