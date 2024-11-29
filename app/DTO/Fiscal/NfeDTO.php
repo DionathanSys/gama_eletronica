@@ -71,7 +71,7 @@ public $tomador;
 
         $this->frete['modalidade_frete'] = $frete['modalidade_frete'];
 
-        if(array_key_exists($frete['transportadora'], $frete)){
+        if(array_key_exists('transportadora', $frete)){
         
             $this->frete['transportador'] = [
                 'cnpj' => $frete['transportadora']->nro_documento,
