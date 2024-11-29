@@ -25,7 +25,7 @@ class NfeService
             //!Hmolo gamma
             // "token" => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbXAiOjIwMTcsInVzciI6NTAwLCJ0cCI6MiwiaWF0IjoxNzMxMDMzOTczfQ.B21Dp8XbkbnW7MTEAWrsi1yodnm810Bq70fNv0zKkmc',
             
-            "ambiente" => 1,
+            "ambiente" => 2,
             "options" => [
                 "debug" => false,
                 "timeout" => 60,
