@@ -55,10 +55,10 @@ public $tomador;
         $this->natureza_operacao = $natureza_operacao;
         $this->destinatario = (new ClienteDTO($cliente))->toArray();
 
-        $nroNotaAtual = NumeroNotaSaida::where('serie_nota', 701)->max('nro_nota');
+        $nroNotaAtual = NumeroNotaSaida::where('serie_nota', 5)->max('nro_nota');
 
         $this->numero = $nroNotaAtual ? $nroNotaAtual + 1 : 1;;
-        $this->serie = 701;
+        $this->serie = 5;
 
         $this->tipo_operacao = 1;
         $this->finalidade_emissao = 1;
