@@ -6,6 +6,7 @@ use App\DTO\Fiscal\NfeDTO;
 use App\Enums\NaturezaOperacaoEnum;
 use App\Models\Equipamento;
 use App\Models\NotaEntrada;
+use App\Models\NumeroNotaSaida;
 use App\Models\OrdemServico;
 use App\Models\Parceiro;
 use App\Services\NfeService;
@@ -59,7 +60,7 @@ class CreateNfRetornoAction
         }
         
         $chavesNota = $this->ordensServico
-                        ->map(fn($ordem) => $ordem->itemNotaRemessa?->chave_nota) // Obter o campo 'chave_nota' do relacionamento
+                        ->map(fn($ordem) => $ordem->notaEntrada?->chave_nota) // Obter o campo 'chave_nota' do relacionamento
                         ->filter() // Remover valores nulos
                         ->unique() // Remover duplicados
                         ->values() // Reindexar a collection
@@ -90,6 +91,14 @@ class CreateNfRetornoAction
                     'nota_entrada_id' => $notaRemessa->id,
                 ]);
             });
+
+            $chaveNotaRetorno = (new ValidaChaveAcessoNfAction($notaRemessa->chave_nota))->getInfo();
+
+            NumeroNotaSaida::create([
+                'nro_nota' => $chaveNotaRetorno->nroNota,
+                'serie_nota' => $chaveNotaRetorno->serie,
+            ]);
+
         }
 
         return $resp;

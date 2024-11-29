@@ -3,6 +3,7 @@
 namespace App\DTO\Fiscal;
 
 use App\DTO\Cliente\ClienteDTO;
+use App\Models\NotaEntrada;
 use App\Models\NumeroNotaSaida;
 use App\Models\Parceiro;
 use Carbon\Carbon;
@@ -34,7 +35,7 @@ class NfeDTO
     public $intermediario;
     public $notas_referenciadas;
     public $destinatario;
-    public $tomador;
+public $tomador;
     
     public $itens;
 
@@ -54,10 +55,10 @@ class NfeDTO
         $this->natureza_operacao = $natureza_operacao;
         $this->destinatario = (new ClienteDTO($cliente))->toArray();
 
-        $nroNotaAtual = NumeroNotaSaida::where('serie_nota', 5)->max('nro_nota');
+        $nroNotaAtual = NumeroNotaSaida::where('serie_nota', 701)->max('nro_nota');
 
         $this->numero = $nroNotaAtual ? $nroNotaAtual + 1 : 1;;
-        $this->serie = 5;
+        $this->serie = 701;
 
         $this->tipo_operacao = 1;
         $this->finalidade_emissao = 1;
@@ -80,7 +81,28 @@ class NfeDTO
 
         $this->pagamento['formas_pagamento'] = array(['meio_pagamento' => 90, 'valor' => 0]);
 
-        $this->informacoes_adicionais_contribuinte = 'Retorno de mercadoria ref. NF-e 414 - 18/11/2024, NF-e 325 - 02/08/2024, NF-e 335 - 14/08/2024';
+        //---------------------------
+        
+        
+        $descricaoNotas = [];
+
+        foreach ($notas_referenciadas as $chave) {
+            // Consultar a nota no banco de dados com base na chave
+            $nota = NotaEntrada::where('chave_nota', $chave)->first();
+            
+            if ($nota) {
+                // Formatar a descrição da nota com o número e a data_fatura
+                $descricaoNotas[] = sprintf(
+                    'NF-e %s - %s',
+                    $nota->nro_nota,
+                    \Carbon\Carbon::parse($nota->data_fatura)->format('d/m/Y')
+                );
+            }
+        }
+        
+        //---------------------------
+
+        $this->informacoes_adicionais_contribuinte = 'Retorno de mercadoria ref. ' . implode(', ', $descricaoNotas);
 
         $i = 0;
         $ordensServico->each(function($ordem) use(&$i, $cliente) {

@@ -36,7 +36,7 @@ Route::get('nf/{chave}/preview', function ($chave) {
 
     if ($resp->sucesso) {
 
-        if($resp->pdf == null){sleep(3);}
+        if($resp->pdf == null){sleep(4);}
         
         $pdf = base64_decode($resp->pdf);
 
