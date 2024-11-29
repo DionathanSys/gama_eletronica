@@ -37,7 +37,7 @@ Route::get('nf/{chave}/preview', function ($chave) {
     if ($resp->sucesso) {
 
         $tentativa = 0;
-        while ($resp->pdf) {
+        while ($resp->pdf == null) {
             $tentativa++;
             if ($tentativa > 5) {
                 break;
