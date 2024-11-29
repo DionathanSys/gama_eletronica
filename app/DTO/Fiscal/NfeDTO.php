@@ -70,14 +70,18 @@ public $tomador;
         }
 
         $this->frete['modalidade_frete'] = $frete['modalidade_frete'];
-        $this->frete['transportador'] = [
-            'cnpj' => $frete['transportadora']->nro_documento,
-            'nome' =>$frete['transportadora']->nome,
-            'inscricao_estadual' => $frete['transportadora']->inscricao_estadual,
-            'endereco' => $frete['transportadora']->enderecos->first()->endereco,
-            'nome_municipio' => $frete['transportadora']->enderecos->first()->cidade,
-            'uf' =>$frete['transportadora']->enderecos->first()->estado,
-        ];
+
+        if($frete['transportadora']){
+        
+            $this->frete['transportador'] = [
+                'cnpj' => $frete['transportadora']->nro_documento,
+                'nome' =>$frete['transportadora']->nome,
+                'inscricao_estadual' => $frete['transportadora']->inscricao_estadual,
+                'endereco' => $frete['transportadora']->enderecos->first()->endereco,
+                'nome_municipio' => $frete['transportadora']->enderecos->first()->cidade,
+                'uf' =>$frete['transportadora']->enderecos->first()->estado,
+            ];
+        }
 
         $this->pagamento['formas_pagamento'] = array(['meio_pagamento' => 90, 'valor' => 0]);
 
