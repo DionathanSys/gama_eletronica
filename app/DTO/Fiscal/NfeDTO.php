@@ -43,7 +43,13 @@ class NfeDTO
     public $informacoes_adicionais_contribuinte;
 
 
-    public function __construct(Parceiro $cliente, array $notas_referenciadas, Collection $ordensServico, string $natureza_operacao)
+    public function __construct(
+        Parceiro $cliente, 
+        array $frete,
+        array $notas_referenciadas, 
+        Collection $ordensServico, 
+        string $natureza_operacao
+        )
     {
         $this->natureza_operacao = $natureza_operacao;
         $this->destinatario = (new ClienteDTO($cliente))->toArray();
@@ -62,8 +68,14 @@ class NfeDTO
             $this->notas_referenciadas []['nfe']['chave'] = $value; 
         }
 
-        $this->frete = [
-            'modalidade_frete' => 1,
+        $this->frete['modalidade_frete'] = $frete['modalidade_frete'];
+        $this->frete['transportador'] = [
+            'cnpj' => $frete['transportadora']->nro_documento,
+            'nome' =>$frete['transportadora']->nome,
+            'inscricao_estadual' => $frete['transportadora']->inscricao_estadual,
+            'endereco' => $frete['transportadora']->enderecos->first()->endereco,
+            'nome_municipio' => $frete['transportadora']->enderecos->first()->cidade,
+            'uf' =>$frete['transportadora']->enderecos->first()->estado,
         ];
 
         $this->pagamento['formas_pagamento'] = array(['meio_pagamento' => 90, 'valor' => 0]);
@@ -92,29 +104,6 @@ class NfeDTO
                 ],
             ];
         });
-
-
-        // foreach ($itens as $key => $value){
-
-            //     $this->itens[] = [
-            //         'numero_item' => $key + 1,
-            //         'codigo_produto' => 90,
-            //         'origem' => 0,
-            //         'descricao' => 'PLACA DE NUCLEO 1520 VJ', 
-            //         'codigo_ncm' => '84439929',
-            //         'cfop' => 6916,
-            //         'unidade_comercial' => 'UN',
-            //         'quantidade_comercial' => 1, 
-            //         'valor_unitario_comercial' => 100, 
-            //         'valor_bruto' => 100, 
-            //         'inclui_no_total' => 1,
-            //         'imposto' => [
-            //             'icms' => (object) ['situacao_tributaria' => 400],
-            //             'pis' => (object) ['situacao_tributaria' => '08'],
-            //             'cofins' => (object) ['situacao_tributaria' => '08'],
-            //         ],
-            //     ];
-            // }   
 
     }
 

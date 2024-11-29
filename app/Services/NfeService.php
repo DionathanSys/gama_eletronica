@@ -17,10 +17,10 @@ class NfeService
         $this->params = [
 
             //!Wp implemtno
-            // "token" => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbXAiOjE5NTIsInVzciI6NTAwLCJ0cCI6MiwiaWF0IjoxNzI3NTE3OTQ4fQ.OxOzaFpxkanEYrwXrVEQIGBQcFxidWWs9clnmC-m8kI',
+            "token" => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbXAiOjE5NTIsInVzciI6NTAwLCJ0cCI6MiwiaWF0IjoxNzI3NTE3OTQ4fQ.OxOzaFpxkanEYrwXrVEQIGBQcFxidWWs9clnmC-m8kI',
             
             //!Prod Gamma
-            "token" => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbXAiOjkyOTgsInVzciI6MzI3LCJ0cCI6MiwiaWF0IjoxNzMyMDQ0OTYwfQ.t_-3jWNpPssWp101_aG2pFYdOkxPxmTVf0ZHBju0Msc',
+            //"token" => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbXAiOjkyOTgsInVzciI6MzI3LCJ0cCI6MiwiaWF0IjoxNzMyMDQ0OTYwfQ.t_-3jWNpPssWp101_aG2pFYdOkxPxmTVf0ZHBju0Msc',
             //teste
             //!Hmolo gamma
             // "token" => 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbXAiOjIwMTcsInVzciI6NTAwLCJ0cCI6MiwiaWF0IjoxNzMxMDMzOTczfQ.B21Dp8XbkbnW7MTEAWrsi1yodnm810Bq70fNv0zKkmc',

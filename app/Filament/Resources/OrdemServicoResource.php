@@ -12,12 +12,15 @@ use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensRelationMa
 use App\Actions\Fiscal\CreateNfRetornoAction;
 use App\Enums\StatusProcessoOrdemServicoEnum;
 use App\Enums\TipoManutencaoOrdemServicoEnum;
+use App\Enums\VinculoParceiroEnum;
 use App\Models\Equipamento;
 use App\Models\OrdemServico;
 use App\Models\Parceiro;
 use App\Models\Veiculo;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Notifications\Notification;
@@ -165,8 +168,38 @@ class OrdemServicoResource extends Resource
                         }),
                     Tables\Actions\BulkAction::make('nf_retorno')
                         ->label('Emitir NF-e Retorno')
-                        ->action(function(Collection $record){
-                            $notaRetorno = (new CreateNfRetornoAction($record))->exec();
+                        ->form(function(Form $form){
+                            return $form->columns(6)->schema([
+                                Select::make('transportadora_id')
+                                    ->columnSpanFull()
+                                    ->label('Transportadora')
+                                    ->relationship('parceiro', 'nome')
+                                    ->preload()
+                                    ->searchable()
+                                    ->hint('Não obrigatório')
+                                    ->options(function () {
+                                        return Parceiro::where('tipo_vinculo', VinculoParceiroEnum::TRANSPORTADORA)
+                                                        ->where('ativo', true)
+                                                        ->pluck('nome', 'id');
+                                }),
+                                Select::make('modalidade_frete')
+                                    ->columnSpanFull()
+                                    ->options([
+                                        '0' => "0 - por conta do emitente",
+                                        '1' => "1 - por conta do destinatário",
+                                        '2' => "2 - por conta de terceiros",
+                                        '3' => "3 - Transporte Proprio por conta do Remetente",
+                                        '4' => "4 - Transporte Proprio por conta do Destinatario",
+                                        '9' => "9 - sem frete"
+                                    ])
+                                    ->default(1)
+
+                            ]);
+                            })
+                        ->requiresConfirmation()
+                        ->action(function(Collection $record, array $data){
+                            
+                            $notaRetorno = (new CreateNfRetornoAction($record, $data))->exec();
                             
                             if ($notaRetorno){
                                 sleep(3);
