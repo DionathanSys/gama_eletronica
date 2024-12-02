@@ -59,11 +59,11 @@ class OrdemServicoResource extends Resource
                                 static::getStatusProcessoFormField(),
                                 static::getPrioridadeFormField(),
                                 static::getTipoManutencaoFormField(),
-                                static::getFaturaFormField(),
                                 static::getRelatoClienteFormField(),
                                 static::getItensRecebidosFormField(),
                                 static::getObsGeralFormField(),
                                 static::getObsInternaFormField(),
+                                static::getFaturaFormField(),
                                 static::getStatusFormField(),
                             ]),
                         Tabs\Tab::make('Anexos')
