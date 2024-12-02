@@ -103,7 +103,7 @@ class ParceiroResource extends Resource
                 Tables\Columns\ToggleColumn::make('ativo')
                     ->toggleable()
                     ->beforeStateUpdated(function ($record, $state) {
-                        $record->update(['status' => !$state]);
+                        $record->update(['ativo' => !$state]);
                     }),
 
                 Tables\Columns\TextColumn::make('created_at')
