@@ -62,6 +62,8 @@ class OrdemServicoResource extends Resource
                                 static::getFaturaFormField(),
                                 static::getRelatoClienteFormField(),
                                 static::getItensRecebidosFormField(),
+                                static::getObsGeralFormField(),
+                                static::getObsInternaFormField(),
                                 static::getStatusFormField(),
                             ]),
                         Tabs\Tab::make('Anexos')
@@ -135,6 +137,12 @@ class OrdemServicoResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->searchable(),
+
+                Tables\Columns\TextColumn::make('observacao_geral')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                Tables\Columns\TextColumn::make('observacao_interna')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('userCreate.name')
                     ->toggleable(isToggledHiddenByDefault: true)
@@ -395,6 +403,21 @@ class OrdemServicoResource extends Resource
         return Forms\Components\Textarea::make('relato_cliente')
                 ->columnSpan(5);
     } 
+    public static function getObsGeralFormField(): Forms\Components\Textarea
+    {
+        return Forms\Components\Textarea::make('observacao_geral')
+                ->label('Observações Gerais')
+                ->maxLength(255)
+                ->columnSpan(5);
+    } 
+    public static function getObsInternaFormField(): Forms\Components\Textarea
+    {
+        return Forms\Components\Textarea::make('observacao_interna')
+                ->label('Observações Internas')
+                ->maxLength(255)
+                ->columnSpan(5);
+    } 
+
     public static function getItensRecebidosFormField(): Forms\Components\Textarea
     {
         return Forms\Components\Textarea::make('itens_recebidos')
