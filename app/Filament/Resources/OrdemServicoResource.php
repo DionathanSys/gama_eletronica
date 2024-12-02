@@ -84,15 +84,18 @@ class OrdemServicoResource extends Resource
                 Tables\Columns\TextColumn::make('parceiro.nome')
                     ->label('Cliente')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('equipamento.descricao')
                     ->label('Descrição')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
                 
                 Tables\Columns\TextColumn::make('equipamento.nro_serie')
                     ->label('Nro. Série')
+                    ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('veiculo.placa')
