@@ -146,13 +146,13 @@ class OrdemServicoResource extends Resource
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Criado Em')
-                    ->dateTime('d/m/Y')
+                    ->dateTime('d/m/Y h:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Atualizado Em')
-                    ->dateTime('d/m/Y')
+                    ->dateTime('d/m/Y h:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
