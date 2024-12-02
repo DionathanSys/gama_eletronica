@@ -425,7 +425,8 @@ class OrdemServicoResource extends Resource
                 ->columnSpan(2)
                 ->prefix('R$')
                 ->numeric()
-                ->minValue(1);
+                ->default(0)
+                ->minValue(0);
         ;
 
     } 
