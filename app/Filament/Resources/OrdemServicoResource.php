@@ -25,6 +25,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -86,18 +87,26 @@ class OrdemServicoResource extends Resource
                     ->label('Cliente')
                     ->numeric()
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->wrap()
+                    ->weight(FontWeight::Thin)
+                    ->size(Tables\Columns\TextColumn\TextColumnSize::ExtraSmall),
 
                 Tables\Columns\TextColumn::make('equipamento.descricao')
-                    ->label('Descrição')
+                    ->label('Equipamento')
                     ->numeric()
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->wrap()
+                    ->weight(FontWeight::Thin)
+                    ->size(Tables\Columns\TextColumn\TextColumnSize::ExtraSmall),
                 
                 Tables\Columns\TextColumn::make('equipamento.nro_serie')
                     ->label('Nro. Série')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->weight(FontWeight::Thin)
+                    ->size(Tables\Columns\TextColumn\TextColumnSize::ExtraSmall),
 
                 Tables\Columns\TextColumn::make('veiculo.placa')
                     ->numeric()
@@ -128,9 +137,11 @@ class OrdemServicoResource extends Resource
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('userCreate.name')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Criado Por'),
                 
                 Tables\Columns\TextColumn::make('userUpdate.name')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Atualizado Por'),
 
                 Tables\Columns\TextColumn::make('created_at')
@@ -217,7 +228,7 @@ class OrdemServicoResource extends Resource
                     ->collapsible(),
 
             ])
-            ->defaultGroup('parceiro.nome')
+            // ->defaultGroup('parceiro.nome')
             ->filtersTriggerAction(
                 fn(Tables\Actions\Action $action) => $action
                     ->button()
