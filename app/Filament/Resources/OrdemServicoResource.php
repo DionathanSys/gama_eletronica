@@ -79,6 +79,7 @@ class OrdemServicoResource extends Resource
                 Tables\Columns\TextColumn::make('id')
                     ->label('Nro. OS')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('parceiro.nome')
