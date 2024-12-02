@@ -13,15 +13,20 @@ class UpdateValorOrdemActions
     {   
         $itensOrdemServico = ItemOrdemServico::where('ordem_servico_id', $ordemServico->id)->get();
 
+        $valorItens = $itensOrdemServico->sum('valor_total');
+        $valorDesconto = $ordemServico->desconto;
+
+        $valorTotal = $valorItens - $valorDesconto;
+
         // dump($itensOrdemServico->sum('valor_total'));
 
         $ordemServico->update([
-            'valor_total' => $itensOrdemServico->sum('valor_total')
+            'valor_total' => $valorTotal
             ]
         );
 
         $ordemServico->refresh();
-        // dd($ordemServico);
+        dd($ordemServico);
 
     }
 }

@@ -12,6 +12,7 @@ use App\Models\OrdemServico;
 use App\Actions\NotaFiscalMercadoria\VinculaNfRemessaAction;
 use App\Actions\OrdemServico\DeleteOrdemServico;
 use App\Actions\OrdemServico\DeleteOrdemServicoAction;
+use App\Actions\OrdemServico\UpdateValorOrdemActions;
 use App\Services\DownloadPdf;
 use Filament\Actions;
 use Filament\Forms\Components\DatePicker;
@@ -164,6 +165,9 @@ class EditOrdemServico extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
+        // $ordemServico = OrdemServico::find($data['id']);
+        // UpdateValorOrdemActions::exec($ordemServico);
+
         $data['updated_by'] = Auth::id();
 
         return $data;

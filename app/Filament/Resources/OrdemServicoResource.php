@@ -63,6 +63,7 @@ class OrdemServicoResource extends Resource
                                 static::getItensRecebidosFormField(),
                                 static::getObsGeralFormField(),
                                 static::getObsInternaFormField(),
+                                static::getDescontoOrdemFormField(),
                                 static::getFaturaFormField(),
                                 static::getStatusFormField(),
                             ]),
@@ -130,7 +131,7 @@ class OrdemServicoResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('desconto')
-                    ->numeric()
+                    ->money('BRL')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
@@ -416,6 +417,17 @@ class OrdemServicoResource extends Resource
                 ->label('Observações Internas')
                 ->maxLength(255)
                 ->columnSpan(5);
+    } 
+    
+    public static function getDescontoOrdemFormField(): Forms\Components\TextInput
+    {
+        return Forms\Components\TextInput::make('desconto')
+                ->columnSpan(2)
+                ->prefix('R$')
+                ->numeric()
+                ->minValue(1);
+        ;
+
     } 
 
     public static function getItensRecebidosFormField(): Forms\Components\Textarea

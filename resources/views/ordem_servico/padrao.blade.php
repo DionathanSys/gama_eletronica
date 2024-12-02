@@ -108,11 +108,16 @@
         <p class="basis-2/4">Total em Serviços</p>
         <p class="basis-1/4">{{'R$ '.number_format($ordem_servico->valor_total, 2, '.', ',')}}</p>
       </li>
+      <li class="flex flex-row font-semibold text-sm">
+        <p class="basis-3/4"></p>
+        <p class="basis-2/4">Desconto</p>
+        <p class="basis-1/4">{{'R$ '.number_format($ordem_servico->desconto, 2, '.', ',')}}</p>
+      </li>
     </ul>
   </div>
 
   <div class="grid justify-end mt-3">
-    <h3 class="font-bold">VALOR DESTA FATURA {{'R$ '.number_format($ordem_servico->valor_total, 2, '.', ',')}}</h3>
+    <h3 class="font-bold">VALOR DESTA FATURA {{'R$ '.number_format($ordem_servico->valor_total - $ordem_servico->desconto, 2, '.', ',')}}</h3>
   </div>
 
   <div class="grid justify-items-center my-10">
