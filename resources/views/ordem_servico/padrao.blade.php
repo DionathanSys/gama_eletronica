@@ -134,7 +134,7 @@
       <!-- Linha para Assinatura -->
       <div class="w-64 border-t-2 border-gray-800 mb-2"></div>
       <!-- Nome da Empresa -->
-      <p class="text-center font-semibold text-sm">THERMO KING & CARRIER TRANSICOLD</p>
+      <p class="text-center font-semibold text-sm" style="text-transform: uppercase;">GAMMA ELETRÔNICA LTDA</p>
     </div>
 
     <!-- Assinatura do Cliente -->
