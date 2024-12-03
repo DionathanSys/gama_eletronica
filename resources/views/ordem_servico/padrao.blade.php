@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/resources/css/os.css">
-    <script src="https://cdn.tailwindcss.com"></script>
+    {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
     <title>Ordem {{$ordem_servico->id}}</title>
-    <!-- <link rel="preconnect" href="https://fonts.googleapis.com"> -->
-    <!-- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
-    <!-- <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet"> -->
     <script>
       // Função para abrir a caixa de diálogo de impressão assim que a página carregar
       window.onload = function() {
@@ -127,7 +124,7 @@
       Autorizo a execução dos serviços discriminados e assumo a responsabilidade pelos dados fornecidos, bem como a responsabilidade da cobrança e/ou pagamento em caso de inadimplência por parte do referido cliente.
     </p>
     <h2 class="font-semibold mt-4">
-      {{$ordem_servico->getDataFormated()}}
+      {{mb_strtoupper($ordem_servico->getDataFormated())}}
     </h2>
   </div>
 
