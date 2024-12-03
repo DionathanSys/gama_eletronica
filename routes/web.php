@@ -124,3 +124,35 @@ Route::prefix('os')->group(function() {
 
     })->name('os.orcamento.html');
 });
+
+Route::get('/nf/correcao/{chave}', function ($chave) {
+
+
+    $payload = [
+        "chave" => $chave,
+        "justificativa" => "Correção de informações complementares de transporte. Ajuste realizado para corrigir a quantidade de volumes e peso informados anteriormente. A quantidade correta é de 1 volume com peso total de 4,96 kg. Não houve alteração nos valores fiscais ou na natureza da operação.",
+    ];
+    
+    $resp = (new NfeService())->correcao($payload);
+
+    sleep(8);
+
+    if ($resp->sucesso){
+        // dump('sucesso', $resp);
+
+        $pdfContent = base64_decode($resp->pdf_carta_correcao);
+
+        if ($pdfContent === false) {
+            return response('Erro ao decodificar o PDF.', 500);
+        }
+
+        // Retorna o PDF para o navegador exibir
+        return response($pdfContent)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="documento.pdf"');
+
+    } else {
+        dump('falha', $resp);
+    }
+
+});

@@ -145,7 +145,7 @@
       <!-- Linha para Assinatura -->
       <div class="w-64 border-t-2 border-gray-800 mb-2"></div>
       <!-- Nome do Cliente -->
-      <p class="text-center font-semibold text-sm">AS REFRIGERAÇÃO LTDA</p>
+      <p class="text-center font-semibold text-sm">{{$cliente->nome}}</p>
     </div>
   </div>
 
