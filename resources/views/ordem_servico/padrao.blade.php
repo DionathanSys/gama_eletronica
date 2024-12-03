@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/resources/css/os.css">
-    {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
+    <link rel="stylesheet" href="/resources/css/app.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Ordem {{$ordem_servico->id}}</title>
     <script>
       // Função para abrir a caixa de diálogo de impressão assim que a página carregar
@@ -50,7 +50,7 @@
     <!-- Seção de Dados do Cliente -->
     <div class="p-4 w-42">
       <h2 class="text-sm font-semibold mb-2">CLIENTE</h2>
-      <p class="text-xs font-medium break-words">{{$cliente->nome}}</p>
+      <p class="text-xs font-medium break-words" style="text-transform: uppercase;">{{$cliente->nome}}</p>
       <p class="text-xs font-thin whitespace-pre-line">{{$cliente->enderecos->first()}}</p>
       <p class="text-xs font-thin">Telefone: {{$contato->telefone_cel ?? ($contato->telefone_fixo ?? '')}}</p>
     </div>
@@ -123,8 +123,8 @@
     <p class="text-center m-0 text-xs font-normal">
       Autorizo a execução dos serviços discriminados e assumo a responsabilidade pelos dados fornecidos, bem como a responsabilidade da cobrança e/ou pagamento em caso de inadimplência por parte do referido cliente.
     </p>
-    <h2 class="font-semibold mt-4">
-      {{mb_strtoupper($ordem_servico->getDataFormated())}}
+    <h2 class="font-semibold mt-4" style="text-transform: uppercase;">
+      {{$ordem_servico->getDataFormated()}}
     </h2>
   </div>
 
@@ -142,7 +142,7 @@
       <!-- Linha para Assinatura -->
       <div class="w-64 border-t-2 border-gray-800 mb-2"></div>
       <!-- Nome do Cliente -->
-      <p class="text-center font-semibold text-sm">{{$cliente->nome}}</p>
+      <p class="text-center font-semibold text-sm" style="text-transform: uppercase;">{{$cliente->nome}}</p>
     </div>
   </div>
 
