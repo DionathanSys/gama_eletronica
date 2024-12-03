@@ -24,9 +24,9 @@
         <img src="{{ asset('storage/logo.png') }}" alt="Logo" class="h-18 w-h-18 px-3">
       </div>
       <div class="basis-2/6 mt-2 ms-3 text-xs">
-        <p class="font-semibold">THERMO KING & CARRIER TRANSICOLD</p>
-        <p class="font-thin">Rua Guimorvam Moura, Travessa E, 98</p>
-        <p class="font-thin">Efapi 89809-562 - Chapecó - SC</p>
+        <p class="font-semibold">Gamma Eletrônica LTDA</p>
+        <p class="font-thin">Rua Maravilha, 679 E APT 102</p>
+        <p class="font-thin">Efapi 89809-540 - Chapecó - SC</p>
         <p class="font-thin">Telefone: (49) 98821-2687</p>
         <p class="font-thin">CNPJ: 45.790.457/0001-85</p>
       </div>
