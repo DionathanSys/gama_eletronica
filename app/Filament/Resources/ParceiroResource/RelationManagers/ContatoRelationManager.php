@@ -19,7 +19,10 @@ class ContatoRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('email')
+                Forms\Components\TextInput::make('nome_contato')
+                    ->maxLength(255),
+                
+                    Forms\Components\TextInput::make('email')
                     ->email()
                     ->maxLength(255),
 
@@ -45,6 +48,7 @@ class ContatoRelationManager extends RelationManager
             ->recordTitle('Contato')
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
+                Tables\Columns\TextColumn::make('nome_contato'),
                 Tables\Columns\TextColumn::make('email'),
                 Tables\Columns\TextColumn::make('telefone_fixo'),
                 Tables\Columns\TextColumn::make('telefone_cel'),
