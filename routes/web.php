@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\StatusProcessoOrdemServicoEnum;
 use App\Models\Endereco;
 use App\Models\NotaEntrada;
 use App\Models\OrdemServico;
@@ -16,15 +17,13 @@ use HeadlessChromium\BrowserFactory;
 // }); 
 
 
-Route::get('/teste/{id}', function ($id) {
+Route::get('/teste', function () {
 
-    $var = Parceiro::with(['enderecos'])->find($id);
-    dd($var->enderecos->first()->cidade);
-    $ordem = OrdemServico::with(['notaEntrada', 'itemNotaRemessa'])->find($id);
-    // dd($ordem->notaEntrada);
-    dump($ordem,$ordem->notaEntrada);
-    dd($ordem->itemNotaRemessa);
-
+    dd(
+        collect(StatusProcessoOrdemServicoEnum::cases())
+            ->mapWithKeys(fn ($status) => [$status->value => dump($status->getStatus())])
+            ->toArray()
+);
 
 
 

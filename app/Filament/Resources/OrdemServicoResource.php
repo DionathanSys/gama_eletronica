@@ -22,6 +22,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
@@ -53,6 +54,7 @@ class OrdemServicoResource extends Resource
                             ->schema([
                                 static::getIdFormField(),
                                 static::getParceiroFormField(),
+                                static::getNroDocParceiroFormField(),
                                 static::getEquipamentoFormField(),
                                 static::getVeiculoFormField(),
                                 static::getDataOrdemFormField(),
@@ -287,12 +289,22 @@ class OrdemServicoResource extends Resource
                                         ->where('ativo', true)
                                         ->pluck('nome', 'id');
                     })
-                    ->afterStateUpdated(function(Set $set){
+                    ->afterStateUpdated(function(Set $set, Get $get){
                         $set('equipamento_id', null);
                         $set('veiculo_id', null);
+                        $set('nro_doc_parceiro', Parceiro::find($get('parceiro_id'))->nro_documento);
                     })
                     ->live()
                     ->required();
+    }
+
+    public static function getNroDocParceiroFormField(): Forms\Components\TextInput
+    {
+        return Forms\Components\TextInput::make('nro_doc_parceiro')
+                    ->columnSpan(2)
+                    ->label('CNPJ/CPF')
+                    ->dehydrated();
+                    
     }
 
     public static function getDataOrdemFormField(): Forms\Components\DatePicker
@@ -370,7 +382,11 @@ class OrdemServicoResource extends Resource
     {
         return Forms\Components\Select::make('status_processo')
                 ->columnSpan(2)
-                ->options(fn() => StatusProcessoOrdemServicoEnum::class)
+                ->options(
+                    collect(StatusProcessoOrdemServicoEnum::cases())
+                        ->mapWithKeys(fn ($status) => [$status->value => $status->getStatus()])
+                        ->toArray()
+                )
                 ->default(StatusProcessoOrdemServicoEnum::PENDENTE->value);
     } 
 

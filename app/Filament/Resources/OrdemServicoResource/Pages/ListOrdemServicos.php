@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\OrdemServicoResource\Pages;
 
+use App\Enums\StatusOrdemServicoEnum;
+use App\Enums\StatusProcessoOrdemServicoEnum;
 use App\Filament\Resources\OrdemServicoResource;
 use Filament\Actions;
 use Filament\Resources\Components\Tab;
@@ -27,15 +29,18 @@ class ListOrdemServicos extends ListRecords
         return [
             'Todos' => Tab::make(),
             'Pendente' => Tab::make()
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'pendente')),
-            'Encerradas' => Tab::make()
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'encerrada')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', StatusProcessoOrdemServicoEnum::PENDENTE->value)),
+            'Em Atendimento' => Tab::make()
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', StatusProcessoOrdemServicoEnum::EM_ATENDIMENTO->value)
                                                                     ->where('fatura_id', '=', null)),
-            'Faturadas' => Tab::make()
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'encerrada')
+            'Ag. Aprovação' => Tab::make()
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', StatusProcessoOrdemServicoEnum::AGUARDANDO_APROVACAO->value)
                                                                     ->where('fatura_id', '!=', null)),
-            'Canceladas' => Tab::make()
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'canceladas')),
+            'Aprovado' => Tab::make()
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', StatusProcessoOrdemServicoEnum::ORCAMENTO_APROVADO->value)),
+
+            'Encerrada' => Tab::make()
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', StatusProcessoOrdemServicoEnum::ORCAMENTO_APROVADO->value)),
         ];
     }
 

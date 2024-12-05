@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/resources/css/os.css">
+    <link rel="stylesheet" href="/resources/css/app.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Ordem {{$ordem_servico->id}}</title>
-    <!-- <link rel="preconnect" href="https://fonts.googleapis.com"> -->
-    <!-- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
-    <!-- <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet"> -->
     <script>
       // Função para abrir a caixa de diálogo de impressão assim que a página carregar
       window.onload = function() {
@@ -32,9 +29,9 @@
         <img src="{{ asset('storage/logo.png') }}" alt="Logo" class="h-18 w-h-18 px-3">
       </div>
       <div class="basis-2/6 mt-2 ms-3 text-xs">
-        <p class="font-semibold">THERMO KING & CARRIER TRANSICOLD</p>
-        <p class="font-thin">Rua Guimorvam Moura, Travessa E, 98</p>
-        <p class="font-thin">Efapi 89809-562 - Chapecó - SC</p>
+        <p class="font-semibold">Gamma Eletrônica LTDA</p>
+        <p class="font-thin">Rua Maravilha, 679 E APT 102</p>
+        <p class="font-thin">Efapi 89809-540 - Chapecó - SC</p>
         <p class="font-thin">Telefone: (49) 98821-2687</p>
         <p class="font-thin">CNPJ: 45.790.457/0001-85</p>
       </div>
@@ -58,7 +55,7 @@
     <!-- Seção de Dados do Cliente -->
     <div class="p-4 w-42">
       <h2 class="text-sm font-semibold mb-2">CLIENTE</h2>
-      <p class="text-xs font-medium break-words">{{$cliente->nome}}</p>
+      <p class="text-xs font-medium break-words" style="text-transform: uppercase;">{{$cliente->nome}}</p>
       <p class="text-xs font-thin whitespace-pre-line">{{$cliente->enderecos->first()}}</p>
       <p class="text-xs font-thin">Telefone: {{$contato->telefone_cel ?? ($contato->telefone_fixo ?? '')}}</p>
     </div>
@@ -124,7 +121,7 @@
     <p class="text-center m-0 text-xs font-normal">
       Autorizo a execução dos serviços discriminados e assumo a responsabilidade pelos dados fornecidos, bem como a responsabilidade da cobrança e/ou pagamento em caso de inadimplência por parte do referido cliente.
     </p>
-    <h2 class="font-semibold mt-4">
+    <h2 class="font-semibold mt-4" style="text-transform: uppercase;">
       {{$ordem_servico->getDataFormated()}}
     </h2>
   </div>
@@ -135,7 +132,7 @@
       <!-- Linha para Assinatura -->
       <div class="w-64 border-t-2 border-gray-800 mb-2"></div>
       <!-- Nome da Empresa -->
-      <p class="text-center font-semibold text-sm">THERMO KING & CARRIER TRANSICOLD</p>
+      <p class="text-center font-semibold text-sm" style="text-transform: uppercase;">GAMMA ELETRÔNICA LTDA</p>
     </div>
 
     <!-- Assinatura do Cliente -->
@@ -143,7 +140,7 @@
       <!-- Linha para Assinatura -->
       <div class="w-64 border-t-2 border-gray-800 mb-2"></div>
       <!-- Nome do Cliente -->
-      <p class="text-center font-semibold text-sm">AS REFRIGERAÇÃO LTDA</p>
+      <p class="text-center font-semibold text-sm" style="text-transform: uppercase;">{{$cliente->nome}}</p>
     </div>
   </div>
   
