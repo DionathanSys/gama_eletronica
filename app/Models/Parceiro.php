@@ -80,4 +80,20 @@ class Parceiro extends Model
     {
         $this->attributes['nro_documento'] = preg_replace('/[-\/\.]/', '', $value);
     }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Atributos
+    |--------------------------------------------------------------------------
+    */
+    
+    public function getNroDocumentoFormatadoAttribute(): string
+    {
+        return preg_replace(
+            '/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/',
+            '$1.$2.$3/$4-$5',
+            $this->nro_documento
+        );
+    }
 }

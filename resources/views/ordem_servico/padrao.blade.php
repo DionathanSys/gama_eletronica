@@ -51,6 +51,7 @@
     <div class="p-4 w-42">
       <h2 class="text-sm font-semibold mb-2">CLIENTE</h2>
       <p class="text-xs font-medium break-words" style="text-transform: uppercase;">{{$cliente->nome}}</p>
+      <p class="text-xs font-medium break-words" style="text-transform: uppercase;">{{$cliente->nro_documento_formatado}}</p>
       <p class="text-xs font-thin whitespace-pre-line">{{$cliente->enderecos->first()}}</p>
       <p class="text-xs font-thin">Telefone: {{$contato->telefone_cel ?? ($contato->telefone_fixo ?? '')}}</p>
     </div>
