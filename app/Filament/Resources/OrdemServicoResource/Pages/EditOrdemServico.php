@@ -13,6 +13,7 @@ use App\Actions\NotaFiscalMercadoria\VinculaNfRemessaAction;
 use App\Actions\OrdemServico\DeleteOrdemServico;
 use App\Actions\OrdemServico\DeleteOrdemServicoAction;
 use App\Actions\OrdemServico\UpdateValorOrdemActions;
+use App\Models\Parceiro;
 use App\Services\DownloadPdf;
 use Filament\Actions;
 use Filament\Forms\Components\DatePicker;
@@ -161,6 +162,17 @@ class EditOrdemServico extends EditRecord
 
 
         ];
+    }
+
+    public function mount($record): void
+    {
+        parent::mount($record);
+
+        $this->form->fill([
+            'nro_doc_parceiro' => Parceiro::find($this->record->parceiro_id)->nro_documento
+        ]);
+
+
     }
 
     protected function mutateFormDataBeforeSave(array $data): array

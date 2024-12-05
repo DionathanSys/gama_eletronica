@@ -303,7 +303,7 @@ class OrdemServicoResource extends Resource
         return Forms\Components\TextInput::make('nro_doc_parceiro')
                     ->columnSpan(2)
                     ->label('CNPJ/CPF')
-                    ->dehydrated();
+                    ->dehydrated(false);
                     
     }
 
