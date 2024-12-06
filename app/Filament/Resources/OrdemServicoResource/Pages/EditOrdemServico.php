@@ -168,32 +168,31 @@ class EditOrdemServico extends EditRecord
     {
         parent::mount($record);
 
-        $this->form->fill([
-            'nro_doc_parceiro' => Parceiro::find($this->record->parceiro_id)->nro_documento
-        ]);
+        $this->form->fill(
+            array_merge($this->form->getState(), [
+                'nro_doc_parceiro' => Parceiro::find($this->record->parceiro_id)?->nro_documento,
+            ])
+        );
 
 
     }
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        // $ordemServico = OrdemServico::find($data['id']);
-        // UpdateValorOrdemActions::exec($ordemServico);
-
         $data['updated_by'] = Auth::id();
 
         return $data;
     }
 
-    protected function getFormActions(): array
-    {
+    // protected function getFormActions(): array
+    // {
+    //     // dd($this->data);
+    //     // if ($this->data['status'] == StatusOrdemServicoEnum::PENDENTE->value) {
+    //     //     return [
+    //     //         ...parent::getFormActions(),
+    //     //     ];
+    //     // }
 
-        if ($this->data['status'] == StatusOrdemServicoEnum::PENDENTE->value) {
-            return [
-                ...parent::getFormActions(),
-            ];
-        }
-
-        return [];
-    }
+    //     // return [];
+    // }
 }
