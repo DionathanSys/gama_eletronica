@@ -40,7 +40,7 @@ class ListOrdemServicos extends ListRecords
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', StatusProcessoOrdemServicoEnum::ORCAMENTO_APROVADO->value)),
 
             'Encerrada' => Tab::make()
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', StatusProcessoOrdemServicoEnum::ORCAMENTO_APROVADO->value)),
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', StatusProcessoOrdemServicoEnum::ENCERRADA->value)),
         ];
     }
 

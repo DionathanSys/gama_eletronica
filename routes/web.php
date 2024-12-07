@@ -1,12 +1,16 @@
 <?php
 
 use App\Enums\StatusProcessoOrdemServicoEnum;
+use App\Enums\VinculoParceiroEnum;
 use App\Models\Endereco;
 use App\Models\NotaEntrada;
 use App\Models\OrdemServico;
 use App\Models\Parceiro;
 use App\Services\BuscaCNPJ;
 use App\Services\NfeService;
+use Filament\Actions\Action;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Form;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use HeadlessChromium\BrowserFactory;
@@ -126,6 +130,7 @@ Route::prefix('os')->group(function() {
 
 Route::get('/nf/correcao/{chave}', function ($chave) {
 
+    dd('negado');
 
     $payload = [
         "chave" => $chave,
@@ -155,3 +160,27 @@ Route::get('/nf/correcao/{chave}', function ($chave) {
     }
 
 });
+
+Route::get('nf/cancela', function () {
+    dd('bloqueado');
+    $payload = [
+        'chave' => '42241245790457000185550050000000121113797028',
+        'justificativa' => 'Devido à duplicidade causada por um erro operacional. Apenas a NF-e com a chave 42241245790457000185550050000000101602518135 é válida, tornando as demais inválidas.',
+    ];
+
+    $resp = (new NfeService())->cancela($payload);
+
+    dd($resp);
+
+});
+
+
+/* 
+
+nota n. 7 - 42241245790457000185550050000000071657046418 
+n 8 - 42241245790457000185550050000000081417135693
+42241245790457000185550050000000091762617076
+11- 42241245790457000185550050000000111592715259
+12- 42241245790457000185550050000000121113797028
+
+*/

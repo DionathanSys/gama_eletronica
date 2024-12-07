@@ -23,6 +23,8 @@ class EnderecoResource extends Resource
 
     protected static ?string $navigationLabel = 'Endereços';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     public static function form(Form $form): Form
     {
         return $form

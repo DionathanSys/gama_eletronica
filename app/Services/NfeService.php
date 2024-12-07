@@ -62,4 +62,9 @@ class NfeService
         return $this->nfe->correcao($payload);
     }
 
+    public function cancela($payload)
+    {
+        return $this->nfe->cancela($payload);
+    }
+
 }
