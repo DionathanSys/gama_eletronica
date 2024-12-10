@@ -32,7 +32,7 @@ Route::get('/teste', function () {
 Route::prefix('nfe')->group(function () {
     Route::get('/{chave}/pdf', function ($chave) {
         $resp = (new NfeService())->consulta($chave);
-
+        dd($resp);
         if ($resp->sucesso) {
 
             $tentativa = 0;
