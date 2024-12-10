@@ -184,7 +184,7 @@ class EditOrdemServico extends EditRecord
     }
 
     protected function getFormActions(): array
-    {dd($this->data);   
+    {
         if ($this->data['status'] == StatusOrdemServicoEnum::PENDENTE->value) {
             return [
                 ...parent::getFormActions(),
