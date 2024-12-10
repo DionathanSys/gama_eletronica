@@ -413,8 +413,7 @@ class OrdemServicoResource extends Resource
     public static function getStatusFormField(): Forms\Components\TextInput
     {
         return Forms\Components\TextInput::make('status')
-                ->columnSpan(2)
-                ->visible(fn() => Auth::id() == 1 ? true : false);
+                ->columnSpan(2);
     } 
     
     public static function getStatusProcessoFormField(): Forms\Components\Select
