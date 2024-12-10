@@ -50,6 +50,9 @@ Route::prefix('nfe')->group(function () {
                 ->header('Content-Type', 'application/pdf')
                 ->header('Content-Disposition', 'inline; filename="documento.pdf"');
         }
+        echo 'erro';
+        return;
+
     })->name('nfe.pdf');
 });
 
