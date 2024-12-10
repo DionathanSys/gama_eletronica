@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Enums\NaturezaOperacaoEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class OrdemServico extends Model
 {
@@ -79,6 +81,50 @@ class OrdemServico extends Model
             'id',                       //Chave PAI na tabela atual
             'nota_entrada_id');         //chave que relaciona a tabela ligação com a fim
     }
+
+    public function notasSaida(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            NotaSaida::class,
+            'nota_saida_ordem_servico',
+            'ordem_servico_id',
+            'nota_saida_id',
+        );
+    }
+
+    public function notaRetorno(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            NotaSaida::class,
+            'nota_saida_ordem_servico',
+            'ordem_servico_id',
+            'nota_saida_id',
+        )->where('natureza_op', NaturezaOperacaoEnum::RETORNO_MERCADORIA->value);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Atributos
+    |--------------------------------------------------------------------------
+    */
+
+    public function setRelatoClienteAttribute($value)
+    {
+        $this->attributes['relato_cliente'] = strtoupper($value);
+    }
+    public function setObservacaoGeralAttribute($value)
+    {
+        $this->attributes['observacao_geral'] = strtoupper($value);
+    }
+    public function setObservacaoInternaAttribute($value)
+    {
+        $this->attributes['observacao_interna'] = strtoupper($value);
+    }
+    public function setItensRecebidosAttribute($value)
+    {
+        $this->attributes['itens_recebidos'] = strtoupper($value);
+    }
+
 
     /*
     |--------------------------------------------------------------------------

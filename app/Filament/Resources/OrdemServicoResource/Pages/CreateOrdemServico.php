@@ -15,8 +15,6 @@ class CreateOrdemServico extends CreateRecord
 
     protected static ?string $title = 'Nova Ordem';
 
-    // protected ?string $subheading = 'Custom Page Subheading';
-
     protected function mutateFormDataBeforeCreate(array $data): array
     {   
         $data['created_by'] = Auth::id();

@@ -26,7 +26,7 @@ class AdminPanelProvider extends PanelProvider
             ->topNavigation()
             ->sidebarCollapsibleOnDesktop()
             ->brandName('Gamma Eletrônica')
-            // ->databaseNotifications()
+            ->databaseNotifications()
             ->default()
             ->id('admin')
             ->path('admin')

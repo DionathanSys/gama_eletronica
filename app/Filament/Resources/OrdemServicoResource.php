@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Actions\Fatura\CreateFaturaAction;
+use App\Actions\Fiscal\CreateNfeRetornoAction;
 use App\Enums\PrioridadeOrdemServicoEnum;
 use App\Filament\Resources\OrdemServicoResource\Pages;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers;
@@ -14,6 +15,7 @@ use App\Enums\StatusProcessoOrdemServicoEnum;
 use App\Enums\TipoManutencaoOrdemServicoEnum;
 use App\Enums\VinculoParceiroEnum;
 use App\Models\Equipamento;
+use App\Models\NotaSaida;
 use App\Models\OrdemServico;
 use App\Models\Parceiro;
 use App\Models\Veiculo;
@@ -137,9 +139,20 @@ class OrdemServicoResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
+                Tables\Columns\TextColumn::make('status_processo')
+                    ->badge()
+                    ->toggleable(isToggledHiddenByDefault: false),
+                
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                Tables\Columns\TextColumn::make('relato_cliente')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                Tables\Columns\TextColumn::make('itens_recebidos')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('observacao_geral')
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -232,6 +245,33 @@ class OrdemServicoResource extends Resource
                                 return redirect()->route('nfe.preview.pdf', ['chave' => $notaRetorno->chave]);
                             }
                         }),
+                    Tables\Actions\BulkAction::make('nfe_retorno')
+                        ->label('TESTE - Emitir NF-e Retorno')
+                        ->requiresConfirmation()
+                        ->action(function(Collection $record){
+                            $notas = $record
+                                        ->map(fn($ordem) => $ordem->notaEntrada ? [
+                                            'chave_nota' => $ordem->notaEntrada->chave_nota,
+                                            'data_fatura' => $ordem->notaEntrada->data_fatura,
+                                            'nro_nota' => $ordem->notaEntrada->nro_nota,
+                                        ] : null) // Obter os campos do relacionamento 'notaEntrada'
+                                        ->filter() // Remover valores nulos
+                                        ->unique(fn($nota) => $nota['chave_nota']) // Remover duplicados com base em 'chave_nota'
+                                        ->map(fn($nota) => [
+                                            $nota['chave_nota'] => "Nro. {$nota['nro_nota']} - {$nota['data_fatura']}",
+                                        ]) // Reformatar os valores
+                                        ->values() // Reindexar a collection
+                                        ->collapse()
+                                        ->toArray();
+                            
+                            $notaSaida = CreateNfeRetornoAction::prepare($record, $notas);
+
+                            if (! $notaSaida){
+                                return false;
+                            }
+                            
+                            return redirect(NotaSaidaResource::getUrl('edit', ['record' => $notaSaida->id]));
+                        })
                 ]),
             ])
             ->groups([
@@ -292,7 +332,7 @@ class OrdemServicoResource extends Resource
                     ->afterStateUpdated(function(Set $set, Get $get){
                         $set('equipamento_id', null);
                         $set('veiculo_id', null);
-                        $set('nro_doc_parceiro', Parceiro::find($get('parceiro_id'))->nro_documento);
+                        $set('nro_doc_parceiro', Parceiro::find($get('parceiro_id'))->nro_documento ?? '');
                     })
                     ->live()
                     ->required();
@@ -374,7 +414,6 @@ class OrdemServicoResource extends Resource
     {
         return Forms\Components\TextInput::make('status')
                 ->columnSpan(2)
-                ->disabled()
                 ->visible(fn() => Auth::id() == 1 ? true : false);
     } 
     

@@ -5,6 +5,7 @@ namespace App\DTO\Fiscal;
 use App\DTO\Cliente\ClienteDTO;
 use App\Models\NotaEntrada;
 use App\Models\NumeroNotaSaida;
+use App\Models\OrdemServico;
 use App\Models\Parceiro;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
@@ -35,7 +36,7 @@ class NfeDTO
     public $intermediario;
     public $notas_referenciadas;
     public $destinatario;
-public $tomador;
+    public $tomador;
     
     public $itens;
 
@@ -57,7 +58,7 @@ public $tomador;
 
         $nroNotaAtual = NumeroNotaSaida::where('serie_nota', 5)->max('nro_nota');
 
-        $this->numero = $nroNotaAtual ? $nroNotaAtual + 1 : 1;;
+        $this->numero = $nroNotaAtual ? $nroNotaAtual + 1 : 1;
         $this->serie = 5;
 
         $this->tipo_operacao = 1;
@@ -153,6 +154,8 @@ public $tomador;
             "informacoes_adicionais_contribuinte" => $this->informacoes_adicionais_contribuinte,
         ];
     }
+
+    
 }
 
 

@@ -3,6 +3,7 @@
 namespace App\Actions\NotaFiscalMercadoria;
 
 use App\Actions\Fiscal\ValidaChaveAcessoNfAction;
+use App\Enums\NaturezaOperacaoEnum;
 use App\Models\ItemNotaRemessa;
 use App\Models\NotaEntrada;
 use App\Models\OrdemServico;
@@ -47,7 +48,7 @@ class VinculaNfRemessaAction
             ],
             [
                 'parceiro_id' => $ordemServico->parceiro_id,
-                'natureza_operacao' => 'REMESSA DE MERCADORIA OU BEM PARA CONSERTO OU REPARO',
+                'natureza_operacao' => NaturezaOperacaoEnum::REMESSA_CONSIGNACAO->value,
                 'chave_nota' => $data['chave_nota'],
                 'nro_nota' => $data['nro_nota'],
                 'serie' => $data['serie'],

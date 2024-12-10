@@ -4,11 +4,11 @@ namespace App\Enums;
 
 enum NaturezaOperacaoEnum:string
 {
-    case VENDA_PRODUTO = 'Venda de Produto';
-    case VENDA_SERVICO = 'Venda de Serviço';
-    case REMESSA_CONSIGNACAO = 'Remessa em Consignação';
-    case DEVOLUCAO_VENDA = 'Devolução de Venda';
-    case RETORNO_MERCADORIA = 'Retorno de Mercadoria';
+    case VENDA_PRODUTO = 'VENDA DE PRODUTO';
+    case VENDA_SERVICO = 'VENDA DE SERVIÇO';
+    case REMESSA_CONSIGNACAO = 'REMESSA DE MERCADORIA OU BEM PARA CONSERTO OU REPARO';
+    case DEVOLUCAO_VENDA = 'DEVOLUÇÃO DE VENDA';
+    case RETORNO_MERCADORIA = 'RETORNO DE MERCADORIA';
 
     /**
      * Obter todas as opções como um array associativo
@@ -28,11 +28,11 @@ enum NaturezaOperacaoEnum:string
     public function description(): string
     {
         return match ($this) {
-            self::VENDA_PRODUTO => 'Operação de venda de produtos.',
-            self::VENDA_SERVICO => 'Prestação de serviços.',
-            self::REMESSA_CONSIGNACAO => 'Envio de mercadorias para venda consignada.',
-            self::DEVOLUCAO_VENDA => 'Devolução de produtos pelo cliente.',
-            self::RETORNO_MERCADORIA => 'Retorno de mercadoria',
+            self::VENDA_PRODUTO => 'OPERAÇÃO DE VENDA DE PRODUTOS.',
+            self::VENDA_SERVICO => 'PRESTAÇÃO DE SERVIÇOS.',
+            self::REMESSA_CONSIGNACAO => 'REMESSA DE MERCADORIA OU BEM PARA CONSERTO OU REPARO',
+            self::DEVOLUCAO_VENDA => 'DEVOLUÇÃO DE PRODUTOS PELO CLIENTE.',
+            self::RETORNO_MERCADORIA => 'RETORNO DE MERCADORIA',
         };
     }
 }

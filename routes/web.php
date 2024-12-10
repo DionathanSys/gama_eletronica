@@ -1,9 +1,11 @@
 <?php
 
+use App\DTO\Fiscal\NfeDTO2;
 use App\Enums\StatusProcessoOrdemServicoEnum;
 use App\Enums\VinculoParceiroEnum;
 use App\Models\Endereco;
 use App\Models\NotaEntrada;
+use App\Models\NotaSaida;
 use App\Models\OrdemServico;
 use App\Models\Parceiro;
 use App\Services\BuscaCNPJ;
@@ -11,6 +13,8 @@ use App\Services\NfeService;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
+use Filament\Notifications\Livewire\Notifications;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use HeadlessChromium\BrowserFactory;
@@ -23,14 +27,30 @@ use HeadlessChromium\BrowserFactory;
 
 Route::get('/teste', function () {
 
-    dd(
-        collect(StatusProcessoOrdemServicoEnum::cases())
-            ->mapWithKeys(fn ($status) => [$status->value => dump($status->getStatus())])
-            ->toArray()
-);
+});
 
+Route::prefix('nfe')->group(function () {
+    Route::get('/{chave}/pdf', function ($chave) {
+        $resp = (new NfeService())->consulta($chave);
 
+        if ($resp->sucesso) {
 
+            $tentativa = 0;
+            while ($resp?->pdf) {
+                $tentativa++;
+                if ($tentativa > 6) {
+                    break; // Sai do loop após 5 tentativas
+                }
+                sleep(2); // Aguarda 2 segundos
+            }
+
+            $pdf = base64_decode($resp->pdf);
+
+            return response($pdf)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'inline; filename="documento.pdf"');
+        }
+    })->name('nfe.pdf');
 });
 
 Route::get('nf/{chave}/preview', function ($chave) {
@@ -47,7 +67,7 @@ Route::get('nf/{chave}/preview', function ($chave) {
             }
             sleep(2); // Aguarda 2 segundos
         }
-        
+
         $pdf = base64_decode($resp->pdf);
 
         return response($pdf)
@@ -56,12 +76,12 @@ Route::get('nf/{chave}/preview', function ($chave) {
     }
 })->name('nfe.preview.pdf');
 
-Route::get('/cnpj/{cnpj}', function($cnpj){
+Route::get('/cnpj/{cnpj}', function ($cnpj) {
     $resp = (new BuscaCNPJ($cnpj))->getInfo();
-    if ($resp){
-        dd($resp,$resp->inscricoes_estaduais[0]->inscricao_estadual);
+    if ($resp) {
+        dd($resp, $resp->inscricoes_estaduais[0]->inscricao_estadual);
     }
-});    
+});
 
 Route::get('/pdf', function () {
     try {
@@ -93,16 +113,15 @@ Route::get('/pdf', function () {
         return response($pdf, 200)
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'inline; filename="relatorio.pdf"');
-
     } catch (\Exception $e) {
         return response('Erro ao gerar o PDF: ' . $e->getMessage(), 500);
     }
 });
 
-Route::prefix('os')->group(function() {
+Route::prefix('os')->group(function () {
 
-    Route::get('{id}/html', function ($id){
-    
+    Route::get('{id}/html', function ($id) {
+
         $ordemServico = OrdemServico::with(['itens.servico', 'parceiro.enderecos', 'equipamento'])->findOrFail($id);
 
         return view('ordem_servico.padrao', [
@@ -111,11 +130,10 @@ Route::prefix('os')->group(function() {
             'cliente' => $ordemServico->parceiro,
             'equipamento' => $ordemServico->equipamento,
         ]);
-
     })->name('os.html');
 
-    Route::get('{id}/orcamento/html', function ($id){
-    
+    Route::get('{id}/orcamento/html', function ($id) {
+
         $ordemServico = OrdemServico::with(['itens.servico', 'parceiro.enderecos', 'equipamento'])->findOrFail($id);
 
         return view('ordem_servico.orcamento', [
@@ -124,7 +142,6 @@ Route::prefix('os')->group(function() {
             'cliente' => $ordemServico->parceiro,
             'equipamento' => $ordemServico->equipamento,
         ]);
-
     })->name('os.orcamento.html');
 });
 
@@ -136,12 +153,12 @@ Route::get('/nf/correcao/{chave}', function ($chave) {
         "chave" => $chave,
         "justificativa" => "Correção de informações complementares de transporte. Ajuste realizado para corrigir a quantidade de volumes e peso informados anteriormente. A quantidade correta é de 1 volume com peso total de 4,96 kg. Não houve alteração nos valores fiscais ou na natureza da operação.",
     ];
-    
+
     $resp = (new NfeService())->correcao($payload);
 
     sleep(8);
 
-    if ($resp->sucesso){
+    if ($resp->sucesso) {
         // dump('sucesso', $resp);
 
         $pdfContent = base64_decode($resp->pdf_carta_correcao);
@@ -154,11 +171,9 @@ Route::get('/nf/correcao/{chave}', function ($chave) {
         return response($pdfContent)
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'inline; filename="documento.pdf"');
-
     } else {
         dump('falha', $resp);
     }
-
 });
 
 Route::get('nf/cancela', function () {
@@ -171,7 +186,6 @@ Route::get('nf/cancela', function () {
     $resp = (new NfeService())->cancela($payload);
 
     dd($resp);
-
 });
 
 

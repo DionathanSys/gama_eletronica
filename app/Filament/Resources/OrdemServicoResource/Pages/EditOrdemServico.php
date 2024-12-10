@@ -174,25 +174,23 @@ class EditOrdemServico extends EditRecord
             ])
         );
 
-
     }
 
     protected function mutateFormDataBeforeSave(array $data): array
-    {
+    {   
         $data['updated_by'] = Auth::id();
 
         return $data;
     }
 
-    // protected function getFormActions(): array
-    // {
-    //     // dd($this->data);
-    //     // if ($this->data['status'] == StatusOrdemServicoEnum::PENDENTE->value) {
-    //     //     return [
-    //     //         ...parent::getFormActions(),
-    //     //     ];
-    //     // }
+    protected function getFormActions(): array
+    {
+        if ($this->data['status'] == StatusOrdemServicoEnum::PENDENTE->value) {
+            return [
+                ...parent::getFormActions(),
+            ];
+        }
 
-    //     // return [];
-    // }
+        return [];
+    }
 }
