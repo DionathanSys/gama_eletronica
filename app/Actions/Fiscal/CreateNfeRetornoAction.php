@@ -4,6 +4,7 @@ namespace App\Actions\Fiscal;
 
 use App\DTO\Fiscal\NfeDTO2;
 use App\Enums\NaturezaOperacaoEnum;
+use App\Enums\StatusNotaFiscalEnum;
 use App\Models\NotaSaida;
 use App\Services\NfeService;
 use App\Traits\{ControleNumeracaoNf, Notifica};
@@ -84,6 +85,7 @@ class CreateNfeRetornoAction
     {
 
         $data = [
+            'status' => StatusNotaFiscalEnum::AUTORIZADA->value,
             'chave_nota' => $chave,
             'nro_nota' => $dto->getNumero(),
             'serie' => $dto->getSerie(),
