@@ -313,7 +313,7 @@ class OrdemServicoResource extends Resource
     {
         return Forms\Components\TextInput::make('id')
                 ->columnSpan(1)
-                ->visible(fn() => Auth::id() == 1 ? true : false);
+                ;
     } 
 
     public static function getParceiroFormField(): Forms\Components\Select
