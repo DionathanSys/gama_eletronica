@@ -20,7 +20,7 @@ class EditNotaSaida extends EditRecord
         return [
             Actions\DeleteAction::make(),
             Actions\Action::make('confirmar')
-                ->disabled(fn($record)=>$record->status != StatusNotaFiscalEnum::AUTORIZADA->value)
+                ->disabled(fn($record)=>$record->status == StatusNotaFiscalEnum::AUTORIZADA->value)
                 ->action(function($record) {
                     $resp = (new CreateNfeRetornoAction())->execute($record, $this->data);
                     if ($resp) {
