@@ -13,8 +13,10 @@ use App\Actions\NotaFiscalMercadoria\VinculaNfRemessaAction;
 use App\Actions\OrdemServico\DeleteOrdemServico;
 use App\Actions\OrdemServico\DeleteOrdemServicoAction;
 use App\Actions\OrdemServico\UpdateValorOrdemActions;
+use App\Enums\StatusProcessoOrdemServicoEnum;
 use App\Models\Parceiro;
 use App\Services\DownloadPdf;
+use App\Traits\UpdateStatusProcessoOrdemServico;
 use Filament\Actions;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
@@ -26,6 +28,8 @@ use Illuminate\Support\Facades\Auth;
 
 class EditOrdemServico extends EditRecord
 {
+    
+
     protected static string $resource = OrdemServicoResource::class;
 
     protected static ?string $title = 'Editar Ordem';
@@ -34,23 +38,26 @@ class EditOrdemServico extends EditRecord
     {
         return [
             Actions\Action::make('nova_os')
-                    ->icon('heroicon-o-plus')
-                    ->color('info')
-                    ->label('O. S.')
-                    ->action(fn() => redirect(OrdemServicoResource::getUrl('create'))),
+                ->icon('heroicon-o-plus')
+                ->color('info')
+                ->label('O. S.')
+                ->action(fn() => redirect(OrdemServicoResource::getUrl('create'))),
 
             Actions\ActionGroup::make([
                 Actions\ActionGroup::make([
                     Actions\Action::make('pdf-os')
                         ->label('Ordem de Serviço')
                         ->icon('heroicon-o-clipboard-document-list')
-                        ->url(fn(OrdemServico $record) => route('os.html', ['id' => $record->id]))                        
+                        ->url(fn(OrdemServico $record) => route('os.html', ['id' => $record->id]))
                         ->openUrlInNewTab(),
 
                     Actions\Action::make('pdf-orcamento')
                         ->label('Orçamento')
                         ->icon('heroicon-o-clipboard-document-list')
-                        ->url(fn(OrdemServico $record) => route('os.orcamento.html', ['id' => $record->id]))
+                        ->url(function (OrdemServico $record) {
+
+                            route('os.orcamento.html', ['id' => $record->id]);
+                        })
                         ->openUrlInNewTab(),
 
                 ])->dropdown(false),
@@ -84,8 +91,8 @@ class EditOrdemServico extends EditRecord
                             AprovarOrcamentoAction::exec($record);
                         }),
                     Actions\DeleteAction::make()
-                        ->action(fn(OrdemServico $record)=>DeleteOrdemServicoAction::exec($record))
-                        ->after(fn()=>redirect(OrdemServicoResource::getUrl('index'))),
+                        ->action(fn(OrdemServico $record) => DeleteOrdemServicoAction::exec($record))
+                        ->after(fn() => redirect(OrdemServicoResource::getUrl('index'))),
                 ])->dropdown(false),
 
                 Actions\ActionGroup::make([
@@ -109,7 +116,7 @@ class EditOrdemServico extends EditRecord
                         ->label('Vinc. NF-e de Remessa')
                         ->color('info')
                         ->icon('heroicon-o-document-arrow-down')
-                        ->fillForm(fn (OrdemServico $record): array => [
+                        ->fillForm(fn(OrdemServico $record): array => [
                             'nro_nota' => $record->notaEntrada->nro_nota ?? '',
                             'serie_nota' => $record->notaEntrada->serie_nota ?? '',
                             'data_fatura' => $record->notaEntrada->data_fatura ?? '',
@@ -118,7 +125,7 @@ class EditOrdemServico extends EditRecord
                             'ncm_item' => $record->itemNotaRemessa->ncm_item ?? '',
                             'valor' => $record->itemNotaRemessa->valor ?? '',
                         ])
-                        ->form(function(Form $form){
+                        ->form(function (Form $form) {
                             return $form->columns(6)->schema([
                                 TextInput::make('chave_nota')
                                     ->autocomplete(false)
@@ -153,7 +160,7 @@ class EditOrdemServico extends EditRecord
                                     ->required(),
                             ]);
                         })
-                        ->requiresConfirmation(fn(OrdemServico $record)=> $record->itemNotaRemessa ? true : false)
+                        ->requiresConfirmation(fn(OrdemServico $record) => $record->itemNotaRemessa ? true : false)
                         ->action(fn(OrdemServico $record, $data) => VinculaNfRemessaAction::vinculaOrdem($record, $data)),
 
                 ])->dropdown(false),
@@ -173,19 +180,18 @@ class EditOrdemServico extends EditRecord
                 'nro_doc_parceiro' => Parceiro::find($this->record->parceiro_id)?->nro_documento,
             ])
         );
-
     }
 
     protected function mutateFormDataBeforeSave(array $data): array
-    {   
+    {
         $data['updated_by'] = Auth::id();
 
         return $data;
     }
 
     protected function getFormActions(): array
-    {
-        if ($this->data['status'] == StatusOrdemServicoEnum::PENDENTE->value) {
+    {   
+        if ($this->record->status == StatusOrdemServicoEnum::PENDENTE->value) {
             return [
                 ...parent::getFormActions(),
             ];

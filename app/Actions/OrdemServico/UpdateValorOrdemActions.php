@@ -26,7 +26,7 @@ class UpdateValorOrdemActions
         );
 
         $ordemServico->refresh();
-        dd($ordemServico);
+        
 
     }
 }

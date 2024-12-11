@@ -313,7 +313,7 @@ class OrdemServicoResource extends Resource
     {
         return Forms\Components\TextInput::make('id')
                 ->columnSpan(1)
-                ;
+                ->formatStateUsing(fn($state)=>str_pad($state, 4, '0',STR_PAD_LEFT));
     } 
 
     public static function getParceiroFormField(): Forms\Components\Select
@@ -413,6 +413,7 @@ class OrdemServicoResource extends Resource
     public static function getStatusFormField(): Forms\Components\TextInput
     {
         return Forms\Components\TextInput::make('status')
+                ->visible(fn()=>Auth::user()->id == 1 ? true : false)
                 ->columnSpan(2);
     } 
     

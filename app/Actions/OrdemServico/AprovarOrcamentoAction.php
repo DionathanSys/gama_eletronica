@@ -2,14 +2,18 @@
 
 namespace App\Actions\OrdemServico;
 
+use App\Enums\StatusProcessoOrdemServicoEnum;
 use App\Models\ItemOrdemServico;
 use App\Models\Orcamento;
 use App\Models\OrdemServico;
+use App\Traits\UpdateStatusProcessoOrdemServico;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 class AprovarOrcamentoAction
 {
+    use UpdateStatusProcessoOrdemServico;
+
     public static function exec(OrdemServico $ordemServico)
     {
         $itensOrcamento = $ordemServico->itens_orcamento;
@@ -36,5 +40,6 @@ class AprovarOrcamentoAction
         });
 
         UpdateValorOrdemActions::exec($ordemServico);
+
     }
 }

@@ -4,6 +4,8 @@ namespace App\Filament\Resources\OrdemServicoResource\RelationManagers;
 
 use App\Actions\OrdemServico\UpdateValorOrdemActions;
 use App\Enums\StatusOrdemServicoEnum;
+use App\Enums\StatusProcessoOrdemServicoEnum;
+use App\Traits\UpdateStatusProcessoOrdemServico;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -17,6 +19,8 @@ use Illuminate\Support\Facades\Auth;
 
 class ItensOrcamentoRelationManager extends RelationManager
 {
+    use UpdateStatusProcessoOrdemServico;
+
     protected static string $relationship = 'itens_orcamento';
 
     protected static ?string $title = 'Orçamentos';
@@ -77,6 +81,9 @@ class ItensOrcamentoRelationManager extends RelationManager
                     ->color('info')
                     ->visible(fn()=>$this->getOwnerRecord()->status == StatusOrdemServicoEnum::PENDENTE->value ? true : false)
                     ->mutateFormDataUsing(function (array $data): array {
+                 
+                        $this->updateStatusOrdemServico($this->getOwnerRecord(), StatusProcessoOrdemServicoEnum::AGUARDANDO_APROVACAO->value);
+                 
                         $data['created_by'] = Auth::id();
                         $data['updated_by'] = Auth::id();
                  

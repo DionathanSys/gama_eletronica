@@ -3,11 +3,15 @@
 namespace App\Actions\OrdemServico;
 
 use App\Enums\StatusOrdemServicoEnum;
+use App\Enums\StatusProcessoOrdemServicoEnum;
 use App\Models\OrdemServico;
+use App\Traits\UpdateStatusProcessoOrdemServico;
 use Filament\Notifications\Notification;
 
 class UpdateStatusOrdemActions
 {
+    use UpdateStatusProcessoOrdemServico;
+
     public function __construct(protected OrdemServico $ordemServico) {}
 
     public function encerrar(): bool
@@ -20,6 +24,13 @@ class UpdateStatusOrdemActions
         $this->ordemServico->update([
             'status' => StatusOrdemServicoEnum::ENCERRADA
         ]);
+
+        if (
+            $this->ordemServico->status_processo != StatusProcessoOrdemServicoEnum::CANCELADA->value &&
+            $this->ordemServico->status_processo != StatusProcessoOrdemServicoEnum::ORCAMENTO_REPROVADO->value
+        ) {
+            $this->updateStatusOrdemServico($this->ordemServico, StatusProcessoOrdemServicoEnum::ENCERRADA->value);
+        }
 
         $this->notificaSucesso();
 

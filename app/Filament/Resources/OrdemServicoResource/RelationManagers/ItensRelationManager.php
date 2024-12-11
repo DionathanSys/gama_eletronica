@@ -3,12 +3,15 @@
 namespace App\Filament\Resources\OrdemServicoResource\RelationManagers;
 
 use App\Actions\OrdemServico\CreateItemOrdemActions;
+use App\Actions\OrdemServico\UpdateStatusOrdemActions;
 use App\Actions\OrdemServico\UpdateValorOrdemActions;
 use App\Enums\StatusOrdemServicoEnum;
+use App\Enums\StatusProcessoOrdemServicoEnum;
 use App\Filament\Resources\ServicoResource;
 use App\Models\ItemOrdemServico;
 use App\Models\OrdemServico;
 use App\Models\Servico;
+use App\Traits\UpdateStatusProcessoOrdemServico;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -22,6 +25,8 @@ use Illuminate\Support\Facades\Auth;
 
 class ItensRelationManager extends RelationManager
 {
+    use UpdateStatusProcessoOrdemServico;
+
     protected static string $relationship = 'itens';
 
     protected static ?string $title = 'Serviços';
@@ -82,10 +87,14 @@ class ItensRelationManager extends RelationManager
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['created_by'] = Auth::id();
                         $data['updated_by'] = Auth::id();
+                        $data['status_processo'] = StatusProcessoOrdemServicoEnum::EM_ATENDIMENTO->value;
                  
                         return $data;
                     })
-                    ->after(fn()=> UpdateValorOrdemActions::exec($this->getOwnerRecord())),
+                    ->after(function(){
+                        // $this->updateStatusOrdemServico(dd($this->getOwnerRecord(), StatusProcessoOrdemServicoEnum::EM_ATENDIMENTO->value);
+                        UpdateValorOrdemActions::exec($this->getOwnerRecord());
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
