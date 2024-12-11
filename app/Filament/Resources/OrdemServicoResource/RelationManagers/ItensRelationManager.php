@@ -87,7 +87,7 @@ class ItensRelationManager extends RelationManager
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['created_by'] = Auth::id();
                         $data['updated_by'] = Auth::id();
-                        $data['status_processo'] = StatusProcessoOrdemServicoEnum::EM_ATENDIMENTO->value;
+                        
                  
                         return $data;
                     })
