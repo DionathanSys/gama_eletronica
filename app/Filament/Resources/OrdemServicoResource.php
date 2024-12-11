@@ -312,8 +312,7 @@ class OrdemServicoResource extends Resource
     public static function getIdFormField(): Forms\Components\TextInput
     {
         return Forms\Components\TextInput::make('id')
-                ->columnSpan(1)
-                ->formatStateUsing(fn($state)=>str_pad($state, 4, '0',STR_PAD_LEFT));
+                ->columnSpan(1);
     } 
 
     public static function getParceiroFormField(): Forms\Components\Select
