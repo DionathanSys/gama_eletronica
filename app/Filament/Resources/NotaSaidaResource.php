@@ -41,10 +41,7 @@ class NotaSaidaResource extends Resource
                             ->schema([
                                 OrdemServicoResource::getParceiroFormField()
                                     ->columnSpan(6),
-                                    
-                                static::getNroNotaFormField(),
 
-                                static::getSerieNotaFormField(),
                                 // OrdemServicoResource::getNroDocParceiroFormField(),
 
                                 static::getNaturezaOperacaoFormField()
@@ -53,6 +50,10 @@ class NotaSaidaResource extends Resource
                                 static::getDataEmissaoFormField(),
 
                                 static::getChaveNotaFormField(),
+
+                                static::getNroNotaFormField(),
+
+                                static::getSerieNotaFormField(),
 
                             ]),
                         Tab::make('Transporte')
@@ -89,16 +90,6 @@ class NotaSaidaResource extends Resource
                 Tables\Columns\TextColumn::make('parceiro.nome')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('fatura_id')
-                    ->placeholder('N/A')
-                    ->label('Fatura')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('natureza_operacao')
-                    ->label('Natureza Operação')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('chave_nota')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('nro_nota')
                     ->numeric()
                     ->sortable(),
@@ -106,6 +97,17 @@ class NotaSaidaResource extends Resource
                     ->label('Série')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('fatura_id')
+                    ->placeholder('N/A')
+                    ->label('Fatura')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('chave_nota')
+                        ->searchable(),
+                Tables\Columns\TextColumn::make('natureza_operacao')
+                    ->label('Natureza Operação')
+                    ->searchable(),
+                
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Criado Em')
                     ->dateTime()
