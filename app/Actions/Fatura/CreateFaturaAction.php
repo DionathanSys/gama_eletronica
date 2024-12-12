@@ -29,7 +29,7 @@ class CreateFaturaAction
                 $ordem->status == StatusOrdemServicoEnum::ENCERRADA->value &&
                 $ordem->fatura_id == null;
         })) {
-            static::notificaFalha('Existem ordens não encerradas');
+            static::notificaFalha('Ordens não encerradas/faturadas');
             return false;
         }
 

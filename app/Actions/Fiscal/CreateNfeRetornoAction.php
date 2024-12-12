@@ -6,6 +6,7 @@ use App\DTO\Fiscal\NfeDTO2;
 use App\Enums\NaturezaOperacaoEnum;
 use App\Enums\StatusNotaFiscalEnum;
 use App\Models\NotaSaida;
+use App\Models\User;
 use App\Services\NfeService;
 use App\Traits\{ControleNumeracaoNf, Notifica};
 use CloudDfe\SdkPHP\Nfe;
@@ -69,6 +70,7 @@ class CreateNfeRetornoAction
         $resp = $this->nfeService->cria($notaFiscalDTO->toArray());
         
         if (! $resp->sucesso) {
+            dd($resp);
             $this->notificaErro('Retorno recebido com falha');
             return false;
         }
@@ -108,6 +110,6 @@ class CreateNfeRetornoAction
                     ->url(route('nfe.pdf', ['chave' => $chave]))
                     ->openUrlInNewTab(),
             ])
-            ->sendToDatabase(Auth::user());
+            ->sendToDatabase([User::find(1), User::find(2)]);
     }
 }

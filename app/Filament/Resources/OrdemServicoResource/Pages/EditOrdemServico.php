@@ -64,13 +64,14 @@ class EditOrdemServico extends EditRecord
 
                 Actions\ActionGroup::make([
                     Actions\Action::make('encerrar')
-                        ->label('Encerar OS')
+                        ->label('Encerrar OS')
                         ->icon('heroicon-o-check-circle')
                         ->color('success')
                         ->action(function (OrdemServico $record) {
-                            if ((new UpdateStatusOrdemActions($record))->encerrar()) {
-                                return redirect(OrdemServicoResource::getUrl('edit', ['record' => $this->getRecord()]));
-                            }
+                            (new UpdateStatusOrdemActions($record))->encerrar();
+                            $this->refreshFormData([
+                                'status',
+                            ]);
                         }),
 
                     Actions\Action::make('reabrir')
@@ -79,9 +80,10 @@ class EditOrdemServico extends EditRecord
                         ->color('primary')
                         ->tooltip('Reabrir OS')
                         ->action(function (OrdemServico $record) {
-                            if ((new UpdateStatusOrdemActions($record))->reabrir()) {
-                                return redirect(OrdemServicoResource::getUrl('edit', ['record' => $this->getRecord()]));
-                            }
+                            (new UpdateStatusOrdemActions($record))->reabrir();
+                            $this->refreshFormData([
+                                'status',
+                            ]);
                         }),
                     Actions\Action::make('aprovar')
                         ->label('Aprovar Orçamento')

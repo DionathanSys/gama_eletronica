@@ -20,6 +20,7 @@ use App\Models\OrdemServico;
 use App\Models\Parceiro;
 use App\Models\Veiculo;
 use Filament\Forms;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
@@ -54,21 +55,33 @@ class OrdemServicoResource extends Resource
                         Tabs\Tab::make('Geral')
                             ->columns(10)
                             ->schema([
-                                static::getIdFormField(),
-                                static::getParceiroFormField(),
-                                static::getNroDocParceiroFormField(),
-                                static::getEquipamentoFormField(),
-                                static::getVeiculoFormField(),
-                                static::getDataOrdemFormField(),
-                                static::getStatusProcessoFormField(),
-                                static::getPrioridadeFormField(),
-                                static::getTipoManutencaoFormField(),
-                                static::getRelatoClienteFormField(),
-                                static::getItensRecebidosFormField(),
-                                static::getObsGeralFormField(),
-                                static::getObsInternaFormField(),
+                                Section::make('Principal')
+                                    ->columns(12)
+                                    ->schema([
+                                        static::getIdFormField(),
+                                        static::getFaturaFormField(),
+                                        static::getDataOrdemFormField(),
+                                        static::getStatusProcessoFormField(),
+                                        static::getTipoManutencaoFormField(),
+                                        static::getPrioridadeFormField(),
+                                    ]),
+                                Section::make('Info Cliente')
+                                    ->columns(12)
+                                    ->schema([
+                                        static::getParceiroFormField(),
+                                        static::getNroDocParceiroFormField(),
+                                        static::getEquipamentoFormField(),
+                                        static::getVeiculoFormField(),
+                                    ]),
+                                Section::make('Observações')
+                                    ->columns(12)
+                                    ->schema([
+                                        static::getRelatoClienteFormField(),
+                                        static::getItensRecebidosFormField(),
+                                        static::getObsGeralFormField(),
+                                        static::getObsInternaFormField(),
+                                    ]),
                                 static::getDescontoOrdemFormField(),
-                                static::getFaturaFormField(),
                                 static::getStatusFormField(),
                             ]),
                         Tabs\Tab::make('Anexos')
@@ -312,13 +325,16 @@ class OrdemServicoResource extends Resource
     public static function getIdFormField(): Forms\Components\TextInput
     {
         return Forms\Components\TextInput::make('id')
-                ->columnSpan(1);
+                ->label('Nro. Ordem')
+                ->disabled(fn()=>Auth::user()->id == 1 ? false : true)
+                ->formatStateUsing(fn($state)=>str_pad($state, 5, '0', STR_PAD_LEFT))
+                ->columnSpan(2);
     } 
 
     public static function getParceiroFormField(): Forms\Components\Select
     {
         return Forms\Components\Select::make('parceiro_id')
-                    ->columnSpan(4)
+                    ->columnSpan(6)
                     ->label('Parceiro')
                     ->relationship('parceiro', 'nome')
                     ->preload()
@@ -340,7 +356,7 @@ class OrdemServicoResource extends Resource
     public static function getNroDocParceiroFormField(): Forms\Components\TextInput
     {
         return Forms\Components\TextInput::make('nro_doc_parceiro')
-                    ->columnSpan(2)
+                    ->columnSpan(3)
                     ->label('CNPJ/CPF')
                     ->dehydrated(false);
                     
@@ -362,7 +378,7 @@ class OrdemServicoResource extends Resource
     public static function getEquipamentoFormField(): Forms\Components\Select
     {
         return Forms\Components\Select::make('equipamento_id')
-                    ->columnSpan(4)
+                    ->columnSpan(6)
                     ->label('Equipamento')
                     ->placeholder('Equipamento')
                     ->relationship('equipamento', 'descricao')
@@ -395,7 +411,7 @@ class OrdemServicoResource extends Resource
     public static function getVeiculoFormField(): Forms\Components\TextInput
     {
         return Forms\Components\TextInput::make('placa')      
-                    ->columnSpan(2)
+                    ->columnSpan(3)
                     ->length(7)
                     ->placeholder('Placa');
     }
@@ -449,28 +465,29 @@ class OrdemServicoResource extends Resource
     {
         return Forms\Components\TextInput::make('fatura_id')
                 ->label('Fatura')
-                ->columnSpan(1)
+                ->formatStateUsing(fn($state)=>str_pad($state, 4, '0', STR_PAD_LEFT))
+                ->columnSpan(2)
                 ->disabled();
     } 
 
     public static function getRelatoClienteFormField(): Forms\Components\Textarea
     {
         return Forms\Components\Textarea::make('relato_cliente')
-                ->columnSpan(5);
+                ->columnSpan(6);
     } 
     public static function getObsGeralFormField(): Forms\Components\Textarea
     {
         return Forms\Components\Textarea::make('observacao_geral')
                 ->label('Observações Gerais')
                 ->maxLength(255)
-                ->columnSpan(5);
+                ->columnSpan(6);
     } 
     public static function getObsInternaFormField(): Forms\Components\Textarea
     {
         return Forms\Components\Textarea::make('observacao_interna')
                 ->label('Observações Internas')
                 ->maxLength(255)
-                ->columnSpan(5);
+                ->columnSpan(6);
     } 
     
     public static function getDescontoOrdemFormField(): Forms\Components\TextInput
@@ -488,7 +505,7 @@ class OrdemServicoResource extends Resource
     public static function getItensRecebidosFormField(): Forms\Components\Textarea
     {
         return Forms\Components\Textarea::make('itens_recebidos')
-                ->columnSpan(5);
+                ->columnSpan(6);
     } 
 
     public static function getImageEquipamentoFormFiel(): Forms\Components\FileUpload 
