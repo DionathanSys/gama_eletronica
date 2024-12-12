@@ -71,6 +71,7 @@ class EditOrdemServico extends EditRecord
                             (new UpdateStatusOrdemActions($record))->encerrar();
                             $this->refreshFormData([
                                 'status',
+                                'status_processo',
                             ]);
                         }),
 
@@ -83,6 +84,7 @@ class EditOrdemServico extends EditRecord
                             (new UpdateStatusOrdemActions($record))->reabrir();
                             $this->refreshFormData([
                                 'status',
+                                'status_processo',
                             ]);
                         }),
                     Actions\Action::make('aprovar')
@@ -105,6 +107,7 @@ class EditOrdemServico extends EditRecord
                             $fatura = CreateFaturaAction::exec(collect([$record]));
                             $this->refreshFormData([
                                 'fatura_id'
+
                             ]);
                             if ($fatura) {
                                 return redirect(FaturaResource::getUrl('edit', ['record' => $fatura->id,]));

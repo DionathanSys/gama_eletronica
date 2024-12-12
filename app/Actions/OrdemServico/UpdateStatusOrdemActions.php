@@ -44,6 +44,8 @@ class UpdateStatusOrdemActions
             return false;
         }
 
+        $this->updateStatusOrdemServico($this->ordemServico, StatusProcessoOrdemServicoEnum::EM_ATENDIMENTO->value);
+
         $this->ordemServico->update([
             'status' => StatusOrdemServicoEnum::PENDENTE
         ]);

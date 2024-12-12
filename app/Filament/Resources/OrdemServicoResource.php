@@ -327,7 +327,7 @@ class OrdemServicoResource extends Resource
         return Forms\Components\TextInput::make('id')
                 ->label('Nro. Ordem')
                 ->readOnly()
-                ->formatStateUsing(fn($state)=>str_pad($state, 5, '0', STR_PAD_LEFT))
+                ->formatStateUsing(fn($state)=> $state ? str_pad($state, 5, '0', STR_PAD_LEFT) : '' )
                 ->columnSpan(2);
     } 
 
@@ -465,7 +465,7 @@ class OrdemServicoResource extends Resource
     {
         return Forms\Components\TextInput::make('fatura_id')
                 ->label('Fatura')
-                ->formatStateUsing(fn($state)=>str_pad($state, 5, '0', STR_PAD_LEFT))
+                ->formatStateUsing(fn($state)=> $state ? str_pad($state, 5, '0', STR_PAD_LEFT) : '' )
                 ->columnSpan(2)
                 ->readOnly();
     } 
