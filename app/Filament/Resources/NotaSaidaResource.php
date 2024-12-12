@@ -17,6 +17,7 @@ use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 
 class NotaSaidaResource extends Resource
@@ -138,6 +139,9 @@ class NotaSaidaResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Action::make('view_pdf')
+                    ->url(fn($record)=>route('nfe.pdf', ['chave' => $record->chave_nota]))
+                    ->openUrlInNewTab(),
             ])
             ->paginated([25, 50, 100])
             ->defaultSort('id', 'desc')
