@@ -41,7 +41,10 @@ class NotaSaidaResource extends Resource
                             ->schema([
                                 OrdemServicoResource::getParceiroFormField()
                                     ->columnSpan(6),
+                                    
+                                static::getNroNotaFormField(),
 
+                                static::getSerieNotaFormField(),
                                 // OrdemServicoResource::getNroDocParceiroFormField(),
 
                                 static::getNaturezaOperacaoFormField()
@@ -50,10 +53,6 @@ class NotaSaidaResource extends Resource
                                 static::getDataEmissaoFormField(),
 
                                 static::getChaveNotaFormField(),
-
-                                static::getNroNotaFormField(),
-
-                                static::getSerieNotaFormField(),
 
                             ]),
                         Tab::make('Transporte')
@@ -91,6 +90,7 @@ class NotaSaidaResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('fatura_id')
+                    ->placeholder('N/A')
                     ->label('Fatura')
                     ->numeric()
                     ->sortable(),
@@ -137,7 +137,8 @@ class NotaSaidaResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
-            ->sort()
+            ->paginated([25, 50, 100])
+            ->defaultSort('id', 'desc')
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
