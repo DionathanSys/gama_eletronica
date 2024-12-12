@@ -65,12 +65,18 @@ class OrdensServicoRelationManager extends RelationManager
                     ->label('Valor Total')
                     ->money('BRL')
                     ->sortable()
-                    ->summarize(Sum::make()->money('BRL')->label('Total')),
-
+                    ->summarize(Sum::make()->money('BRL')->label('Valor Bruto')),
+                    
                 Tables\Columns\TextColumn::make('desconto')
-                    ->numeric()
+                    ->money('BRL')
+                    ->summarize(Sum::make()->money('BRL')->label('Desconto'))
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: false),
+
+                // Tables\Columns\TextColumn::make('valor_liquido')
+                //     ->money('BRL')
+                //     ->sortable()
+                //     ->toggleable(isToggledHiddenByDefault: false),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Criado Em')

@@ -37,67 +37,65 @@ class NotaSaidaResource extends Resource
                     ->columnSpanFull()
                     ->tabs([
                         Tab::make('Geral')
+                            ->columns(12)
                             ->schema([
                                 OrdemServicoResource::getParceiroFormField()
-                                    ->columnSpan(3),
+                                    ->columnSpan(6),
 
                                 OrdemServicoResource::getNroDocParceiroFormField(),
 
-                                static::getNaturezaOperacaoFormField(),
+                                static::getNaturezaOperacaoFormField()
+                                    ->columnSpan(4),
 
                                 static::getDataEmissaoFormField(),
-                            ]),
-                        Tab::make('Transporte')
-                            ->schema([
-                                Builder::make('frete')
-                                    ->label('Transporte')
-                                    ->blocks([
-                                        Block::make('frete')
-                                            ->schema([
-                                                static::getTransportadoraFormField(),
-                                                static::getModalidadeFreteFormField(),
-                                                static::getVolumeEspecieFormField(),
-                                                static::getVolumeQuantidadeFormField(),
-                                                static::getVolumePesoLiquidoFormField(),
-                                                static::getVolumePesoBrutoFormField(),
-                                            ])
-                                    ])
-                            ]),
-                        Tab::make('notas')
-                            ->schema([
-                                static::getNotasReferenciadasFormField()
-                                    ->label(''),
+
+                                // static::getChaveNotaFormField(),
+
+                                // static::getNroNotaFormField(),
+
+                                // static::getSerieNotaFormField(),
                             ])
-                        ]
-                    )
+                    ]),
+                Tab::make('Transporte')
+                    ->schema([
+                        Builder::make('frete')
+                            ->label('Transporte')
+                            ->blocks([
+                                Block::make('frete')
+                                    ->schema([
+                                        static::getTransportadoraFormField(),
+                                        static::getModalidadeFreteFormField(),
+                                        static::getVolumeEspecieFormField(),
+                                        static::getVolumeQuantidadeFormField(),
+                                        static::getVolumePesoLiquidoFormField(),
+                                        static::getVolumePesoBrutoFormField(),
+                                    ])
+                            ])
+                    ]),
+                Tab::make('notas')
+                    ->schema([
+                        static::getNotasReferenciadasFormField()
+                            ->label(''),
+                    ])
 
             ]);
-        // Forms\Components\Select::make('parceiro_id')
-        //     ->relationship('parceiro', 'nome')
-        //     ->required(),
-
-        // Forms\Components\TextInput::make('chave_nota'),
-        // Forms\Components\TextInput::make('nro_nota')
-        //     ->numeric(),
-
-        // Forms\Components\TextInput::make('serie')
-        //     ->numeric(),
-
-        // Forms\Components\DatePicker::make('data_emissao'),
-        // Forms\Components\DatePicker::make('data_entrada_saida'),
     }
-
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('parceiro.id')
+                Tables\Columns\TextColumn::make('id')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('parceiro.nome')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('fatura_id')
+                    ->label('Fatura')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('natureza_operacao')
+                    ->label('Natureza Operação')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('chave_nota')
                     ->searchable(),
@@ -105,22 +103,33 @@ class NotaSaidaResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('serie')
+                    ->label('Série')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Criado Em')
                     ->dateTime()
+                    ->dateTime('d/m/Y h:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Atualizado Em')
                     ->dateTime()
+                    ->dateTime('d/m/Y h:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('data_emissao')
+                    ->label('Dt. Emissão')
                     ->date()
-                    ->sortable(),
+                    ->dateTime('d/m/Y')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: false),
                 Tables\Columns\TextColumn::make('data_entrada_saida')
+                    ->label('Dt. Ent. Saí.')
                     ->date()
-                    ->sortable(),
+                    ->dateTime('d/m/Y')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
@@ -233,6 +242,31 @@ class NotaSaidaResource extends Resource
     public static function getVolumePesoBrutoFormField(): Forms\Components\TextInput
     {
         return Forms\Components\TextInput::make('volume_peso_bruto')
+            ->columnSpan(2)
+            ->default(1)
+            ->minValue(1)
+            ->numeric();
+    }
+
+    public static function getChaveNotaFormField(): Forms\Components\TextInput
+    {
+        return Forms\Components\TextInput::make('chave_nota')
+            ->columnSpan(5)
+            ->numeric();
+    }
+
+    public static function getNroNotaFormField(): Forms\Components\TextInput
+    {
+        return Forms\Components\TextInput::make('nro_nota')
+            ->columnSpan(2)
+            ->default(1)
+            ->minValue(1)
+            ->numeric();
+    }
+
+    public static function getSerieNotaFormField(): Forms\Components\TextInput
+    {
+        return Forms\Components\TextInput::make('serie')
             ->columnSpan(2)
             ->default(1)
             ->minValue(1)

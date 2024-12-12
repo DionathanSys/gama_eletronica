@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/resources/css/app.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Ordem {{$ordem_servico->id}}</title>
+    <title>GAMMA ELETRÔNICA</title>
     <script>
       // Função para abrir a caixa de diálogo de impressão assim que a página carregar
       window.onload = function() {

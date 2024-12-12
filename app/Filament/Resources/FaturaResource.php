@@ -25,23 +25,39 @@ class FaturaResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->columns(4)
+            ->columns(12)
             ->schema([
                 Forms\Components\Select::make('parceiro_id')
                     ->disabled()
-                    ->columnSpan(2)
+                    ->columnSpan(4)
                     ->label('Parceiro')
                     ->relationship('parceiro', 'nome'),
 
                 Forms\Components\TextInput::make('valor_total')
+                ->numeric()
                     ->disabled()
-                    ->columnSpan(1)
+                    ->columnSpan(2)
                     ->label('Valor Total')
+                    ->prefix('R$'),
+                
+                Forms\Components\TextInput::make('desconto')
+                ->numeric()
+                    ->disabled()
+                    ->columnSpan(2)
+                    ->label('Desconto')
+                    ->prefix('R$'),
+                    
+                Forms\Components\TextInput::make('valor_total')
+                    ->formatStateUsing(fn($record) => $record->valor_total - $record->desconto)
+                    ->numeric()
+                    ->disabled()
+                    ->columnSpan(2)
+                    ->label('Valor Liquído')
                     ->prefix('R$'),
 
                 Forms\Components\TextInput::make('status')
                     ->disabled()
-                    ->columnSpan(1),
+                    ->columnSpan(2),
                     
             ]);
     }
@@ -63,14 +79,21 @@ class FaturaResource extends Resource
 
                 Tables\Columns\TextColumn::make('valor_total')
                     ->label('Valor Total')
+                    ->sortable()
                     ->money('BRL')
-                    ->sortable()
                     ->summarize(Sum::make()->money('BRL')->label('Total')),
-
+                    
                 Tables\Columns\TextColumn::make('desconto')
-                    ->numeric()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->money('BRL')
+                    ->summarize(Sum::make()->money('BRL')->label('Descontos'))
+                    ->toggleable(isToggledHiddenByDefault: false),
+
+                // Tables\Columns\TextColumn::make('valor_liquido')
+                //     ->sortable()
+                //     ->money('BRL')
+                //     ->summarize(Sum::make()->money('BRL')->label('Valor Liquído'))
+                //     ->toggleable(isToggledHiddenByDefault: false),
 
                 Tables\Columns\TextColumn::make('status')
                     ->badge()

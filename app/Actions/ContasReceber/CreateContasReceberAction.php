@@ -17,7 +17,7 @@ class CreateContasReceberAction
             'parceiro_id' => $fatura->parceiro_id,
             'fatura_id' => $fatura->id,
             'data_vencimento' => Carbon::now()->addDays(15),
-            'valor' => $fatura->valor_total,
+            'valor' => $fatura->valor_total - $fatura->desconto,
             'desdobramento' => 1,
             'desdobramentos' => 1,
             'status' => StatusFaturaEnum::PENDENTE,

@@ -29,17 +29,19 @@ class CreateFaturaAction
                 $ordem->status == StatusOrdemServicoEnum::ENCERRADA->value &&
                 $ordem->fatura_id == null;
         })) {
-            static::notificaFalha('Ordens não encerradas/faturadas');
+            static::notificaFalha('Existem ordens não encerradas ou já faturadas');
             return false;
         }
 
         $parceiro_id = ($ordens->first())->parceiro_id;
 
         $valor_servicos = $ordens->sum('valor_total');
+        $valor_descontos = $ordens->sum('desconto');
 
         $fatura = (new Fatura())->create([
             'parceiro_id' => $parceiro_id,
             'valor_total' => $valor_servicos,
+            'desconto' => $valor_descontos,
             'status' => StatusFaturaEnum::PENDENTE,
             'created_by' => Auth::id(),
             'updated_by' => Auth::id(),

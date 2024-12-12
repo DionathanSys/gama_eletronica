@@ -326,7 +326,7 @@ class OrdemServicoResource extends Resource
     {
         return Forms\Components\TextInput::make('id')
                 ->label('Nro. Ordem')
-                ->disabled(fn()=>Auth::user()->id == 1 ? false : true)
+                ->readOnly()
                 ->formatStateUsing(fn($state)=>str_pad($state, 5, '0', STR_PAD_LEFT))
                 ->columnSpan(2);
     } 
@@ -465,9 +465,9 @@ class OrdemServicoResource extends Resource
     {
         return Forms\Components\TextInput::make('fatura_id')
                 ->label('Fatura')
-                ->formatStateUsing(fn($state)=>str_pad($state, 4, '0', STR_PAD_LEFT))
+                ->formatStateUsing(fn($state)=>str_pad($state, 5, '0', STR_PAD_LEFT))
                 ->columnSpan(2)
-                ->disabled();
+                ->readOnly();
     } 
 
     public static function getRelatoClienteFormField(): Forms\Components\Textarea
