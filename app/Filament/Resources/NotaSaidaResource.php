@@ -42,42 +42,42 @@ class NotaSaidaResource extends Resource
                                 OrdemServicoResource::getParceiroFormField()
                                     ->columnSpan(6),
 
-                                OrdemServicoResource::getNroDocParceiroFormField(),
+                                // OrdemServicoResource::getNroDocParceiroFormField(),
 
                                 static::getNaturezaOperacaoFormField()
-                                    ->columnSpan(4),
+                                    ->columnSpan(3),
 
                                 static::getDataEmissaoFormField(),
 
-                                // static::getChaveNotaFormField(),
+                                static::getChaveNotaFormField(),
 
-                                // static::getNroNotaFormField(),
+                                static::getNroNotaFormField(),
 
-                                // static::getSerieNotaFormField(),
-                            ])
-                    ]),
-                Tab::make('Transporte')
-                    ->schema([
-                        Builder::make('frete')
-                            ->label('Transporte')
-                            ->blocks([
-                                Block::make('frete')
-                                    ->schema([
-                                        static::getTransportadoraFormField(),
-                                        static::getModalidadeFreteFormField(),
-                                        static::getVolumeEspecieFormField(),
-                                        static::getVolumeQuantidadeFormField(),
-                                        static::getVolumePesoLiquidoFormField(),
-                                        static::getVolumePesoBrutoFormField(),
+                                static::getSerieNotaFormField(),
+
+                            ]),
+                        Tab::make('Transporte')
+                            ->schema([
+                                Builder::make('frete')
+                                    ->label('Transporte')
+                                    ->blocks([
+                                        Block::make('frete')
+                                            ->schema([
+                                                static::getTransportadoraFormField(),
+                                                static::getModalidadeFreteFormField(),
+                                                static::getVolumeEspecieFormField(),
+                                                static::getVolumeQuantidadeFormField(),
+                                                static::getVolumePesoLiquidoFormField(),
+                                                static::getVolumePesoBrutoFormField(),
+                                            ])
                                     ])
-                            ])
-                    ]),
-                Tab::make('notas')
-                    ->schema([
-                        static::getNotasReferenciadasFormField()
-                            ->label(''),
+                            ]),
+                        Tab::make('notas')
+                            ->schema([
+                                static::getNotasReferenciadasFormField()
+                                    ->label(''),
+                            ]),
                     ])
-
             ]);
     }
     public static function table(Table $table): Table
@@ -137,6 +137,7 @@ class NotaSaidaResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
+            ->sort()
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -252,6 +253,7 @@ class NotaSaidaResource extends Resource
     {
         return Forms\Components\TextInput::make('chave_nota')
             ->columnSpan(5)
+            ->readOnly()
             ->numeric();
     }
 
@@ -259,8 +261,7 @@ class NotaSaidaResource extends Resource
     {
         return Forms\Components\TextInput::make('nro_nota')
             ->columnSpan(2)
-            ->default(1)
-            ->minValue(1)
+            ->readOnly()
             ->numeric();
     }
 
@@ -268,8 +269,7 @@ class NotaSaidaResource extends Resource
     {
         return Forms\Components\TextInput::make('serie')
             ->columnSpan(2)
-            ->default(1)
-            ->minValue(1)
+            ->readOnly()
             ->numeric();
     }
 
