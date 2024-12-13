@@ -67,4 +67,9 @@ class NfeService
         return $this->nfe->cancela($payload);
     }
 
+    public function inutiliza($payload)
+    {
+        return $this->nfe->inutiliza($payload);
+    }
+
 }

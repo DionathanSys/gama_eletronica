@@ -326,7 +326,7 @@ class OrdemServicoResource extends Resource
     {
         return Forms\Components\TextInput::make('id')
                 ->label('Nro. Ordem')
-                ->readOnly()
+                ->readOnly(fn()=>Auth::user()->id == 1 ? false : true)
                 ->formatStateUsing(fn($state)=> $state ? str_pad($state, 5, '0', STR_PAD_LEFT) : '' )
                 ->columnSpan(2);
     } 

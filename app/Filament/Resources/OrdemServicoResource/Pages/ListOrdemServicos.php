@@ -31,16 +31,11 @@ class ListOrdemServicos extends ListRecords
             'Pendente' => Tab::make()
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status_processo', StatusProcessoOrdemServicoEnum::PENDENTE->value)),
             'Em Atendimento' => Tab::make()
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status_processo', StatusProcessoOrdemServicoEnum::EM_ATENDIMENTO->value)
-                                                                    ->where('fatura_id', '=', null)),
-            'Ag. Aprovação' => Tab::make()
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status_processo', StatusProcessoOrdemServicoEnum::AGUARDANDO_APROVACAO->value)),
-
-            'Aprovado' => Tab::make()
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status_processo', StatusProcessoOrdemServicoEnum::ORCAMENTO_APROVADO->value)),
-
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status_processo', StatusProcessoOrdemServicoEnum::EM_ATENDIMENTO->value)),
+                                                                    
             'Encerrada' => Tab::make()
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status_processo', StatusProcessoOrdemServicoEnum::ENCERRADA->value)),
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', StatusProcessoOrdemServicoEnum::ENCERRADA->value)
+                                                                    ->where('fatura_id', '=', null)),
 
             'Cancelado' => Tab::make()
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status_processo', StatusProcessoOrdemServicoEnum::CANCELADA->value)),

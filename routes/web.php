@@ -201,3 +201,18 @@ n 8 - 42241245790457000185550050000000081417135693
 12- 42241245790457000185550050000000121113797028
 
 */
+
+
+// Route::get('/nf/inutiliza', function (){
+    
+//     $payload = [
+//         "numero_inicial" => "4",
+//         "numero_final" => "5",
+//         "serie" => "5",
+//         "justificativa" => "Foi inutilizado devido ao seu salto inadvertido durante emissões iniciais no sistema. Não houve operação fiscal vinculada a este número, e sua inutilização é solicitada para manter a sequência numérica e a conformidade com as normas fiscais vigentes"
+//     ];
+    
+//     $resp = (new NfeService())->inutiliza($payload);
+    
+//     dd($resp);
+// });
