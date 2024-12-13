@@ -9,7 +9,6 @@ enum StatusProcessoOrdemServicoEnum:string
     case AGUARDANDO_APROVACAO = 'AGUARDANDO APROVACAO';
     case ORCAMENTO_APROVADO = 'ORCAMENTO APROVADO';
     case ORCAMENTO_REPROVADO = 'ORCAMENTO REPROVADO';
-    case DEVOLVIDO = 'DEVOLVIDO';
     case CANCELADA = 'CANCELADA';
     case ENCERRADA = 'ENCERRADA';
 
@@ -21,7 +20,6 @@ enum StatusProcessoOrdemServicoEnum:string
             self::AGUARDANDO_APROVACAO => 'AGUARDANDO APROVACAO',
             self::ORCAMENTO_APROVADO => 'ORCAMENTO APROVADO',
             self::ORCAMENTO_REPROVADO => 'ORCAMENTO REPROVADO',
-            self::DEVOLVIDO => 'DEVOLVIDO',
             self::CANCELADA => 'CANCELADA',
             self::ENCERRADA=> 'ENCERRADA',
         };
