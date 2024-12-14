@@ -85,7 +85,7 @@
         <p class="basis-1/4">Valor Unitário</p>
         <p class="basis-1/4">Valor Total</p>
       </li>
-
+      
       @foreach ($itens as $item)
         <li class="flex flex-row font-normal text-sm">
           <p class="basis-3/4">{{$item->servico->nome}}</p>
@@ -117,7 +117,7 @@
   </div>
 
   <div class="grid justify-end mt-3">
-    <h3 class="font-bold">VALOR DESTA FATURA {{'R$ '.number_format($ordem_servico->valor_total - $ordem_servico->desconto, 2, '.', ',')}}</h3>
+    <h3 class="font-bold">VALOR DESTA FATURA {{'R$ '.number_format($ordem_servico->valor_total, 2, '.', ',')}}</h3>
   </div>
 
   <div class="grid justify-items-center my-10">
