@@ -189,6 +189,9 @@ class EditOrdemServico extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
+
+        UpdateValorOrdemActions::exec(OrdemServico::find($this->data['id']));
+
         $data['updated_by'] = Auth::id();
 
         return $data;
