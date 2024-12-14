@@ -17,14 +17,22 @@ class UpdateValorOrdemActions
         $valorDesconto = $ordemServico->desconto;
 
         $valorTotal = $valorItens - $valorDesconto;
+        
+        Log::debug('UpdateValorOrdemActions', [
+            'valorItens' => $valorItens,
+            'valorDesconto - NEW' => $valorDesconto,
+            'valorTotal - NEW' => $valorTotal,
+            'valorDesconto - OLD' => $ordemServico->desconto,
+            'valorTotal - OLD' => $ordemServico->valor_total,
+            'change' => $ordemServico->getChanges(),
+        ]);
 
-        // dump($itensOrdemServico->sum('valor_total'));
 
         $ordemServico->update([
             'valor_total' => $valorTotal
             ]
         );
-
+        
         $ordemServico->refresh();
         
 
