@@ -104,7 +104,8 @@ class NotaSaidaResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('chave_nota')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('natureza_operacao')
                     ->label('Natureza Operação')
                     ->searchable(),
