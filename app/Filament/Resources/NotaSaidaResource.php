@@ -104,11 +104,11 @@ class NotaSaidaResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('chave_nota')
-                        ->searchable(),
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('natureza_operacao')
                     ->label('Natureza Operação')
                     ->searchable(),
-                
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Criado Em')
                     ->dateTime()
@@ -140,7 +140,8 @@ class NotaSaidaResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Action::make('view_pdf')
-                    ->url(fn($record)=>route('nfe.pdf', ['chave' => $record->chave_nota]))
+                    ->disabled(fn($record) => $record->chave_nota ? false : true)
+                    ->url(fn($record) => route('nfe.pdf', ['chave' => $record->chave_nota ?? 0]))
                     ->openUrlInNewTab(),
             ])
             ->paginated([25, 50, 100])
