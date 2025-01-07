@@ -108,7 +108,7 @@ class NotaSaidaResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('natureza_operacao')
                     ->label('Natureza Operação')
-                    ->searchable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Criado Em')
