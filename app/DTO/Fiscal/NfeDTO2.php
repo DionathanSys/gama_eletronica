@@ -52,7 +52,7 @@ class NfeDTO2
 
         $frete = $notaSaida->frete[0]['data'];
         $frete = [
-            'transportador' => (new Transportador($frete['transportadora_id']))->toArray(),
+            'transportador' => $frete['transportadora_id'] ? (new Transportador($frete['transportadora_id']))->toArray() : null,
             'modalidade_frete' => $frete['modalidade_frete'],
             'volumes' => [
                 [
