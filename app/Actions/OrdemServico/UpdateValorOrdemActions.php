@@ -22,9 +22,7 @@ class UpdateValorOrdemActions
             'valorItens' => $valorItens,
             'valorDesconto - NEW' => $valorDesconto,
             'valorTotal - NEW' => $valorTotal,
-            'valorDesconto - OLD' => $ordemServico->desconto,
             'valorTotal - OLD' => $ordemServico->valor_total,
-            'change' => $ordemServico->getChanges(),
         ]);
 
 
@@ -33,6 +31,10 @@ class UpdateValorOrdemActions
             ]
         );
         
+        Log::debug('UpdateValorOrdemActions', [
+            'change' => $ordemServico->getChanges()
+        ]);
+
         $ordemServico->refresh();
         
 

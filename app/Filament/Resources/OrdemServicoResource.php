@@ -194,7 +194,7 @@ class OrdemServicoResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TernaryFilter::make('email_verified_at')
+                Tables\Filters\TernaryFilter::make('nota_entrada_id')
                     ->label('Com NF-e Remessa')
                     ->placeholder('Todas')
                     ->trueLabel('Sim')
@@ -203,7 +203,11 @@ class OrdemServicoResource extends Resource
                         true: fn (Builder $query) => $query->whereNotNull('nota_entrada_id'),
                         false: fn (Builder $query) => $query->whereNull('nota_entrada_id'),
                         blank: fn (Builder $query) => $query,
-                    )
+                    ),
+                Tables\Filters\SelectFilter::make('parceiro_id')
+                    ->label('Cliente')
+                    ->searchable()
+                    ->relationship('parceiro', 'nome')
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
@@ -516,6 +520,6 @@ class OrdemServicoResource extends Resource
             ->columnSpanFull()
             ->multiple()
             ->panelLayout('grid')
-            ->openable();
+            /* ->openable() */;
     }
 }

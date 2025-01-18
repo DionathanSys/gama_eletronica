@@ -64,7 +64,7 @@ class CreateNfeRetornoAction
     }
 
     public function execute(NotaSaida $notaSaida, array $data)
-    {
+    {   
         $notaFiscalDTO = NfeDTO2::fromMakeDto($notaSaida, $data);
         
         $resp = $this->nfeService->cria($notaFiscalDTO->toArray());

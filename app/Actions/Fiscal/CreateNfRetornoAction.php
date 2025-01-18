@@ -29,6 +29,9 @@ class CreateNfRetornoAction
 
         $this->frete['modalidade_frete'] = $data['modalidade_frete'];
         
+        dump($data['modalidade_frete']);
+        dd($data['transportadora_id'], $data);
+
         if ($data['transportadora_id']) {
             $this->frete['transportadora'] = Parceiro::find($data['transportadora_id']);
         }

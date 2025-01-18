@@ -26,7 +26,7 @@ use HeadlessChromium\BrowserFactory;
 
 
 Route::get('/teste', function () {
-
+    ds('Home page accessed!');
 });
 
 Route::prefix('nfe')->group(function () {
@@ -180,10 +180,10 @@ Route::get('/nf/correcao/{chave}', function ($chave) {
 });
 
 Route::get('nf/cancela', function () {
-    dd('bloqueado');
+    
     $payload = [
-        'chave' => '42241245790457000185550050000000121113797028',
-        'justificativa' => 'Devido à duplicidade causada por um erro operacional. Apenas a NF-e com a chave 42241245790457000185550050000000101602518135 é válida, tornando as demais inválidas.',
+        'chave' => '42250145790457000185558500000000011080511965',
+        'justificativa' => 'Divergência nas informações',
     ];
 
     $resp = (new NfeService())->cancela($payload);
