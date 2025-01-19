@@ -110,8 +110,11 @@ class EditOrdemServico extends EditRecord
                             AprovarOrcamentoAction::exec($record);
                         }),
                     Actions\DeleteAction::make()
-                        ->action(fn(OrdemServico $record) => DeleteOrdemServicoAction::exec($record))
-                        ->after(fn() => redirect(OrdemServicoResource::getUrl('index'))),
+                        ->action(function(OrdemServico $record){
+                            ds($record->load('equipamento', 'itens', 'notaEntrada'));
+                            DeleteOrdemServicoAction::exec($record);
+                            redirect(OrdemServicoResource::getUrl('index'));
+                        }),
                 ])->dropdown(false),
 
                 Actions\ActionGroup::make([

@@ -18,10 +18,11 @@ class DeleteOrdemServicoAction
             self::notificaErro('Não é possível excluir uma ordem encerrada');
             return false;
         }
-
-        if (! static::removeRelacionamentos($ordemServico)) {
-            self::notificaErro('Não foi possível excluir os relacionamentos');
-            return false;
+        if ($ordemServico->notaEntrada){
+            if (! static::removeRelacionamentos($ordemServico)) {
+                self::notificaErro('Não foi possível excluir os relacionamentos');
+                return false;
+            }
         }
 
         $ordemServico->delete();
