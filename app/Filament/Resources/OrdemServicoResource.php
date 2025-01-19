@@ -197,6 +197,8 @@ class OrdemServicoResource extends Resource
                     ->searchable()
                     ->relationship('parceiro', 'nome')
             ])
+            ->persistFiltersInSession()
+            ->deselectAllRecordsWhenFiltered(false)
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->iconButton(),

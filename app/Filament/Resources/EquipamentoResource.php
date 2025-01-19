@@ -99,6 +99,7 @@ class EquipamentoResource extends Resource
                     ->searchable()
                     ->relationship('parceiro', 'nome')
             ])
+            ->persistFiltersInSession()
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->iconButton(),
