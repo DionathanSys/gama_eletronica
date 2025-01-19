@@ -25,6 +25,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Support\Enums\ActionSize;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class EditOrdemServico extends EditRecord
 {
@@ -42,6 +43,20 @@ class EditOrdemServico extends EditRecord
                 ->color('info')
                 ->label('O. S.')
                 ->action(fn() => redirect(OrdemServicoResource::getUrl('create'))),
+
+            Actions\Action::make('nova-os-cliente')
+                ->icon('heroicon-o-plus')
+                ->color('info')
+                ->label('O. S. Cliente')
+                ->action(function(OrdemServico $record){
+
+                    Session::put('parceiro_id', $record->parceiro_id);
+                    Session::put('nro_doc_parceiro', $record->nro_doc_parceiro);
+                    Session::put('data_ordem', $record->data_ordem);
+
+                    ds(Session::all());
+                    redirect(OrdemServicoResource::getUrl('create'));
+                }),
 
             Actions\ActionGroup::make([
                 Actions\ActionGroup::make([
@@ -178,6 +193,7 @@ class EditOrdemServico extends EditRecord
 
     public function mount($record): void
     {
+        // ds(Session::get('parceiro_id'));
         parent::mount($record);
 
         $this->form->fill(
@@ -185,6 +201,7 @@ class EditOrdemServico extends EditRecord
                 'nro_doc_parceiro' => Parceiro::find($this->record->parceiro_id)?->nro_documento,
             ])
         );
+
     }
 
     protected function mutateFormDataBeforeSave(array $data): array

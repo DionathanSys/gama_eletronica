@@ -7,35 +7,23 @@ use App\Actions\Fiscal\CreateNfeRetornoAction;
 use App\Enums\PrioridadeOrdemServicoEnum;
 use App\Filament\Resources\OrdemServicoResource\Pages;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers;
-use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensOrcamentoRelationManager;
-use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensOrdensAnterioresRelationManager;
-use App\Filament\Resources\OrdemServicoResource\RelationManagers\ItensRelationManager;
+use App\Filament\Resources\OrdemServicoResource\RelationManagers\{ItensOrcamentoRelationManager, ItensOrdensAnterioresRelationManager, ItensRelationManager};
 use App\Actions\Fiscal\CreateNfRetornoAction;
-use App\Enums\StatusProcessoOrdemServicoEnum;
-use App\Enums\TipoManutencaoOrdemServicoEnum;
-use App\Enums\VinculoParceiroEnum;
-use App\Models\Equipamento;
-use App\Models\NotaSaida;
-use App\Models\OrdemServico;
-use App\Models\Parceiro;
-use App\Models\Veiculo;
+use App\Enums\{StatusProcessoOrdemServicoEnum, TipoManutencaoOrdemServicoEnum, VinculoParceiroEnum};
+use App\Models\{Equipamento, OrdemServico, Parceiro, Veiculo};
+use Filament\Actions\Action;
 use Filament\Forms;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Tabs;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
+use Filament\Forms\Components\{Section, Select, Tabs, TextInput};
+use Filament\Forms\{Form, Get, Set};
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Database\Eloquent\{Builder, Collection};
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 
 class OrdemServicoResource extends Resource
 {
@@ -338,22 +326,23 @@ class OrdemServicoResource extends Resource
     public static function getParceiroFormField(): Forms\Components\Select
     {
         return Forms\Components\Select::make('parceiro_id')
-                    ->columnSpan(6)
+                    ->columnSpan(9)
                     ->label('Parceiro')
-                    ->relationship('parceiro', 'nome')
+                    ->relationship('cliente', 'nome')
                     ->preload()
                     ->searchable()
-                    ->options(function () {
-                        return Parceiro::where('tipo_vinculo', 'CLIENTE')
-                                        ->where('ativo', true)
-                                        ->pluck('nome', 'id');
-                    })
-                    ->afterStateUpdated(function(Set $set, Get $get){
+                    ->default(fn() => Session::get('parceiro_id', null))
+                    ->afterStateUpdated(function(Set $set, Get $get, $state){
+                        
                         $set('equipamento_id', null);
                         $set('veiculo_id', null);
-                        $set('nro_doc_parceiro', Parceiro::find($get('parceiro_id'))->nro_documento ?? '');
+                        
+                        if ($state){
+                            $set('nro_doc_parceiro', Parceiro::find($get('parceiro_id'))->nro_documento ?? '');
+                        }
+
                     })
-                    ->live()
+                    ->live(onBlur: true)
                     ->required();
     }
 
@@ -362,6 +351,7 @@ class OrdemServicoResource extends Resource
         return Forms\Components\TextInput::make('nro_doc_parceiro')
                     ->columnSpan(3)
                     ->label('CNPJ/CPF')
+                    ->placeholder('CPF/CNPJ')
                     ->dehydrated(false);
                     
     }
@@ -376,13 +366,13 @@ class OrdemServicoResource extends Resource
                     ->maxDate(now())
                     ->native(false)
                     ->required()
-                    ->default(now());
+                    ->default(Session::get('data_ordem', now()));
     }
 
-    public static function getEquipamentoFormField(): Forms\Components\Select
+    public static function getEquipamentoFormField($var= null): Forms\Components\Select
     {
         return Forms\Components\Select::make('equipamento_id')
-                    ->columnSpan(6)
+                    ->columnSpan(9)
                     ->label('Equipamento')
                     ->placeholder('Equipamento')
                     ->relationship('equipamento', 'descricao')
@@ -394,6 +384,7 @@ class OrdemServicoResource extends Resource
                                         ->pluck('descricao_nro_serie', 'id');
                     })
                     ->createOptionForm(function(Form $form){
+                        
                         return $form->columns(5)->schema([
                             EquipamentoResource::getDescricaoFormField()->columnSpan(2),
                             EquipamentoResource::getNroSerieFormField(),

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\NaturezaOperacaoEnum;
+use App\Enums\VinculoParceiroEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -37,6 +38,12 @@ class OrdemServico extends Model
     public function parceiro(): BelongsTo
     {
         return $this->BelongsTo(Parceiro::class);
+    }
+
+    public function cliente(): BelongsTo
+    {
+        return $this->belongsTo(Parceiro::class)
+                    ->where('tipo_vinculo', VinculoParceiroEnum::CLIENTE);
     }
 
     public function equipamento(): BelongsTo

@@ -18,9 +18,13 @@ use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use HeadlessChromium\BrowserFactory;
+use Illuminate\Support\Facades\Session;
 
 // Route::get('/', function () {
-
+//     Session::put('teste', 'banana');
+//     ds(Session::all());
+//     Session::forget('teste');
+//     ds(Session::all());
 
 // }); 
 

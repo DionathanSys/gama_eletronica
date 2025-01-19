@@ -94,9 +94,10 @@ class EquipamentoResource extends Resource
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
-                Tables\Filters\SelectFilter::make('tipo_vinculo')
-                    ->options(VinculoParceiroEnum::class)
-                    ->label('Vínculo'),
+                Tables\Filters\SelectFilter::make('parceiro_id')
+                    ->label('Cliente')
+                    ->searchable()
+                    ->relationship('parceiro', 'nome')
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
