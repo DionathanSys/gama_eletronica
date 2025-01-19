@@ -54,7 +54,6 @@ class EditOrdemServico extends EditRecord
                     Session::put('nro_doc_parceiro', $record->nro_doc_parceiro);
                     Session::put('data_ordem', $record->data_ordem);
 
-                    ds(Session::all());
                     redirect(OrdemServicoResource::getUrl('create'));
                 }),
 

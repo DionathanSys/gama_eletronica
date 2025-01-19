@@ -18,6 +18,7 @@ class CreateOrdemServico extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {   
+
         $data['created_by'] = Auth::id();
         $data['updated_by'] = Auth::id();
         $data['status'] = StatusOrdemServicoEnum::PENDENTE;

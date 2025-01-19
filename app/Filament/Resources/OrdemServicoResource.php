@@ -354,6 +354,7 @@ class OrdemServicoResource extends Resource
                     ->columnSpan(3)
                     ->label('CNPJ/CPF')
                     ->placeholder('CPF/CNPJ')
+                    ->default(Session::get('nro_doc_parceiro', null))
                     ->dehydrated(false);
                     
     }
