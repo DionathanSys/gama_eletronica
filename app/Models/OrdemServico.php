@@ -42,7 +42,7 @@ class OrdemServico extends Model
 
     public function cliente(): BelongsTo
     {
-        return $this->belongsTo(Parceiro::class)
+        return $this->belongsTo(Parceiro::class, 'parceiro_id')
                     ->where('tipo_vinculo', VinculoParceiroEnum::CLIENTE);
     }
 
