@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Session;
 //     Session::forget('teste');
 //     ds(Session::all());
 
-// }); 
+// }); +
 
 
 Route::get('/teste', function () {
@@ -36,7 +36,7 @@ Route::get('/teste', function () {
 Route::prefix('nfe')->group(function () {
     Route::get('/{chave}/pdf', function ($chave) {
         $resp = (new NfeService())->consulta($chave);
-        
+       
         if ($resp->sucesso) {
 
             $tentativa = 0;

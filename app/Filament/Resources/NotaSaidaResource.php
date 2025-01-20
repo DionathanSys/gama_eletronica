@@ -109,6 +109,21 @@ class NotaSaidaResource extends Resource
                 Tables\Columns\TextColumn::make('natureza_operacao')
                     ->label('Natureza Operação')
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('status')
+                    ,
+               
+                Tables\Columns\TextColumn::make('data_emissao')
+                    ->label('Dt. Emissão')
+                    ->date()
+                    ->dateTime('d/m/Y')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: false),
+                Tables\Columns\TextColumn::make('data_entrada_saida')
+                    ->label('Dt. Ent. Saí.')
+                    ->date()
+                    ->dateTime('d/m/Y')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Criado Em')
@@ -122,25 +137,16 @@ class NotaSaidaResource extends Resource
                     ->dateTime('d/m/Y h:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('data_emissao')
-                    ->label('Dt. Emissão')
-                    ->date()
-                    ->dateTime('d/m/Y')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: false),
-                Tables\Columns\TextColumn::make('data_entrada_saida')
-                    ->label('Dt. Ent. Saí.')
-                    ->date()
-                    ->dateTime('d/m/Y')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->iconButton(),
                 Action::make('view_pdf')
+                    ->iconButton()
+                    ->icon('heroicon-o-eye')
                     ->disabled(fn($record) => $record->chave_nota ? false : true)
                     ->url(fn($record) => route('nfe.pdf', ['chave' => $record->chave_nota ?? 0]))
                     ->openUrlInNewTab(),
