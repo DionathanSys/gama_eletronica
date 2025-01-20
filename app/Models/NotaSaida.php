@@ -26,6 +26,11 @@ class NotaSaida extends Model
     {
         return $this->BelongsTo(Parceiro::class);
     }
+   
+    public function cliente(): BelongsTo
+    {
+        return $this->BelongsTo(Parceiro::class, 'parceiro_id');
+    }
 
     public function ordensServico(): BelongsToMany
     {
