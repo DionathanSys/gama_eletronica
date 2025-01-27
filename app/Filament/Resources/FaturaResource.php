@@ -20,8 +20,6 @@ class FaturaResource extends Resource
 {
     protected static ?string $model = Fatura::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
     public static function form(Form $form): Form
     {
         return $form

@@ -36,8 +36,11 @@ class ListOrdemServicos extends ListRecords
             'Encerrada' => Tab::make()
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', StatusProcessoOrdemServicoEnum::ENCERRADA->value)
                                                                     ->where('fatura_id', '=', null)),
+            'Faturada' => Tab::make()
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', StatusProcessoOrdemServicoEnum::ENCERRADA->value)
+                                                                    ->where('fatura_id', '!=', null)),
 
-            'Cancelado' => Tab::make()
+            'Cancelada' => Tab::make()
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status_processo', StatusProcessoOrdemServicoEnum::CANCELADA->value)),
             
             'Orç. Reprovado' => Tab::make()

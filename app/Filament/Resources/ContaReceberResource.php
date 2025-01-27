@@ -100,20 +100,32 @@ class ContaReceberResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('parceiro_id')
+                    ->relationship('parceiro', 'nome')
+                    ->searchable()
+                    ->label('Parceiro'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->button()
+                    ->iconButton()
                     ->color('gray')
                     ->visible(fn($record)=> $record->status == StatusContaReceberEnum::PENDENTE->value ? true : false),
 
                 Tables\Actions\Action::make('pago')
                     ->icon('heroicon-o-banknotes')
-                    ->button()
+                    ->tooltip('Marcar como pago')
+                    ->iconButton()
                     ->color('gray')
                     ->action(fn($record) => $record->update(['status' => StatusContaReceberEnum::PAGO]))
                     ->visible(fn($record) => $record->status == StatusContaReceberEnum::CONFIRMADA->value ? true : false),
+
+                Tables\Actions\Action::make('n-pago')
+                    ->icon('heroicon-o-banknotes')
+                    ->tooltip('Marcar como não pago')
+                    ->color('danger')
+                    ->iconButton()
+                    ->action(fn($record) => $record->update(['status' => StatusContaReceberEnum::CONFIRMADA]))
+                    ->visible(fn($record) => $record->status == StatusContaReceberEnum::PAGO->value ? true : false),
             ])
             ->bulkActions([
             ]);

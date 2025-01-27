@@ -212,48 +212,9 @@ class OrdemServicoResource extends Resource
                                 return redirect(FaturaResource::getUrl('edit', ['record' => $fatura->id,]));
                             }
                         }),
-                    Tables\Actions\BulkAction::make('nf_retorno')
-                        ->label('Emitir NF-e Retorno')
-                        ->form(function(Form $form){
-                            return $form->columns(6)->schema([
-                                Select::make('transportadora_id')
-                                    ->columnSpanFull()
-                                    ->label('Transportadora')
-                                    ->relationship('parceiro', 'nome')
-                                    ->preload()
-                                    ->searchable()
-                                    ->hint('Não obrigatório')
-                                    ->options(function () {
-                                        return Parceiro::where('tipo_vinculo', VinculoParceiroEnum::TRANSPORTADORA)
-                                                        ->where('ativo', true)
-                                                        ->pluck('nome', 'id');
-                                }),
-                                Select::make('modalidade_frete')
-                                    ->columnSpanFull()
-                                    ->options([
-                                        '0' => "0 - por conta do emitente",
-                                        '1' => "1 - por conta do destinatário",
-                                        '2' => "2 - por conta de terceiros",
-                                        '3' => "3 - Transporte Proprio por conta do Remetente",
-                                        '4' => "4 - Transporte Proprio por conta do Destinatario",
-                                        '9' => "9 - sem frete"
-                                    ])
-                                    ->default(1)
-
-                            ]);
-                            })
-                        ->requiresConfirmation()
-                        ->action(function(Collection $record, array $data){
-                            
-                            $notaRetorno = (new CreateNfRetornoAction($record, $data))->exec();
-                            
-                            if ($notaRetorno){
-                                sleep(3);
-                                return redirect()->route('nfe.preview.pdf', ['chave' => $notaRetorno->chave]);
-                            }
-                        }),
+                
                     Tables\Actions\BulkAction::make('nfe_retorno')
-                        ->label('TESTE - Emitir NF-e Retorno')
+                        ->label('Emitir NF-e Retorno')
                         ->requiresConfirmation()
                         ->action(function(Collection $record){
                             $notas = $record
