@@ -143,7 +143,7 @@ class ContaReceberResource extends Resource
         return [
             'index' => Pages\ListContaRecebers::route('/'),
             'create' => Pages\CreateContaReceber::route('/create'),
-            'edit' => Pages\EditContaReceber::route('/{record}/edit'),
+            // 'edit' => Pages\EditContaReceber::route('/{record}/edit'),
         ];
     }
 
