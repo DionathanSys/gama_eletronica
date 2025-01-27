@@ -130,7 +130,7 @@ Route::prefix('os')->group(function () {
     Route::get('{id}/html', function ($id) {
 
         $ordemServico = OrdemServico::with(['itens.servico', 'parceiro.enderecos', 'equipamento'])->findOrFail($id);
-        ds($ordemServico);
+        
         return view('ordem_servico.padrao', [
             'ordem_servico' => $ordemServico,
             'itens' => $ordemServico->itens,
