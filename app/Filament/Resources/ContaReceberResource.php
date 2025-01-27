@@ -106,10 +106,10 @@ class ContaReceberResource extends Resource
                     ->label('Parceiro'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                    ->iconButton()
-                    ->color('gray')
-                    ->visible(fn($record)=> $record->status == StatusContaReceberEnum::PENDENTE->value ? true : false),
+                // Tables\Actions\EditAction::make()
+                //     ->iconButton()
+                //     ->color('gray')
+                //     ->visible(fn($record)=> $record->status == StatusContaReceberEnum::PENDENTE->value ? true : false),
 
                 Tables\Actions\Action::make('pago')
                     ->icon('heroicon-o-banknotes')
