@@ -3,6 +3,7 @@
 use App\DTO\Fiscal\NfeDTO2;
 use App\Enums\StatusProcessoOrdemServicoEnum;
 use App\Enums\VinculoParceiroEnum;
+use App\Models\ContaReceber;
 use App\Models\Endereco;
 use App\Models\NotaEntrada;
 use App\Models\NotaSaida;
@@ -21,12 +22,11 @@ use HeadlessChromium\BrowserFactory;
 use Illuminate\Support\Facades\Session;
 
 // Route::get('/', function () {
-//     Session::put('teste', 'banana');
-//     ds(Session::all());
-//     Session::forget('teste');
-//     ds(Session::all());
+    
+//     $contasReceber = ContaReceber::find(1);
+//     dd($contasReceber->ordensServico);
 
-// }); +
+// }); 
 
 
 Route::get('/teste', function () {
@@ -130,7 +130,7 @@ Route::prefix('os')->group(function () {
     Route::get('{id}/html', function ($id) {
 
         $ordemServico = OrdemServico::with(['itens.servico', 'parceiro.enderecos', 'equipamento'])->findOrFail($id);
-
+        ds($ordemServico);
         return view('ordem_servico.padrao', [
             'ordem_servico' => $ordemServico,
             'itens' => $ordemServico->itens,
@@ -195,16 +195,6 @@ Route::get('nf/cancela', function () {
     dd($resp);
 });
 
-
-/* 
-
-nota n. 7 - 42241245790457000185550050000000071657046418 
-n 8 - 42241245790457000185550050000000081417135693
-42241245790457000185550050000000091762617076
-11- 42241245790457000185550050000000111592715259
-12- 42241245790457000185550050000000121113797028
-
-*/
 
 
 // Route::get('/nf/inutiliza', function (){

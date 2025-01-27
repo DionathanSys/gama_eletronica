@@ -8,13 +8,13 @@ use InvalidArgumentException;
 
 class Transportador
 {
-    public string | null $cnpj;
-    public string | null $cpf;
-    public string $nome;
-    public string $inscricaoEstadual;
-    public string $endereco;
-    public string $nomeMunicipio;
-    public string $uf;
+    public string|null  $cnpj;
+    public string|null  $cpf;
+    public string       $nome;
+    public string       $inscricaoEstadual;
+    public string       $endereco;
+    public string       $nomeMunicipio;
+    public string       $uf;
 
     public function __construct(
         int $parceiro_id

@@ -54,6 +54,11 @@ class ContaReceberResource extends Resource
                     ->numeric()
                     ->sortable(),
 
+                Tables\Columns\TextColumn::make('ordensServico')
+                    ->label("OS's")
+                    ->numeric()
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('data_vencimento')
                     ->label('Vencimento')
                     ->date()

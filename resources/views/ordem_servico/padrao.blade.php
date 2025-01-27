@@ -67,12 +67,32 @@
   </div>
 
 
-  <div class="mt-2 border border-black">
-    <h2 class="text-sm font-semibold m-2">
-      RELATO CLIENTE
-    </h2>
-    <p class="m-2 text-xs font-normal">{{$ordem_servico->relato_cliente}}</p>
-  </div>
+  @if ($ordem_servico->relato_cliente != '')
+    <div class="mt-2 border border-black">
+      <h2 class="text-sm font-semibold m-2">
+        RELATO CLIENTE
+      </h2>
+      <p class="m-2 text-xs font-normal">{{$ordem_servico->relato_cliente}}</p>
+    </div>
+  @endif
+
+  @if ($ordem_servico->observacao_geral != '')
+    <div class="mt-2 border border-black">
+      <h2 class="text-sm font-semibold m-2">
+        OBSERVAÇÕES GERAIS
+      </h2>
+      <p class="m-2 text-xs font-normal">{{$ordem_servico->observacao_geral}}</p>
+    </div>
+  @endif
+  
+  @if ($ordem_servico->itens_recebidos != '')
+    <div class="mt-2 border border-black">
+      <h2 class="text-sm font-semibold m-2">
+        ITENS RECEBIDOS
+      </h2>
+      <p class="m-2 text-xs font-normal">{{$ordem_servico->itens_recebidos}}</p>
+    </div>
+  @endif
 
   <div class="mt-2 border border-black ">
     <h2 class="text-sm font-semibold m-2">

@@ -34,17 +34,17 @@ class NfeDTO2
 
     public static function fromMakeDto(NotaSaida $notaSaida, array $data): self
     {
-        $natureza_operacao = $notaSaida->natureza_operacao;
-        $tipo_operacao = 1;
-        $numero = self::getNextNumber(env('SERIE_NF_RETORNO'));
-        $serie = env('SERIE_NF_RETORNO');
-        $finalidade_emissao = 1;            // 1 - Nota normal
-        $consumidor_final = 1;              // "0 - Normal" - "1 - Consumidor final"
-        $presenca_comprador = 0;            // "0 - Não se aplica"
-        $data_emissao = Carbon::createFromFormat('Y-m-d H:i:s', now())->format('Y-m-d\TH:i:sP');
-        $data_entrada_saida = Carbon::createFromFormat('Y-m-d H:i:s', now())->format('Y-m-d\TH:i:sP');
-        $informacoes_adicionais_contribuinte = 'Retorno de mercadoria ref. ' . implode(', ', $notaSaida->notas_referenciadas);
-        $destinatario = (new ClienteDTO(Parceiro::find($notaSaida->parceiro_id)))->toArray();
+        $natureza_operacao                      = $notaSaida->natureza_operacao;
+        $tipo_operacao                          = 1;
+        $numero                                 = self::getNextNumber(env('SERIE_NF_RETORNO'));
+        $serie                                  = env('SERIE_NF_RETORNO');
+        $finalidade_emissao                     = 1;            // 1 - Nota normal
+        $consumidor_final                       = 1;              // "0 - Normal" - "1 - Consumidor final"
+        $presenca_comprador                     = 0;            // "0 - Não se aplica"
+        $data_emissao                           = Carbon::createFromFormat('Y-m-d H:i:s', now())->format('Y-m-d\TH:i:sP');
+        $data_entrada_saida                     = Carbon::createFromFormat('Y-m-d H:i:s', now())->format('Y-m-d\TH:i:sP');
+        $informacoes_adicionais_contribuinte    = 'Retorno de mercadoria ref. ' . implode(', ', $notaSaida->notas_referenciadas);
+        $destinatario                           = (new ClienteDTO(Parceiro::find($notaSaida->parceiro_id)))->toArray();
 
         foreach ($notaSaida->notas_referenciadas as $key => $value) {
             $notas_referenciadas[]['nfe']['chave'] = $key;
