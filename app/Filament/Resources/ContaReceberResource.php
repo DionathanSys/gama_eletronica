@@ -51,6 +51,8 @@ class ContaReceberResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('fatura.id')
+                    ->url(fn(ContaReceber $record): string => FaturaResource::getUrl('edit', ['record' => $record->fatura_id]))
+                    ->openUrlInNewTab()
                     ->numeric()
                     ->sortable(),
 
