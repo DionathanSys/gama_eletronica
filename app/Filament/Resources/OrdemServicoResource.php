@@ -347,6 +347,18 @@ class OrdemServicoResource extends Resource
                         return Equipamento::where('parceiro_id', $get('parceiro_id'))
                                         ->pluck('descricao_nro_serie', 'id');
                     })
+                    ->hintActions([
+                        Forms\Components\Actions\Action::make('equipamento')
+                            ->icon('heroicon-o-pencil-square')
+                            ->color('info')
+                            ->url(function(Forms\Get $get){
+                                if($get('equipamento_id')){
+                                    return EquipamentoResource::getUrl('edit', ['record' => $get('equipamento_id')]);
+                                }
+                                return EquipamentoResource::getUrl();
+                            })
+                            ->openUrlInNewTab()
+                    ])
                     ->createOptionForm(function(Form $form){
                         
                         return $form->columns(5)->schema([
