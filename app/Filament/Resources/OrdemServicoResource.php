@@ -76,8 +76,8 @@ class OrdemServicoResource extends Resource
                             ->schema([
                                 static::getImageEquipamentoFormFiel(),
                             ]),
-                        
-                        ])
+
+                    ])
             ]);
     }
 
@@ -108,7 +108,7 @@ class OrdemServicoResource extends Resource
                     ->wrap()
                     ->weight(FontWeight::Thin)
                     ->size(Tables\Columns\TextColumn\TextColumnSize::ExtraSmall),
-                
+
                 Tables\Columns\TextColumn::make('equipamento.nro_serie')
                     ->label('Nro. Série')
                     ->searchable()
@@ -143,7 +143,7 @@ class OrdemServicoResource extends Resource
                 Tables\Columns\TextColumn::make('status_processo')
                     ->badge()
                     ->toggleable(isToggledHiddenByDefault: false),
-                
+
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->searchable()
@@ -164,7 +164,7 @@ class OrdemServicoResource extends Resource
                 Tables\Columns\TextColumn::make('userCreate.name')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Criado Por'),
-                
+
                 Tables\Columns\TextColumn::make('userUpdate.name')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Atualizado Por'),
@@ -188,9 +188,9 @@ class OrdemServicoResource extends Resource
                     ->trueLabel('Sim')
                     ->falseLabel('Não')
                     ->queries(
-                        true: fn (Builder $query) => $query->whereNotNull('nota_entrada_id'),
-                        false: fn (Builder $query) => $query->whereNull('nota_entrada_id'),
-                        blank: fn (Builder $query) => $query,
+                        true: fn(Builder $query) => $query->whereNotNull('nota_entrada_id'),
+                        false: fn(Builder $query) => $query->whereNull('nota_entrada_id'),
+                        blank: fn(Builder $query) => $query,
                     ),
                 Tables\Filters\SelectFilter::make('parceiro_id')
                     ->label('Cliente')
@@ -206,38 +206,38 @@ class OrdemServicoResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\BulkAction::make('faturar')
-                        ->action(function(Collection $record){
+                        ->action(function (Collection $record) {
                             $fatura = CreateFaturaAction::exec($record);
-                            if ($fatura){
+                            if ($fatura) {
                                 return redirect(FaturaResource::getUrl('edit', ['record' => $fatura->id,]));
                             }
                         }),
-                
+
                     Tables\Actions\BulkAction::make('nfe_retorno')
                         ->label('Emitir NF-e Retorno')
                         ->requiresConfirmation()
-                        ->action(function(Collection $record){
+                        ->action(function (Collection $record) {
                             $notas = $record
-                                        ->map(fn($ordem) => $ordem->notaEntrada ? [
-                                            'chave_nota' => $ordem->notaEntrada->chave_nota,
-                                            'data_fatura' => $ordem->notaEntrada->data_fatura,
-                                            'nro_nota' => $ordem->notaEntrada->nro_nota,
-                                        ] : null) // Obter os campos do relacionamento 'notaEntrada'
-                                        ->filter() // Remover valores nulos
-                                        ->unique(fn($nota) => $nota['chave_nota']) // Remover duplicados com base em 'chave_nota'
-                                        ->map(fn($nota) => [
-                                            $nota['chave_nota'] => "Nro. {$nota['nro_nota']} - {$nota['data_fatura']}",
-                                        ]) // Reformatar os valores
-                                        ->values() // Reindexar a collection
-                                        ->collapse()
-                                        ->toArray();
-                            
+                                ->map(fn($ordem) => $ordem->notaEntrada ? [
+                                    'chave_nota' => $ordem->notaEntrada->chave_nota,
+                                    'data_fatura' => $ordem->notaEntrada->data_fatura,
+                                    'nro_nota' => $ordem->notaEntrada->nro_nota,
+                                ] : null) // Obter os campos do relacionamento 'notaEntrada'
+                                ->filter() // Remover valores nulos
+                                ->unique(fn($nota) => $nota['chave_nota']) // Remover duplicados com base em 'chave_nota'
+                                ->map(fn($nota) => [
+                                    $nota['chave_nota'] => "Nro. {$nota['nro_nota']} - {$nota['data_fatura']}",
+                                ]) // Reformatar os valores
+                                ->values() // Reindexar a collection
+                                ->collapse()
+                                ->toArray();
+
                             $notaSaida = CreateNfeRetornoAction::prepare($record, $notas);
 
-                            if (! $notaSaida){
+                            if (! $notaSaida) {
                                 return false;
                             }
-                            
+
                             return redirect(NotaSaidaResource::getUrl('edit', ['record' => $notaSaida->id]));
                         })
                 ]),
@@ -247,7 +247,6 @@ class OrdemServicoResource extends Resource
                     ->collapsible(),
 
             ])
-            // ->defaultGroup('parceiro.nome')
             ->filtersTriggerAction(
                 fn(Tables\Actions\Action $action) => $action
                     ->button()
@@ -280,140 +279,138 @@ class OrdemServicoResource extends Resource
     public static function getIdFormField(): Forms\Components\TextInput
     {
         return Forms\Components\TextInput::make('id')
-                ->label('Nro. Ordem')
-                ->readOnly(fn()=>Auth::user()->id == 1 ? false : true)
-                ->formatStateUsing(fn($state)=> $state ? str_pad($state, 5, '0', STR_PAD_LEFT) : '' )
-                ->columnSpan(2);
-    } 
+            ->label('Nro. Ordem')
+            ->readOnly(fn() => Auth::user()->id == 1 ? false : true)
+            ->formatStateUsing(fn($state) => $state ? str_pad($state, 5, '0', STR_PAD_LEFT) : '')
+            ->columnSpan(2);
+    }
 
     public static function getParceiroFormField(): Forms\Components\Select
     {
         return Forms\Components\Select::make('parceiro_id')
-                    ->columnSpan(9)
-                    ->label('Parceiro')
-                    ->relationship('cliente', 'nome')
-                    ->preload()
-                    ->searchable()
-                    ->default(fn() => Session::get('parceiro_id', null))
-                    ->afterStateUpdated(function(Set $set, Get $get, $state){
-                        
-                        $set('equipamento_id', null);
-                        $set('veiculo_id', null);
-                        
-                        if ($state){
-                            $set('nro_doc_parceiro', Parceiro::find($get('parceiro_id'))->nro_documento ?? '');
-                        }
+            ->columnSpan(9)
+            ->label('Parceiro')
+            ->relationship('cliente', 'nome')
+            ->preload()
+            ->searchable()
+            ->default(fn() => Session::get('parceiro_id', null))
+            ->afterStateUpdated(function (Set $set, Get $get, $state) {
 
-                    })
-                    ->live(onBlur: true)
-                    ->required();
+                $set('equipamento_id', null);
+                $set('veiculo_id', null);
+
+                if ($state) {
+                    $set('nro_doc_parceiro', Parceiro::find($get('parceiro_id'))->nro_documento ?? '');
+                }
+            })
+            ->live(onBlur: true)
+            ->required();
     }
 
     public static function getNroDocParceiroFormField(): Forms\Components\TextInput
     {
         return Forms\Components\TextInput::make('nro_doc_parceiro')
-                    ->columnSpan(3)
-                    ->label('CNPJ/CPF')
-                    ->placeholder('CPF/CNPJ')
-                    ->default(Session::get('nro_doc_parceiro', null))
-                    ->dehydrated(false);
-                    
+            ->columnSpan(3)
+            ->label('CNPJ/CPF')
+            ->placeholder('CPF/CNPJ')
+            ->default(Session::get('nro_doc_parceiro', null))
+            ->dehydrated(false);
     }
 
     public static function getDataOrdemFormField(): Forms\Components\DatePicker
     {
         return  Forms\Components\DatePicker::make('data_ordem')
-                    ->columnSpan(2)
-                    ->date('d/m/Y')
-                    ->displayFormat('d/m/Y')
-                    ->closeOnDateSelection()
-                    ->maxDate(now())
-                    ->native(false)
-                    ->required()
-                    ->default(Session::get('data_ordem', now()));
+            ->columnSpan(2)
+            ->date('d/m/Y')
+            ->displayFormat('d/m/Y')
+            ->closeOnDateSelection()
+            ->maxDate(now())
+            ->native(false)
+            ->required()
+            ->default(Session::get('data_ordem', now()));
     }
 
-    public static function getEquipamentoFormField($var= null): Forms\Components\Select
+    public static function getEquipamentoFormField($var = null): Forms\Components\Select
     {
         return Forms\Components\Select::make('equipamento_id')
-                    ->columnSpan(9)
-                    ->label('Equipamento')
-                    ->placeholder('Equipamento')
-                    ->relationship('equipamento', 'descricao')
-                    ->preload()
-                    ->searchable()
-                    ->required()
-                    ->options(function (Forms\Get $get) {
-                        return Equipamento::where('parceiro_id', $get('parceiro_id'))
-                                        ->pluck('descricao_nro_serie', 'id');
-                    })
-                    ->hintActions([
-                        Forms\Components\Actions\Action::make('equipamento')
-                            ->icon('heroicon-o-pencil-square')
-                            ->color('info')
-                            ->url(function(Forms\Get $get){
-                                if($get('equipamento_id')){
-                                    return EquipamentoResource::getUrl('edit', ['record' => $get('equipamento_id')]);
-                                }
-                                return EquipamentoResource::getUrl();
-                            })
-                            ->openUrlInNewTab()
-                    ])
-                    ->createOptionForm(function(Form $form){
-                        
-                        return $form->columns(5)->schema([
-                            EquipamentoResource::getDescricaoFormField()->columnSpan(2),
-                            EquipamentoResource::getNroSerieFormField(),
-                            EquipamentoResource::getModeloFormField(),
-                            EquipamentoResource::getMarcaFormField(),
-                        ]);
-                    }
-                    )
-                    ->createOptionUsing(function (array $data, Forms\Get $get): int {
-                        $data['parceiro_id'] = $get('parceiro_id') ?? null;
-                        $data['created_by'] = Auth::id();
-                        $data['updated_by'] = Auth::id();
-                        $data['nro_serie'] = $data['nro_serie'] ?? 'SN';
-                        $equipamento = Equipamento::create($data);
-                        return $equipamento->id;
-                    });
+            ->columnSpan(9)
+            ->label('Equipamento')
+            ->placeholder('Equipamento')
+            ->relationship('equipamento', 'descricao')
+            ->preload()
+            ->searchable()
+            ->required()
+            ->options(function (Forms\Get $get) {
+                return Equipamento::where('parceiro_id', $get('parceiro_id'))
+                    ->pluck('descricao_nro_serie', 'id');
+            })
+            ->editOptionForm(
+                function (Form $form) {
+
+                    return $form->columns(5)->schema([
+                        EquipamentoResource::getDescricaoFormField()->columnSpan(2),
+                        EquipamentoResource::getNroSerieFormField(),
+                        EquipamentoResource::getModeloFormField(),
+                        EquipamentoResource::getMarcaFormField(),
+                    ]);
+                }
+            )
+            ->createOptionForm(
+                function (Form $form) {
+
+                    return $form->columns(5)->schema([
+                        EquipamentoResource::getDescricaoFormField()->columnSpan(2),
+                        EquipamentoResource::getNroSerieFormField(),
+                        EquipamentoResource::getModeloFormField(),
+                        EquipamentoResource::getMarcaFormField(),
+                    ]);
+                }
+            )
+            ->createOptionUsing(function (array $data, Forms\Get $get): int {
+                $data['parceiro_id'] = $get('parceiro_id') ?? null;
+                $data['created_by'] = Auth::id();
+                $data['updated_by'] = Auth::id();
+                $data['nro_serie'] = $data['nro_serie'] ?? 'SN';
+                $equipamento = Equipamento::create($data);
+                return $equipamento->id;
+            });
     }
 
     public static function getVeiculoFormField(): Forms\Components\TextInput
     {
-        return Forms\Components\TextInput::make('placa')      
-                    ->columnSpan(3)
-                    ->length(7)
-                    ->placeholder('Placa');
+        return Forms\Components\TextInput::make('placa')
+            ->columnSpan(3)
+            ->length(7)
+            ->placeholder('Placa');
     }
 
     public static function getDescontoFormField(): Forms\Components\TextInput
     {
         return Forms\Components\TextInput::make('desconto')
-                ->columnSpan(1)
-                ->prefix('%')
-                ->numeric()
-                ->default(0);
-    } 
-    
+            ->columnSpan(1)
+            ->prefix('%')
+            ->numeric()
+            ->default(0);
+    }
+
     public static function getStatusFormField(): Forms\Components\TextInput
     {
         return Forms\Components\TextInput::make('status')
-                ->visible(fn()=>Auth::user()->id == 1 ? true : false)
-                ->columnSpan(2);
-    } 
-    
+            ->visible(fn() => Auth::user()->id == 1 ? true : false)
+            ->columnSpan(2);
+    }
+
     public static function getStatusProcessoFormField(): Forms\Components\Select
     {
         return Forms\Components\Select::make('status_processo')
-                ->columnSpan(2)
-                ->options(
-                    collect(StatusProcessoOrdemServicoEnum::cases())
-                        ->mapWithKeys(fn ($status) => [$status->value => $status->getStatus()])
-                        ->toArray()
-                )
-                ->default(StatusProcessoOrdemServicoEnum::PENDENTE->value);
-    } 
+            ->columnSpan(2)
+            ->options(
+                collect(StatusProcessoOrdemServicoEnum::cases())
+                    ->mapWithKeys(fn($status) => [$status->value => $status->getStatus()])
+                    ->toArray()
+            )
+            ->default(StatusProcessoOrdemServicoEnum::PENDENTE->value);
+    }
 
     public static function getPrioridadeFormField(): Forms\Components\Select
     {
@@ -422,7 +419,7 @@ class OrdemServicoResource extends Resource
             ->options(PrioridadeOrdemServicoEnum::class)
             ->default(PrioridadeOrdemServicoEnum::BAIXA);
     }
-    
+
     public static function getTipoManutencaoFormField(): Forms\Components\Select
     {
         return Forms\Components\Select::make('tipo_manutencao')
@@ -431,55 +428,53 @@ class OrdemServicoResource extends Resource
             ->options(TipoManutencaoOrdemServicoEnum::class)
             ->default(TipoManutencaoOrdemServicoEnum::CORRETIVA);
     }
-    
+
     public static function getFaturaFormField(): Forms\Components\TextInput
     {
         return Forms\Components\TextInput::make('fatura_id')
-                ->label('Fatura')
-                ->formatStateUsing(fn($state)=> $state ? str_pad($state, 5, '0', STR_PAD_LEFT) : '' )
-                ->columnSpan(2)
-                ->readOnly();
-    } 
+            ->label('Fatura')
+            ->formatStateUsing(fn($state) => $state ? str_pad($state, 5, '0', STR_PAD_LEFT) : '')
+            ->columnSpan(2)
+            ->readOnly();
+    }
 
     public static function getRelatoClienteFormField(): Forms\Components\Textarea
     {
         return Forms\Components\Textarea::make('relato_cliente')
-                ->columnSpan(6);
-    } 
+            ->columnSpan(6);
+    }
     public static function getObsGeralFormField(): Forms\Components\Textarea
     {
         return Forms\Components\Textarea::make('observacao_geral')
-                ->label('Observações Gerais')
-                ->maxLength(255)
-                ->columnSpan(6);
-    } 
+            ->label('Observações Gerais')
+            ->maxLength(255)
+            ->columnSpan(6);
+    }
     public static function getObsInternaFormField(): Forms\Components\Textarea
     {
         return Forms\Components\Textarea::make('observacao_interna')
-                ->label('Observações Internas')
-                ->maxLength(255)
-                ->columnSpan(6);
-    } 
-    
+            ->label('Observações Internas')
+            ->maxLength(255)
+            ->columnSpan(6);
+    }
+
     public static function getDescontoOrdemFormField(): Forms\Components\TextInput
     {
         return Forms\Components\TextInput::make('desconto')
-                ->columnSpan(2)
-                ->prefix('R$')
-                ->numeric()
-                ->default(0)
-                ->minValue(0);
-        ;
-
-    } 
+            ->columnSpan(2)
+            ->prefix('R$')
+            ->numeric()
+            ->default(0)
+            ->minValue(0);;
+    }
 
     public static function getItensRecebidosFormField(): Forms\Components\Textarea
     {
         return Forms\Components\Textarea::make('itens_recebidos')
-                ->columnSpan(6);
-    } 
+            ->columnSpan(6);
+    }
 
-    public static function getImageEquipamentoFormFiel(): Forms\Components\FileUpload 
+    public static function getImageEquipamentoFormFiel(): Forms\Components\FileUpload
     {
         return Forms\Components\FileUpload::make('img_equipamento')
             ->label('Imagens')
