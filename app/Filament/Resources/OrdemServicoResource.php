@@ -482,6 +482,6 @@ class OrdemServicoResource extends Resource
             ->columnSpanFull()
             ->multiple()
             ->panelLayout('grid')
-            /* ->openable() */;
+            ->openable();
     }
 }
