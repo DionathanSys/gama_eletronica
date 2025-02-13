@@ -479,7 +479,8 @@ class OrdemServicoResource extends Resource
         return Forms\Components\FileUpload::make('img_equipamento')
             ->label('Imagens')
             ->image()
-            ->columnSpanFull()
+            ->previewable(true)
+            // ->columnSpanFull()
             ->multiple()
             ->panelLayout('grid')
             ->openable();

@@ -2,18 +2,22 @@
 
 namespace App\Models;
 
+use App\Enums\StatusNotaFiscalEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class NotaSaida extends Model
 {
     protected $table = 'notas_saida';
 
     protected $casts = [
-        'notas_referenciadas' => 'array',
-        'frete' => 'array',
+        'status'                =>   StatusNotaFiscalEnum::class,
+        'notas_referenciadas'   =>   'array',
+        'frete'                 =>   'array',
+        'eventos'                 =>   'array',
     ];
 
     /*
@@ -23,6 +27,11 @@ class NotaSaida extends Model
     */
 
     public function parceiro(): BelongsTo
+    {
+        return $this->BelongsTo(Parceiro::class);
+    }
+
+    public function transportadora(): BelongsTo
     {
         return $this->BelongsTo(Parceiro::class);
     }
@@ -40,5 +49,10 @@ class NotaSaida extends Model
             'nota_saida_id',
             'ordem_servico_id',
         );
+    }
+
+    public function documentos(): MorphMany
+    {
+        return $this->morphMany(Documento::class, 'documentable');
     }
 }

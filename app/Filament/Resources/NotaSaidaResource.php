@@ -42,19 +42,14 @@ class NotaSaidaResource extends Resource
                             ->schema([
                                 OrdemServicoResource::getParceiroFormField()
                                     ->columnSpan(6),
-
-                                // OrdemServicoResource::getNroDocParceiroFormField(),
-
                                 static::getNaturezaOperacaoFormField()
                                     ->columnSpan(3),
 
                                 static::getDataEmissaoFormField(),
-
                                 static::getChaveNotaFormField(),
-
                                 static::getNroNotaFormField(),
-
                                 static::getSerieNotaFormField(),
+                                static::getStatusFormField(),
 
                             ]),
                         Tab::make('Transporte')
@@ -74,10 +69,18 @@ class NotaSaidaResource extends Resource
                                     ])
                             ]),
                         Tab::make('notas')
+                            ->label('Notas Remessa')
                             ->schema([
                                 static::getNotasReferenciadasFormField()
                                     ->label(''),
                             ]),
+                        Tab::make('eventos')
+                            ->label('Eventos')
+                            ->schema([
+                                static::getEventosNotaFormField()
+                                    ->label(''),
+                                    
+                            ])
                     ])
             ]);
     }
@@ -200,9 +203,32 @@ class NotaSaidaResource extends Resource
             ->disabled();
     }
 
+    public static function getStatusFormField(): Forms\Components\TextInput
+    {
+        return Forms\Components\TextInput::make('status')
+            ->columnSpan(3)
+            ->disabled();
+    }
+
     public static function getNotasReferenciadasFormField(): Forms\Components\KeyValue
     {
         return Forms\Components\KeyValue::make('notas_referenciadas')
+            ->keyLabel('Chave NF-e')    
+            ->valueLabel('Descrição')
+            ->editableKeys(false)
+            ->addable(false)
+            ->deletable(false)
+            ->columnSpan(6);
+    }
+    
+    public static function getEventosNotaFormField(): Forms\Components\KeyValue
+    {
+        return Forms\Components\KeyValue::make('eventos')
+            ->keyLabel('Evento')    
+            ->valueLabel('Descrição')
+            ->editableKeys(false)
+            ->addable(false)
+            ->deletable(false)
             ->columnSpan(6);
     }
 

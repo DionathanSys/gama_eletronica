@@ -14,13 +14,12 @@ class OrdensServicoRelationManager extends RelationManager
 {
     protected static string $relationship = 'ordensServico';
 
+    protected static ?string $title = 'OS\'s';
+
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('id')
-                    ->required()
-                    ->maxLength(255),
             ]);
     }
 
@@ -35,16 +34,10 @@ class OrdensServicoRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 }

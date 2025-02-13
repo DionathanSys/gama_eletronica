@@ -21,17 +21,6 @@ use Illuminate\Support\Facades\Route;
 use HeadlessChromium\BrowserFactory;
 use Illuminate\Support\Facades\Session;
 
-// Route::get('/', function () {
-    
-//     $contasReceber = ContaReceber::find(1);
-//     dd($contasReceber->ordensServico);
-
-// }); 
-
-
-Route::get('/teste', function () {
-    ds('Home page accessed!');
-});
 
 Route::prefix('nfe')->group(function () {
     Route::get('/{chave}/pdf', function ($chave) {

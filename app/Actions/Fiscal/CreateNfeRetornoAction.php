@@ -70,9 +70,13 @@ class CreateNfeRetornoAction
         $resp = $this->nfeService->cria($notaFiscalDTO->toArray());
         
         if (! $resp->sucesso) {
-            dd($resp);
-            $this->notificaErro('Retorno recebido com falha');
+            
+            Notification::make()
+                ->title('Falha na solicitação')
+                ->body("Código {$resp->codigo}: {$resp->mensagem}.")
+                ->sendToDatabase([User::find(1), User::find(2)]);
             return false;
+            
         }
 
         $this->setLastNumber($notaFiscalDTO->getNumero(), $notaFiscalDTO->getSerie());

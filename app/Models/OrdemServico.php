@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+
+use function Pest\Laravel\put;
 
 class OrdemServico extends Model
 {
@@ -107,6 +110,11 @@ class OrdemServico extends Model
             'ordem_servico_id',
             'nota_saida_id',
         )->where('natureza_op', NaturezaOperacaoEnum::RETORNO_MERCADORIA->value);
+    }
+
+    public function documentos(): MorphMany
+    {
+        return $this->morphMany(Documento::class, 'documentable');
     }
 
     /*

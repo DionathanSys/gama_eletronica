@@ -10,7 +10,7 @@ class NfeService
 {
     protected   Nfe     $nfe;
     protected   array   $params;
-    private     int     $ambiente = 1;
+    private     int     $ambiente = 2;
     private     string  $token;
     
     public function __construct()
