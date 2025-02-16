@@ -220,7 +220,7 @@ class OrdemServicoResource extends Resource
                             $notas = $record
                                 ->map(fn($ordem) => $ordem->notaEntrada ? [
                                     'chave_nota' => $ordem->notaEntrada->chave_nota,
-                                    'data_fatura' => $ordem->notaEntrada->data_fatura,
+                                    'data_fatura' => Carbon::parse($ordem->notaEntrada->data_fatura)->format('d/m/Y'),
                                     'nro_nota' => $ordem->notaEntrada->nro_nota,
                                 ] : null) // Obter os campos do relacionamento 'notaEntrada'
                                 ->filter() // Remover valores nulos
