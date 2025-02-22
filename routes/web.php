@@ -21,6 +21,7 @@ use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use HeadlessChromium\BrowserFactory;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 
@@ -94,9 +95,9 @@ Route::prefix('nfe')->group(function () {
 
 });
 
-Route::post('/rotateste', function () {
-    return response(200);
-});
+Route::post('/rotateste', function (Request $request) {
+    return response('OK', 200);
+})->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
 
 Route::get('/cnpj/{cnpj}', function ($cnpj) {
