@@ -95,7 +95,6 @@ Route::prefix('nfe')->group(function () {
 });
 
 Route::get('/rotateste', function () {
-    dd('teste');
     return response('OK', 200);
 });
 
