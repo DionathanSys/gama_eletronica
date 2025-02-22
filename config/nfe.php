@@ -1,0 +1,31 @@
+<?php
+
+return [
+    'params' => [
+        // IMPORTANTE: 1 - Produção / 2 - Homologação
+        "token" => env('AMBIENTE_NFE') == '1' ? env('TOKEN_NFE_PRODUCAO') : env('TOKEN_NFE_HOMOLOGACAO'),
+        "ambiente" => env('AMBIENTE_NFE'),  
+        "options" => [
+            "debug" => false,
+            "timeout" => 60,
+            "port" => 443,
+            "http_version" => CURL_HTTP_VERSION_NONE
+        ]
+    ],
+    'serie' => [
+        'nfe_retorno' => env('AMBIENTE_NFE') == '1' ? 5 : 850,
+    ],
+    'item' => [
+        'origem' => [
+            '0' => 'Nacional',
+            '1' => 'Estrangeira - Importação direta',
+            '2' => 'Estrangeira - Adquirida no mercado interno',
+            '3' => 'Nacional com mais de 40% de conteúdo estrangeiro',
+            '4' => 'Nacional produzida através de processos produtivos básicos',
+            '5' => 'Nacional com menos de 40% de conteúdo estrangeiro',
+            '6' => 'Estrangeira - Importação direta, sem produto nacional similar',
+            '7' => 'Estrangeira - Adquirida no mercado interno, sem produto nacional similar',
+            '8' => 'Nacional, mercadoria ou bem com Conteúdo de Importação superior a 70%',
+        ],
+    ],
+];

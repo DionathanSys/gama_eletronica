@@ -9,7 +9,6 @@ use App\Models\NotaSaida;
 use App\Models\User;
 use App\Services\NfeService;
 use App\Traits\{ControleNumeracaoNf, Notifica};
-use CloudDfe\SdkPHP\Nfe;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Collection;
@@ -80,14 +79,33 @@ class CreateNfeRetornoAction
         }
 
         $this->setLastNumber($notaFiscalDTO->getNumero(), $notaFiscalDTO->getSerie());
-        $this->setInfoRegistroNotaSaida($notaSaida, $notaFiscalDTO, $resp->chave);
+        $this->refreshInfoNotaSaida($notaSaida, $notaFiscalDTO, $resp->chave);
 
         $this->notificaSucesso($notaFiscalDTO->getNumero(), $resp->chave);
 
         return $resp;
     }
 
-    private function setInfoRegistroNotaSaida(NotaSaida $notaSaida, NfeDTO2 $dto, $chave)
+    // public function preview(NotaSaida $notaSaida, array $data)
+    // {
+    //     $notaFiscalDTO = NfeDTO2::fromMakeDto($notaSaida, $data);
+        
+    //     $resp = $this->nfeService->preview($notaFiscalDTO->toArray());
+        
+    //     if (! $resp->sucesso) {
+            
+    //         Notification::make()
+    //             ->title('Falha na solicitação')
+    //             ->body("Código {$resp->codigo}: {$resp->mensagem}.")
+    //             ->sendToDatabase([User::find(1), User::find(2)]);
+    //         return false;
+            
+    //     }
+        
+    //     return $resp->pdf;
+    // }
+
+    private function refreshInfoNotaSaida(NotaSaida $notaSaida, NfeDTO2 $dto, $chave)
     {
 
         $data = [

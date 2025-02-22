@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\NaturezaOperacaoEnum;
 use App\Enums\StatusNotaFiscalEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,10 +15,11 @@ class NotaSaida extends Model
     protected $table = 'notas_saida';
 
     protected $casts = [
-        'status'                =>   StatusNotaFiscalEnum::class,
-        'notas_referenciadas'   =>   'array',
-        'frete'                 =>   'array',
-        'eventos'                 =>   'array',
+        'status'              => StatusNotaFiscalEnum::class,
+        'natureza_operacao'   => NaturezaOperacaoEnum::class,
+        'notas_referenciadas' => 'array',
+        'frete'               => 'array',
+        'eventos'             => 'array',
     ];
 
     /*

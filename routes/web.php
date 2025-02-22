@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\Fiscal\CreateNfeRetornoAction;
 use App\DTO\Fiscal\NfeDTO2;
 use App\Enums\StatusProcessoOrdemServicoEnum;
 use App\Enums\VinculoParceiroEnum;
@@ -11,6 +12,7 @@ use App\Models\OrdemServico;
 use App\Models\Parceiro;
 use App\Services\BuscaCNPJ;
 use App\Services\NfeService;
+use CloudDfe\SdkPHP\Nfe;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
@@ -25,7 +27,7 @@ use Illuminate\Support\Facades\Session;
 Route::prefix('nfe')->group(function () {
     Route::get('/{chave}/pdf', function ($chave) {
         $resp = (new NfeService())->consulta($chave);
-       
+
         if ($resp->sucesso) {
 
             $tentativa = 0;
@@ -45,32 +47,58 @@ Route::prefix('nfe')->group(function () {
         }
         echo 'erro';
         return;
-
     })->name('nfe.pdf');
-});
 
-Route::get('nf/{chave}/preview', function ($chave) {
+    Route::get('/{notaSaida}/preview', function(NotaSaida $notaSaida) {
+        
+        $nfe = (new NfeService());
+        $resp = $nfe->preview($notaSaida);
 
-    $resp = (new NfeService())->consulta($chave);
+        if ($resp) {
 
-    if ($resp->sucesso) {
+            $pdf = base64_decode($resp->pdf);
 
-        $tentativa = 0;
-        while ($resp?->pdf) {
-            $tentativa++;
-            if ($tentativa > 5) {
-                break; // Sai do loop após 5 tentativas
-            }
-            sleep(2); // Aguarda 2 segundos
+            return response($pdf)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'inline; filename="documento.pdf"');
         }
 
-        $pdf = base64_decode($resp->pdf);
+        echo "Erro na geração do preview da nota fiscal!";
+        echo "";
 
-        return response($pdf)
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'inline; filename="documento.pdf"');
-    }
-})->name('nfe.preview.pdf');
+    })->name('nfe.preview');
+
+    Route::get('/{notaSaida}/view', function (NotaSaida $notaSaida) {
+
+        $nfe = new Nfe(config('nfe.params'));
+        
+        $resp = $nfe->pdf([
+            'chave' => $notaSaida->chave_nota,
+        ]);
+        
+        if($resp->sucesso){
+            return response(base64_decode($resp->pdf))
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'inline; filename="documento.pdf"');
+        }
+        echo "Erro na geração do PDF da nota fiscal!";
+        echo "";
+        echo "Aguarde alguns segundos e ATUALIZE (F5) a tela novamente.";
+
+
+    })->name('nfe.view.pdf');
+
+    Route::get('/webhook/nfe', function () {
+
+    });
+
+});
+
+Route::get('/rotateste', function () {
+    dd('teste');
+    return response('OK', 200);
+});
+
 
 Route::get('/cnpj/{cnpj}', function ($cnpj) {
     $resp = (new BuscaCNPJ($cnpj))->getInfo();
@@ -119,7 +147,7 @@ Route::prefix('os')->group(function () {
     Route::get('{id}/html', function ($id) {
 
         $ordemServico = OrdemServico::with(['itens.servico', 'parceiro.enderecos', 'equipamento'])->findOrFail($id);
-        
+
         return view('ordem_servico.padrao', [
             'ordem_servico' => $ordemServico,
             'itens' => $ordemServico->itens,
@@ -171,19 +199,6 @@ Route::get('/nf/correcao/{chave}', function ($chave) {
         dump('falha', $resp);
     }
 });
-
-Route::get('nf/cancela', function () {
-    
-    $payload = [
-        'chave' => '42250145790457000185558500000000011080511965',
-        'justificativa' => 'Divergência nas informações',
-    ];
-
-    $resp = (new NfeService())->cancela($payload);
-
-    dd($resp);
-});
-
 
 
 // Route::get('/nf/inutiliza', function (){

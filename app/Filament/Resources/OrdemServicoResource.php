@@ -9,8 +9,11 @@ use App\Filament\Resources\OrdemServicoResource\Pages;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers\{ItensOrcamentoRelationManager, ItensOrdensAnterioresRelationManager, ItensRelationManager};
 use App\Actions\Fiscal\CreateNfRetornoAction;
+use App\Actions\Fiscal\RegistrarNotaSaidaAction;
+use App\Actions\NotaFiscalMercadoria\RegistrarNfeRetornoAction;
 use App\Enums\{StatusProcessoOrdemServicoEnum, TipoManutencaoOrdemServicoEnum, VinculoParceiroEnum};
 use App\Models\{Equipamento, OrdemServico, Parceiro, Veiculo};
+use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\{Section, Select, Tabs, TextInput};
@@ -238,6 +241,20 @@ class OrdemServicoResource extends Resource
                                 return false;
                             }
 
+                            return redirect(NotaSaidaResource::getUrl('edit', ['record' => $notaSaida->id]));
+                        }),
+                    Tables\Actions\BulkAction::make('nfe_retorno_teste')
+                        ->label('Teste')
+                        ->requiresConfirmation()
+                        ->action(function(Collection $record) {
+                            $notaSaida = RegistrarNfeRetornoAction::handle($record);
+                            if ($notaSaida == false) {
+                                Notification::make()
+                                    ->title('Falha ao realizar a solicitação!')
+                                    ->send();
+
+                                return false;
+                            }
                             return redirect(NotaSaidaResource::getUrl('edit', ['record' => $notaSaida->id]));
                         })
                 ]),
