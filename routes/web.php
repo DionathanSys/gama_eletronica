@@ -4,6 +4,7 @@ use App\Actions\Fiscal\CreateNfeRetornoAction;
 use App\DTO\Fiscal\NfeDTO2;
 use App\Enums\StatusProcessoOrdemServicoEnum;
 use App\Enums\VinculoParceiroEnum;
+use App\Events\RetornoNfe;
 use App\Models\ContaReceber;
 use App\Models\Endereco;
 use App\Models\NotaEntrada;
@@ -96,7 +97,7 @@ Route::prefix('nfe')->group(function () {
 });
 
 Route::post('/api/webhook/nfe', function (Request $request) {
-
+    RetornoNfe::dispatch($request);
 
     
     return response('OK', 200);

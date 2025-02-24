@@ -46,6 +46,7 @@ class EditNotaSaida extends EditRecord
                 Actions\Action::make('confirmar-teste')
                     ->label('Confirmar NFe')
                     ->color('info')
+                    ->requiresConfirmation(fn() => env('AMBIENTE_NFE') == '1')
                     ->action(fn(NotaSaida $record) => (new NfeService())->criar($record)),
                 Actions\Action::make('preview')
                     ->label('Preview NFe')

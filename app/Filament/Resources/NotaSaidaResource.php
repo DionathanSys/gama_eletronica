@@ -142,7 +142,10 @@ class NotaSaidaResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('parceiro_id')
+                    ->label('Cliente')
+                    ->searchable()
+                    ->relationship('parceiro', 'nome')
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
