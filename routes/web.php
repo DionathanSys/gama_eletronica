@@ -95,7 +95,10 @@ Route::prefix('nfe')->group(function () {
 
 });
 
-Route::post('/rotateste', function (Request $request) {
+Route::post('/api/webhook/nfe', function (Request $request) {
+
+
+    
     return response('OK', 200);
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
