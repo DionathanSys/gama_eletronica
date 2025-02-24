@@ -22,6 +22,7 @@ class NotificarRetornoNfe
      */
     public function handle(RetornoNfe $event): void
     {
+        
         Log::info($event);
     }
 }

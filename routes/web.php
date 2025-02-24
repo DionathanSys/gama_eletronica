@@ -97,6 +97,11 @@ Route::prefix('nfe')->group(function () {
 });
 
 Route::post('/api/webhook/nfe', function (Request $request) {
+    // $dados = $request->getContent();
+    // echo '<pre>';
+    // var_dump($dados);
+    // echo '</pre>';
+
     // RetornoNfe::dispatch($request);
 
     
