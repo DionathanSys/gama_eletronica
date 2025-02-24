@@ -97,7 +97,7 @@ Route::prefix('nfe')->group(function () {
 });
 
 Route::post('/api/webhook/nfe', function (Request $request) {
-    RetornoNfe::dispatch($request);
+    // RetornoNfe::dispatch($request);
 
     
     return response('OK', 200);
