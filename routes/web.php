@@ -1,29 +1,16 @@
 <?php
 
-use App\Actions\Fiscal\CreateNfeRetornoAction;
-use App\DTO\Fiscal\NfeDTO2;
-use App\Enums\StatusProcessoOrdemServicoEnum;
-use App\Enums\VinculoParceiroEnum;
-use App\Events\RetornoNfe;
-use App\Models\ContaReceber;
-use App\Models\Endereco;
-use App\Models\NotaEntrada;
+use App\DTO\Fiscal\NfeEstornoDTO;
 use App\Models\NotaSaida;
 use App\Models\OrdemServico;
 use App\Models\Parceiro;
 use App\Services\BuscaCNPJ;
 use App\Services\NfeService;
 use CloudDfe\SdkPHP\Nfe;
-use Filament\Actions\Action;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Form;
-use Filament\Notifications\Livewire\Notifications;
 use Filament\Notifications\Notification;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use HeadlessChromium\BrowserFactory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 
 
 Route::prefix('nfe')->group(function () {
@@ -223,3 +210,22 @@ Route::get('/nf/correcao/{chave}', function ($chave) {
     
 //     dd($resp);
 // });
+
+Route::get('/estorno', function () {
+
+    $nfe = new Nfe(config('nfe.params'));
+    $dto = NfeEstornoDTO::fromMakeDto();
+    
+    $resp = $nfe->cria($dto->toArray());
+
+    if (!$resp->sucesso) {
+        dd($resp);
+    }
+
+    $pdf = base64_decode($resp->pdf);
+
+    return response($pdf)
+        ->header('Content-Type', 'application/pdf')
+        ->header('Content-Disposition', 'inline; filename="documento.pdf"');
+    
+});

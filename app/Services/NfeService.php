@@ -163,7 +163,7 @@ class NfeService
             ->actions([
                 Action::make('Abrir')
                     ->button()
-                    ->url(route('nfe.pdf', ['chave' => $chave]))
+                    ->url(route('nfe.view.pdf', ['notaSaida' => $chave]))
                     ->openUrlInNewTab(),
             ])
             ->sendToDatabase(User::all());

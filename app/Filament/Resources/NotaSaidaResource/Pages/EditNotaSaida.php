@@ -33,17 +33,17 @@ class EditNotaSaida extends EditRecord
             Actions\ActionGroup::make([
                 Actions\DeleteAction::make()
                     ->icon(null),
+                // Actions\Action::make('confirmar')
+                //     ->color('succes')
+                //     // ->disabled(fn($record) => $record->status != StatusNotaFiscalEnum::PENDENTE)
+                //     ->action(function ($record) {
+                //         $resp = (new CreateNfeRetornoAction())->execute($record, $this->data);
+                //         if ($resp) {
+                //             $this->notificaSucesso();
+                //             return redirect(NotaSaidaResource::getUrl('edit', ['record' => $record]));
+                //         }
+                //     }),
                 Actions\Action::make('confirmar')
-                    ->color('succes')
-                    // ->disabled(fn($record) => $record->status != StatusNotaFiscalEnum::PENDENTE)
-                    ->action(function ($record) {
-                        $resp = (new CreateNfeRetornoAction())->execute($record, $this->data);
-                        if ($resp) {
-                            $this->notificaSucesso();
-                            return redirect(NotaSaidaResource::getUrl('edit', ['record' => $record]));
-                        }
-                    }),
-                Actions\Action::make('confirmar-teste')
                     ->label('Confirmar NFe')
                     ->color('info')
                     ->requiresConfirmation(fn() => env('AMBIENTE_NFE') == '1')
@@ -71,7 +71,6 @@ class EditNotaSaida extends EditRecord
                             ->extraAttributes(['style' => 'padding: 10px; background-color: #fff3cd; color: #856404; font-weight: bold; border: 1px solid #ffeeba; border-radius: 5px;']),
                         Textarea::make('justificativa')
                             ->required()
-                            ->default('CANCELAMENTO DE TESTE')
                             ->minLength(15)
                             ->maxLength(255),
                         TextInput::make('codigo_confirmation')
