@@ -40,6 +40,7 @@ class DocumentosRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\Action::make('consultar_nfe')
                     ->label('Atualizar Docs.')
+                    ->visible(fn() => $this->ownerRecord->documentos->isEmpty())
                     ->action(fn() => ConsultaNfJob::dispatch($this->ownerRecord->chave_nota, 1)->delay(now()->addSeconds(3))),
             ])
             ->actions([

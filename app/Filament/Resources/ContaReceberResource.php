@@ -63,7 +63,7 @@ class ContaReceberResource extends Resource
 
                 Tables\Columns\TextColumn::make('data_vencimento')
                     ->label('Vencimento')
-                    ->date()
+                    ->date('d/m/Y')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('valor')

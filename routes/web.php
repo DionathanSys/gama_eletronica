@@ -187,19 +187,19 @@ Route::get('/nf/correcao/{chave}', function ($chave) {
 });
 
 
-Route::get('/nf/inutiliza', function (){
+// Route::get('/nf/inutiliza', function (){
 
-    $payload = [
-        "numero_inicial" => "1",
-        "numero_final" => "1",
-        "serie" => "850",
-        "justificativa" => "Foi inutilizado devido ao seu salto inadvertido durante emissões iniciais no sistema. Não houve operação fiscal vinculada a este número, e sua inutilização é solicitada para manter a sequência numérica e a conformidade com as normas fiscais vigentes"
-    ];
+//     $payload = [
+//         "numero_inicial" => "31",
+//         "numero_final" => "31",
+//         "serie" => "5",
+//         "justificativa" => "Foi inutilizado devido ao seu salto inadvertido durante emissões no sistema. Não houve operação fiscal vinculada a este número, e sua inutilização é solicitada para manter a sequência numérica e a conformidade com as normas fiscais vigentes"
+//     ];
 
-    $resp = (new NfeService())->inutiliza($payload);
+//     $resp = (new NfeService())->inutiliza($payload);
 
-    dd($resp);
-});
+//     dd($resp);
+// });
 
 // Route::get('/estorno', function () {
 
