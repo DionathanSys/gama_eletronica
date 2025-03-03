@@ -18,9 +18,9 @@ trait GerarPdf
         $nomeArquivo = $nomeArquivo.'.pdf' ?? 'doc_'.time().'.pdf';
 
         $caminho = 'pdfs\\'.$nomeArquivo;
-      
+        
         Storage::disk('public')->put($caminho, $pdf);
 
-        return storage_path($caminho);
+        return storage_path('\\app\\public\\'.$caminho);
     }
 }

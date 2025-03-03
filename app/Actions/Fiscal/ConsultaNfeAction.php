@@ -36,7 +36,7 @@ class ConsultaNfeAction
                 ->sendToDatabase(User::all());
             return;
         }
-       
+   
         AtualizaDadosNfeAction::execute($resp);
 
         Notification::make()

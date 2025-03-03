@@ -221,5 +221,5 @@ Route::get('/nf/inutiliza', function (){
 // });
 
 Route::get('/teste', function () {
-    ConsultaNfeAction::execute('42241236286501000123558500000000111705165280', 0);
+    ConsultaNfeAction::execute('42250236286501000123558500000000281138822030', 0);
 });

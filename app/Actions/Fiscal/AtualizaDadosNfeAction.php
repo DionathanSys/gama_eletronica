@@ -20,7 +20,7 @@ class AtualizaDadosNfeAction
         
         $pathPdf = (new self)::saveBase64ToPdf($resp->pdf, $resp->chave);
         $pathXml = (new self)::saveBase64ToXml($resp->xml, $resp->chave);
-        
+      
         $notaSaida->documentos()->createMany([
             [
                 'descricao' => 'DANFE NFe',

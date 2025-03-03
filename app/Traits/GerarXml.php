@@ -21,6 +21,6 @@ trait GerarXml
 
         Storage::disk('public')->put($caminho, $xml);
 
-        return storage_path($caminho);
+        return storage_path('\\app\\public\\'.$caminho);
     }
 }

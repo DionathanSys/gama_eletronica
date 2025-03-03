@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\NotaSaidaResource\RelationManagers;
 
+use App\Jobs\ConsultaNfJob;
 use App\Models\Documento;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -37,12 +38,15 @@ class DocumentosRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
+                Tables\Actions\Action::make('consultar_nfe')
+                    ->label('Atualizar Docs.')
+                    ->action(fn() => ConsultaNfJob::dispatch($this->ownerRecord->chave_nota, 1)->delay(now()->addSeconds(3))),
             ])
             ->actions([
-                Tables\Actions\Action::make('Download')
+                Tables\Actions\Action::make('download_doc')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('info')
-                    ->tooltip('Baixar OS')
+                    ->tooltip('Download')
                     ->label('')
                     ->action(function (Documento $record) {
 
@@ -52,6 +56,7 @@ class DocumentosRelationManager extends RelationManager
 
             ])
             ->bulkActions([
-            ]);
+            ])
+            ->poll(3);
     }
 }
