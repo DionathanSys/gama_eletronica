@@ -6,6 +6,8 @@ use App\Enums\NaturezaOperacaoEnum;
 use App\Enums\VinculoParceiroEnum;
 use App\Filament\Resources\NotaSaidaResource\Pages;
 use App\Filament\Resources\NotaSaidaResource\RelationManagers;
+use App\Filament\Resources\NotaSaidaResource\RelationManagers\DocumentosRelationManager;
+use App\Filament\Resources\NotaSaidaResource\RelationManagers\ItensRelationManager;
 use App\Filament\Resources\NotaSaidaResource\RelationManagers\OrdensServicoRelationManager;
 use App\Models\NotaSaida;
 use App\Models\Parceiro;
@@ -170,6 +172,8 @@ class NotaSaidaResource extends Resource
     {
         return [
             OrdensServicoRelationManager::class,
+            ItensRelationManager::class,
+            DocumentosRelationManager::class,
         ];
     }
 
@@ -261,7 +265,7 @@ class NotaSaidaResource extends Resource
                 '2' => "2 - por conta de terceiros",
                 '3' => "3 - Transporte Proprio por conta do Remetente",
                 '4' => "4 - Transporte Proprio por conta do Destinatario",
-                '9' => "9 - sem frete"
+                // '9' => "9 - sem frete"   Removido devido o fato de poder deixar sem criar frete, onde é aplicado o valor 9 automaticamente
             ])
             ->default(1);
     }
@@ -322,6 +326,7 @@ class NotaSaidaResource extends Resource
         return Forms\Components\Select::make('volume_especie')
             ->columnSpan(3)
             ->label('Espécie dos Volumes')
+            ->default('CAIXA')
             ->options([
                 'CAIXA' => 'Caixa',
                 'PACOTE' => 'Pacote',

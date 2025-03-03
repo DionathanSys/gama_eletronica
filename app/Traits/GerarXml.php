@@ -15,12 +15,12 @@ trait GerarXml
             throw new Exception("Erro ao gerar XML.");
         }
 
-        $nomeArquivo = $nomeArquivo ?? 'doc_'.time().'.xml';
+        $nomeArquivo = $nomeArquivo.'.xml' ?? 'doc_'.time().'.xml';
 
-        $caminho = "xmls/{$nomeArquivo}";
+        $caminho = 'xmls\\'.$nomeArquivo;
 
-        Storage::put($caminho, $xml);
+        Storage::disk('public')->put($caminho, $xml);
 
-        return $caminho;
+        return storage_path($caminho);
     }
 }

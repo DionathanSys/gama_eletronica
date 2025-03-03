@@ -2,6 +2,7 @@
 
 namespace App\DTO\Fiscal;
 
+use App\Contracts\NfeDTOInterface;
 use App\DTO\Cliente\ClienteDTO;
 use App\Enums\NaturezaOperacaoEnum;
 use App\Models\NotaSaida;
@@ -9,8 +10,9 @@ use App\Models\Parceiro;
 use App\Traits\ControleNumeracaoNf;
 use Carbon\Carbon;
 
-class NfeEstornoDTO
+class NfeEstornoDTO implements NfeDTOInterface
 {
+
     use ControleNumeracaoNf;
 
     public function __construct(
@@ -33,24 +35,22 @@ class NfeEstornoDTO
 
     ) {}
 
-    public static function fromMakeDto(): self
+    public static function fromNotaSaida(NotaSaida $notaSaida): self
     {
-        $notaSaida = NotaSaida::find(34);
-
         $natureza_operacao                      = NaturezaOperacaoEnum::ESTORNO_NFE_NAO_CANCELADA->value;
         $tipo_operacao                          = 0;            // 0 - Entrada
-        $serie                                  = 849;
+        $serie                                  = config('nfe.serie.nfe_estorno');
         $numero                                 = self::getNextNumber($serie);
         $finalidade_emissao                     = 3;            // "3 - NFe de ajuste"
         $consumidor_final                       = 0;            // "0 - Normal" - "1 - Consumidor final"
         $presenca_comprador                     = 0;            // "0 - Não se aplica"
         $data_emissao                           = Carbon::createFromFormat('Y-m-d H:i:s', now())->format('Y-m-d\TH:i:sP');
         $data_entrada_saida                     = Carbon::createFromFormat('Y-m-d H:i:s', now())->format('Y-m-d\TH:i:sP');
-        $informacoes_adicionais_contribuinte    = 'NFe 42250245790457000185550050000000271384826379 Nro. 27 Série 5';
-        $informacoes_adicionais_fisco           = 'NFe estornada devido à emissão para o CNPJ incorreto, estando fora do prazo regulamentar para cancelamento.';
-        $destinatario                           = (new ClienteDTO(Parceiro::find(53)))->toArray();
+        $informacoes_adicionais_contribuinte    = 'NFe 42250245790457000185550050000000321821022581 Nro. 32 Série 5';
+        $informacoes_adicionais_fisco           = 'NFe estornada devido valor/quantidade incorretos, estando fora do prazo regulamentar para cancelamento.';
+        $destinatario                           = (new ClienteDTO(Parceiro::find(46)))->toArray();
 
-        $notas_referenciadas[]['nfe']['chave'] = '42250245790457000185550050000000271384826379';
+        $notas_referenciadas[]['nfe']['chave'] = '42250245790457000185550050000000321821022581';
 
         $frete = [
             'modalidade_frete'  => '9',
@@ -69,7 +69,7 @@ class NfeEstornoDTO
                 'origem'                    => 0,
                 'descricao'                 => $ordem->equipamento->descricao,
                 'codigo_ncm'                => $ordem->itemNotaRemessa->ncm_item,
-                'cfop'                      => '2949',
+                'cfop'                      => '1949',
                 'unidade_comercial'         => 'UN',
                 'quantidade_comercial'      => 1,
                 'valor_unitario_comercial'  => $ordem->itemNotaRemessa->valor,
@@ -103,7 +103,7 @@ class NfeEstornoDTO
         );
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'natureza_operacao'                     => $this->natureza_operacao,
@@ -125,22 +125,21 @@ class NfeEstornoDTO
         ];
     }
 
-    public function getNumero()
+    public function getNumero(): int
     {
         return $this->numero;
     }
-    public function getSerie()
+    public function getSerie(): int
     {
         return $this->serie;
     }
-
-    public function getDataEmissao()
+    public function getDataEmissao(): string
     {
         return $this->data_emissao;
     }
-
-    public function getDataEntradaSaida()
+    public function getDataEntradaSaida(): string
     {
         return $this->data_entrada_saida;
     }
+
 }

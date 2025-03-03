@@ -32,17 +32,8 @@ class EditNotaSaida extends EditRecord
 
             Actions\ActionGroup::make([
                 Actions\DeleteAction::make()
+                    ->visible(fn(NotaSaida $record) => $record->status == StatusNotaFiscalEnum::PENDENTE)
                     ->icon(null),
-                // Actions\Action::make('confirmar')
-                //     ->color('succes')
-                //     // ->disabled(fn($record) => $record->status != StatusNotaFiscalEnum::PENDENTE)
-                //     ->action(function ($record) {
-                //         $resp = (new CreateNfeRetornoAction())->execute($record, $this->data);
-                //         if ($resp) {
-                //             $this->notificaSucesso();
-                //             return redirect(NotaSaidaResource::getUrl('edit', ['record' => $record]));
-                //         }
-                //     }),
                 Actions\Action::make('confirmar')
                     ->label('Confirmar NFe')
                     ->color('info')
@@ -113,30 +104,17 @@ class EditNotaSaida extends EditRecord
         ];
     }
 
-    protected function mutateFormDataBeforeSave(array $data): array
+    protected function getFormActions(): array
     {
-        //Devido à um preenchimento incorreto por parte do Form, onde ele assume para transportadora_id o mesmo valor de parceiro_id, quando
-        //transportadora_id é null, o erro ocorre devido a utilização do mesmo relacionamento pelos dois
 
-        if ($data['frete'][0]['data']['transportadora_id'] == $data['parceiro_id']) {
-            $data['frete'][0]['data']['transportadora_id'] = null;
+        if ($this->data['status'] != StatusNotaFiscalEnum::AUTORIZADA->value) {
+            return [
+                ...parent::getFormActions(),
+            ];
         }
-        
-        return $data;
+
+        return [];
     }
-    
-    
-    // protected function getFormActions(): array
-    // {
-
-    //     if ($this->data['status'] != StatusNotaFiscalEnum::AUTORIZADA->value) {
-    //         return [
-    //             ...parent::getFormActions(),
-    //         ];
-    //     }
-
-    //     return [];
-    // }
 
     // protected function fillForm(): void
     // {

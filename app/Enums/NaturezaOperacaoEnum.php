@@ -2,6 +2,9 @@
 
 namespace App\Enums;
 
+use App\DTO\Fiscal\NfeRetornoDTO;
+use App\DTO\Fiscal\NfeEstornoDTO;
+
 enum NaturezaOperacaoEnum:string
 {
     case VENDA_PRODUTO                  = 'VENDA DE PRODUTO';
@@ -29,11 +32,27 @@ enum NaturezaOperacaoEnum:string
     public function description(): string
     {
         return match ($this) {
-            self::VENDA_PRODUTO         => 'OPERAÇÃO DE VENDA DE PRODUTOS.',
-            self::VENDA_SERVICO         => 'PRESTAÇÃO DE SERVIÇOS.',
-            self::REMESSA_CONSIGNACAO   => 'REMESSA DE MERCADORIA OU BEM PARA CONSERTO OU REPARO',
-            self::DEVOLUCAO_VENDA       => 'DEVOLUÇÃO DE PRODUTOS PELO CLIENTE.',
-            self::RETORNO_MERCADORIA    => 'RETORNO DE MERCADORIA',
+            self::VENDA_PRODUTO                 => 'OPERAÇÃO DE VENDA DE PRODUTOS.',
+            self::VENDA_SERVICO                 => 'PRESTAÇÃO DE SERVIÇOS.',
+            self::REMESSA_CONSIGNACAO           => 'REMESSA DE MERCADORIA OU BEM PARA CONSERTO OU REPARO',
+            self::DEVOLUCAO_VENDA               => 'DEVOLUÇÃO DE PRODUTOS PELO CLIENTE.',
+            self::RETORNO_MERCADORIA            => 'RETORNO DE MERCADORIA',
+            self::ESTORNO_NFE_NAO_CANCELADA     => 'ESTORNO NFE NÃO CANCELADA NO PRAZO LEGAL',
+        };
+    }
+
+    /**
+     * Retorna a classe DTO apropriada para a natureza da operação
+     *
+     * @return string
+     */
+    public function getDTO(): string
+    {
+        return match ($this) {
+            self::RETORNO_MERCADORIA        => NfeRetornoDTO::class,
+            self::ESTORNO_NFE_NAO_CANCELADA => NfeEstornoDTO::class,
+
+            default => NfeRetornoDTO::class, // Fallback
         };
     }
 }

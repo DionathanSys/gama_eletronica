@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
-use App\DTO\Fiscal\NfeDTO2;
+use App\Contracts\NfeDTOInterface;
+use App\DTO\Fiscal\NfeRetornoDTO;
 use App\Enums\StatusNotaFiscalEnum;
+use App\Jobs\ConsultaNfJob;
 use App\Models\Documento;
 use App\Models\NotaSaida;
 use App\Models\User;
@@ -13,6 +15,7 @@ use CloudDfe\SdkPHP\Nfe;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class NfeService
@@ -36,22 +39,26 @@ class NfeService
 
     public function criar(NotaSaida $notaSaida)
     {
-        $notaFiscalDTO = NfeDTO2::fromMakeDto($notaSaida);
-        
-        $resp = $this->nfe->cria($notaFiscalDTO->toArray());
+        $dtoClass = $notaSaida->natureza_operacao->getDTO();
+        /** @var NfeDTOInterface $dto */
+        $dto = $dtoClass::fromNotaSaida($notaSaida);
+
+        $resp = $this->nfe->cria($dto->toArray());
 
         if (!$resp->sucesso) {
             Notification::make()
                 ->title('Falha na solicitação')
                 ->body("Código {$resp->codigo}: {$resp->mensagem}.")
-                ->sendToDatabase([User::all()]);
+                ->sendToDatabase(Auth::user());
             return false;
         }
         
-        $this->setLastNumber($notaFiscalDTO->getNumero(), $notaFiscalDTO->getSerie());
-        $this->refreshInfoNotaSaida($notaSaida, $notaFiscalDTO, $resp->chave);
+        $this->setLastNumber($dto->getNumero(), $dto->getSerie());
+        $this->refreshInfoNotaSaida($notaSaida, $dto, $resp->chave);
 
-        $this->notificaSucesso($notaFiscalDTO->getNumero(), $resp->chave);
+        ConsultaNfJob::dispatch($resp->chave);
+        
+        $this->notificaSucesso($dto->getNumero(), $resp->chave);
 
         return $resp;
 
@@ -59,18 +66,21 @@ class NfeService
 
     public function preview(NotaSaida $notaSaida)
     {
-        $notaFiscalDTO = NfeDTO2::fromMakeDto($notaSaida);
+        $dtoClass = $notaSaida->natureza_operacao->getDTO();
+        /** @var NfeDTOInterface $dto */
+        $dto = $dtoClass::fromNotaSaida($notaSaida);
         
-        $resp = $this->nfe->preview($notaFiscalDTO->toArray());
+        $resp = $this->nfe->preview($dto->toArray());
 
         if (!$resp->sucesso) {
             Notification::make()
                 ->title('Falha na solicitação')
                 ->body("Código {$resp->codigo}: {$resp->mensagem}.")
-                ->sendToDatabase([User::all()]);
+                ->sendToDatabase(User::all());
+                
             return false;
         }
-
+        
         return $resp;
     }
 
@@ -139,11 +149,11 @@ class NfeService
         return $this->nfe->inutiliza($payload);
     }
 
-    private function refreshInfoNotaSaida(NotaSaida $notaSaida, NfeDTO2 $dto, $chave)
+    private function refreshInfoNotaSaida(NotaSaida $notaSaida, NfeDTOInterface $dto,string $chave): void
     {
 
         $data = [
-            'status'                => StatusNotaFiscalEnum::AUTORIZADA->value,
+            // 'status'                => StatusNotaFiscalEnum::AUTORIZADA->value, //!Mover para atualizar em Job/Action
             'chave_nota'            => $chave,
             'nro_nota'              => $dto->getNumero(),
             'serie'                 => $dto->getSerie(),
@@ -154,7 +164,7 @@ class NfeService
         $notaSaida->update($data);
     }
 
-    private function notificaSucesso($nro_nota, $chave)
+    private function notificaSucesso($nro_nota, $chave): void
     {
         Notification::make()
             ->title('Sucesso')

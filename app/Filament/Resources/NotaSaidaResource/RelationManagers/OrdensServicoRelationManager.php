@@ -28,7 +28,17 @@ class OrdensServicoRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->columns([
-                Tables\Columns\TextColumn::make('id'),
+                Tables\Columns\TextColumn::make('id')
+                    ->label('OS'),
+                Tables\Columns\TextColumn::make('equipamento.descricao')
+                    ->label('Equipamento'),
+                Tables\Columns\TextColumn::make('equipamento.nro_serie')
+                    ->label('Nro. Série'),
+                Tables\Columns\TextColumn::make('equipamento.modelo'),
+                Tables\Columns\TextColumn::make('data_ordem')
+                    ->date('d/m/Y'),
+                Tables\Columns\TextColumn::make('status_processo')
+                    ->label('Status'),
             ])
             ->filters([
                 //

@@ -1,6 +1,8 @@
 <?php
 
+use App\Actions\Fiscal\ConsultaNfeAction;
 use App\DTO\Fiscal\NfeEstornoDTO;
+use App\Models\ItemNotaSaida;
 use App\Models\NotaSaida;
 use App\Models\OrdemServico;
 use App\Models\Parceiro;
@@ -15,34 +17,27 @@ use Illuminate\Http\Request;
 
 Route::prefix('nfe')->group(function () {
     Route::get('/{chave}/pdf', function ($chave) {
-        $resp = (new NfeService())->consulta($chave);
+        $nfe = new Nfe(config('nfe.params'));
+
+        $resp = $nfe->pdf([
+            'chave' => $chave,
+        ]);
 
         if ($resp->sucesso) {
-
-            $tentativa = 0;
-            while ($resp?->pdf) {
-                $tentativa++;
-                if ($tentativa > 6) {
-                    break; // Sai do loop após 5 tentativas
-                }
-                sleep(2); // Aguarda 2 segundos
-            }
-
-            $pdf = base64_decode($resp->pdf);
-
-            return response($pdf)
+            return response(base64_decode($resp->pdf))
                 ->header('Content-Type', 'application/pdf')
                 ->header('Content-Disposition', 'inline; filename="documento.pdf"');
         }
-        echo 'erro';
-        return;
+        echo "Erro na geração do PDF da nota fiscal!";
+        echo "";
+        echo "Aguarde alguns segundos e ATUALIZE (F5) a tela novamente.";
     })->name('nfe.pdf');
 
-    Route::get('/{notaSaida}/preview', function(NotaSaida $notaSaida) {
-        
+    Route::get('/{notaSaida}/preview', function (NotaSaida $notaSaida) {
+
         $nfe = (new NfeService());
         $resp = $nfe->preview($notaSaida);
-
+        
         if ($resp) {
 
             $pdf = base64_decode($resp->pdf);
@@ -54,18 +49,17 @@ Route::prefix('nfe')->group(function () {
 
         echo "Erro na geração do preview da nota fiscal!";
         echo "";
-
     })->name('nfe.preview');
 
-    Route::get('/{notaSaida}/view', function (NotaSaida $notaSaida) {
+    Route::get('/{notaSaida}/pdf', function (NotaSaida $notaSaida) {
 
         $nfe = new Nfe(config('nfe.params'));
-        
+
         $resp = $nfe->pdf([
             'chave' => $notaSaida->chave_nota,
         ]);
-        
-        if($resp->sucesso){
+
+        if ($resp->sucesso) {
             return response(base64_decode($resp->pdf))
                 ->header('Content-Type', 'application/pdf')
                 ->header('Content-Disposition', 'inline; filename="documento.pdf"');
@@ -73,14 +67,9 @@ Route::prefix('nfe')->group(function () {
         echo "Erro na geração do PDF da nota fiscal!";
         echo "";
         echo "Aguarde alguns segundos e ATUALIZE (F5) a tela novamente.";
-
-
     })->name('nfe.view.pdf');
 
-    Route::get('/webhook/nfe', function () {
-
-    });
-
+    Route::get('/webhook/nfe', function () {});
 });
 
 Route::post('/api/webhook/nfe', function (Request $request) {
@@ -91,7 +80,7 @@ Route::post('/api/webhook/nfe', function (Request $request) {
 
     // RetornoNfe::dispatch($request);
 
-    
+
     return response('OK', 200);
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
@@ -167,12 +156,13 @@ Route::prefix('os')->group(function () {
 
 Route::get('/nf/correcao/{chave}', function ($chave) {
 
-    dd('negado');
 
     $payload = [
         "chave" => $chave,
-        "justificativa" => "Correção de informações complementares de transporte. Ajuste realizado para corrigir a quantidade de volumes e peso informados anteriormente. A quantidade correta é de 1 volume com peso total de 4,96 kg. Não houve alteração nos valores fiscais ou na natureza da operação.",
+        "justificativa" => "Correção das informações complementares de transporte. Ajuste realizado para corrigir o responsável pelo pagamento do frete, sendo o correto o emitente da nota fiscal.",
     ];
+
+    // dd($payload);
 
     $resp = (new NfeService())->correcao($payload);
 
@@ -197,35 +187,39 @@ Route::get('/nf/correcao/{chave}', function ($chave) {
 });
 
 
-// Route::get('/nf/inutiliza', function (){
-    
-//     $payload = [
-//         "numero_inicial" => "4",
-//         "numero_final" => "5",
-//         "serie" => "5",
-//         "justificativa" => "Foi inutilizado devido ao seu salto inadvertido durante emissões iniciais no sistema. Não houve operação fiscal vinculada a este número, e sua inutilização é solicitada para manter a sequência numérica e a conformidade com as normas fiscais vigentes"
-//     ];
-    
-//     $resp = (new NfeService())->inutiliza($payload);
-    
-//     dd($resp);
+Route::get('/nf/inutiliza', function (){
+
+    $payload = [
+        "numero_inicial" => "1",
+        "numero_final" => "1",
+        "serie" => "850",
+        "justificativa" => "Foi inutilizado devido ao seu salto inadvertido durante emissões iniciais no sistema. Não houve operação fiscal vinculada a este número, e sua inutilização é solicitada para manter a sequência numérica e a conformidade com as normas fiscais vigentes"
+    ];
+
+    $resp = (new NfeService())->inutiliza($payload);
+
+    dd($resp);
+});
+
+// Route::get('/estorno', function () {
+
+//     $nfe = new Nfe(config('nfe.params'));
+//     $dto = NfeEstornoDTO::fromNotaSaida(NotaSaida::find(40));
+
+//     $resp = $nfe->cria($dto->toArray());
+
+//     if (!$resp->sucesso) {
+//         dd($resp);
+//     }
+
+//     $pdf = base64_decode($resp->pdf);
+
+//     return response($pdf)
+//         ->header('Content-Type', 'application/pdf')
+//         ->header('Content-Disposition', 'inline; filename="documento.pdf"');
+
 // });
 
-Route::get('/estorno', function () {
-
-    $nfe = new Nfe(config('nfe.params'));
-    $dto = NfeEstornoDTO::fromMakeDto();
-    
-    $resp = $nfe->cria($dto->toArray());
-
-    if (!$resp->sucesso) {
-        dd($resp);
-    }
-
-    $pdf = base64_decode($resp->pdf);
-
-    return response($pdf)
-        ->header('Content-Type', 'application/pdf')
-        ->header('Content-Disposition', 'inline; filename="documento.pdf"');
-    
+Route::get('/teste', function () {
+    ConsultaNfeAction::execute('42241236286501000123558500000000111705165280', 0);
 });

@@ -53,6 +53,11 @@ class NotaSaida extends Model
         );
     }
 
+    public function itens(): HasMany
+    {
+        return $this->hasMany(ItemNotaSaida::class);
+    }
+
     public function documentos(): MorphMany
     {
         return $this->morphMany(Documento::class, 'documentable');

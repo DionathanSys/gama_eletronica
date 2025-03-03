@@ -2,7 +2,7 @@
 
 namespace App\Actions\Fiscal;
 
-use App\DTO\Fiscal\NfeDTO2;
+use App\DTO\Fiscal\NfeRetornoDTO;
 use App\Enums\NaturezaOperacaoEnum;
 use App\Enums\StatusNotaFiscalEnum;
 use App\Models\NotaSaida;
@@ -64,7 +64,7 @@ class CreateNfeRetornoAction
 
     public function execute(NotaSaida $notaSaida, array $data)
     {   
-        $notaFiscalDTO = NfeDTO2::fromMakeDto($notaSaida, $data);
+        $notaFiscalDTO = NfeRetornoDTO::fromMakeDto($notaSaida, $data);
         
         $resp = $this->nfeService->cria($notaFiscalDTO->toArray());
         
@@ -88,7 +88,7 @@ class CreateNfeRetornoAction
 
     // public function preview(NotaSaida $notaSaida, array $data)
     // {
-    //     $notaFiscalDTO = NfeDTO2::fromMakeDto($notaSaida, $data);
+    //     $notaFiscalDTO = NfeRetornoDTO::fromMakeDto($notaSaida, $data);
         
     //     $resp = $this->nfeService->preview($notaFiscalDTO->toArray());
         
@@ -105,7 +105,7 @@ class CreateNfeRetornoAction
     //     return $resp->pdf;
     // }
 
-    private function refreshInfoNotaSaida(NotaSaida $notaSaida, NfeDTO2 $dto, $chave)
+    private function refreshInfoNotaSaida(NotaSaida $notaSaida, NfeRetornoDTO $dto, $chave)
     {
 
         $data = [

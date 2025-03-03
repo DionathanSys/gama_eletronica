@@ -4,7 +4,7 @@ return [
     'params' => [
         // IMPORTANTE: 1 - Produção / 2 - Homologação
         "token" => env('AMBIENTE_NFE') == '1' ? env('TOKEN_NFE_PRODUCAO') : env('TOKEN_NFE_HOMOLOGACAO'),
-        "ambiente" => env('AMBIENTE_NFE'),  
+        "ambiente" => env('AMBIENTE_NFE'),
         "options" => [
             "debug" => false,
             "timeout" => 60,
@@ -13,7 +13,8 @@ return [
         ]
     ],
     'serie' => [
-        'nfe_retorno' => env('AMBIENTE_NFE') == '1' ? 5 : 850,
+        'nfe_retorno' => env('AMBIENTE_NFE') == '1' ? 5     : 850,
+        'nfe_estorno' => env('AMBIENTE_NFE') == '1' ? 849   : 850,
     ],
     'item' => [
         'origem' => [
@@ -27,5 +28,24 @@ return [
             '7' => 'Estrangeira - Adquirida no mercado interno, sem produto nacional similar',
             '8' => 'Nacional, mercadoria ou bem com Conteúdo de Importação superior a 70%',
         ],
+    ],
+    'cfop' => [
+        'intraestadual' => [
+            'nfe_retorno' => 5916,
+            'nfe_estorno' => 1949,
+        ],
+        'insterestadual' => [
+            'nfe_retorno' => 6916,
+            'nfe_estorno' => 2949,
+        ],
+    ],
+    'icms' => [
+        'situacao_tributaria' => 900,
+    ],
+    'pis' => [
+        'situacao_tributaria' => '08',
+    ],
+    'cofins' => [
+        'situacao_tributaria' => '08',
     ],
 ];

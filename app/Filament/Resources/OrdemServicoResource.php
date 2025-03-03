@@ -9,8 +9,8 @@ use App\Filament\Resources\OrdemServicoResource\Pages;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers\{ItensOrcamentoRelationManager, ItensOrdensAnterioresRelationManager, ItensRelationManager};
 use App\Actions\Fiscal\CreateNfRetornoAction;
-use App\Actions\Fiscal\RegistrarNotaSaidaAction;
-use App\Actions\NotaFiscalMercadoria\RegistrarNfeRetornoAction;
+use App\Actions\Fiscal\RegistrarNfeRetornoAction;
+// use App\Actions\NotaFiscalMercadoria\RegistrarNfeRetornoAction;
 use App\Enums\{StatusProcessoOrdemServicoEnum, TipoManutencaoOrdemServicoEnum, VinculoParceiroEnum};
 use App\Models\{Equipamento, OrdemServico, Parceiro, Veiculo};
 use Carbon\Carbon;
@@ -216,35 +216,35 @@ class OrdemServicoResource extends Resource
                             }
                         }),
 
+                    // Tables\Actions\BulkAction::make('nfe_retorno')
+                    //     ->label('Emitir NF-e Retorno')
+                    //     ->requiresConfirmation()
+                    //     ->action(function (Collection $record) {
+                    //         $notas = $record
+                    //             ->map(fn($ordem) => $ordem->notaEntrada ? [
+                    //                 'chave_nota' => $ordem->notaEntrada->chave_nota,
+                    //                 'data_fatura' => Carbon::parse($ordem->notaEntrada->data_fatura)->format('d/m/Y'),
+                    //                 'nro_nota' => $ordem->notaEntrada->nro_nota,
+                    //             ] : null) // Obter os campos do relacionamento 'notaEntrada'
+                    //             ->filter() // Remover valores nulos
+                    //             ->unique(fn($nota) => $nota['chave_nota']) // Remover duplicados com base em 'chave_nota'
+                    //             ->map(fn($nota) => [
+                    //                 $nota['chave_nota'] => "Nro. {$nota['nro_nota']} - {$nota['data_fatura']}",
+                    //             ]) // Reformatar os valores
+                    //             ->values() // Reindexar a collection
+                    //             ->collapse()
+                    //             ->toArray();
+
+                    //         $notaSaida = CreateNfeRetornoAction::prepare($record, $notas);
+
+                    //         if (! $notaSaida) {
+                    //             return false;
+                    //         }
+
+                    //         return redirect(NotaSaidaResource::getUrl('edit', ['record' => $notaSaida->id]));
+                    //     }),
                     Tables\Actions\BulkAction::make('nfe_retorno')
                         ->label('Emitir NF-e Retorno')
-                        ->requiresConfirmation()
-                        ->action(function (Collection $record) {
-                            $notas = $record
-                                ->map(fn($ordem) => $ordem->notaEntrada ? [
-                                    'chave_nota' => $ordem->notaEntrada->chave_nota,
-                                    'data_fatura' => Carbon::parse($ordem->notaEntrada->data_fatura)->format('d/m/Y'),
-                                    'nro_nota' => $ordem->notaEntrada->nro_nota,
-                                ] : null) // Obter os campos do relacionamento 'notaEntrada'
-                                ->filter() // Remover valores nulos
-                                ->unique(fn($nota) => $nota['chave_nota']) // Remover duplicados com base em 'chave_nota'
-                                ->map(fn($nota) => [
-                                    $nota['chave_nota'] => "Nro. {$nota['nro_nota']} - {$nota['data_fatura']}",
-                                ]) // Reformatar os valores
-                                ->values() // Reindexar a collection
-                                ->collapse()
-                                ->toArray();
-
-                            $notaSaida = CreateNfeRetornoAction::prepare($record, $notas);
-
-                            if (! $notaSaida) {
-                                return false;
-                            }
-
-                            return redirect(NotaSaidaResource::getUrl('edit', ['record' => $notaSaida->id]));
-                        }),
-                    Tables\Actions\BulkAction::make('nfe_retorno_teste')
-                        ->label('Teste')
                         ->requiresConfirmation()
                         ->action(function(Collection $record) {
                             $notaSaida = RegistrarNfeRetornoAction::handle($record);

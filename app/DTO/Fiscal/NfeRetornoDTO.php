@@ -2,6 +2,7 @@
 
 namespace App\DTO\Fiscal;
 
+use App\Contracts\NfeDTOInterface;
 use App\DTO\Cliente\ClienteDTO;
 use App\Models\NotaSaida;
 use App\Models\Parceiro;
@@ -9,7 +10,7 @@ use App\Traits\ControleNumeracaoNf;
 use App\ValueObjects\Transportador;
 use Carbon\Carbon;
 
-class NfeDTO2
+class NfeRetornoDTO implements NfeDTOInterface
 {
     use ControleNumeracaoNf;
 
@@ -32,7 +33,7 @@ class NfeDTO2
 
     ) {}
 
-    public static function fromMakeDto(NotaSaida $notaSaida): self
+    public static function fromNotaSaida(NotaSaida $notaSaida): self
     {
         $natureza_operacao                      = ($notaSaida->natureza_operacao)->value;
         $tipo_operacao                          = 1;
@@ -50,44 +51,47 @@ class NfeDTO2
             $notas_referenciadas[]['nfe']['chave'] = $key;
         }
 
-        $frete = $notaSaida->frete[0]['data'];
-        $frete = [
-            'transportador'     => $frete['transportadora_id'] ? (new Transportador($frete['transportadora_id']))->toArray() : null,
-            'modalidade_frete'  => $frete['modalidade_frete'],
-            'volumes'           => [
-                [
-                    'especie'       => $frete['volume_especie'],
-                    'quantidade'    => $frete['volume_quantidade'],
-                    'peso_liquido'  => $frete['volume_peso_liquido'],
-                    'peso_bruto'    => $frete['volume_peso_bruto'],
-                ]
+        $frete = $notaSaida->frete
+            ? [
+                'transportador'    => $notaSaida->frete[0]['data']['transportadora_id']
+                    ? (new Transportador($notaSaida->frete[0]['data']['transportadora_id']))->toArray()
+                    : null,
+                'modalidade_frete' => $notaSaida->frete[0]['data']['modalidade_frete'],
+                'volumes'          => [[
+                    'especie'      => $notaSaida->frete[0]['data']['volume_especie'],
+                    'quantidade'   => $notaSaida->frete[0]['data']['volume_quantidade'],
+                    'peso_liquido' => $notaSaida->frete[0]['data']['volume_peso_liquido'],
+                    'peso_bruto'   => $notaSaida->frete[0]['data']['volume_peso_bruto'],
+                ]],
             ]
-        ];
+            : [
+                'modalidade_frete' => 9
+            ];
 
         $pagamento['formas_pagamento'][] = ['meio_pagamento' => 90, 'valor' => 0,];
 
-        $ordensServico = $notaSaida->ordensServico;
+        $itens = $notaSaida->itens;
 
         $i = 0;
 
-        $itens = $ordensServico->map(function ($ordem) use (&$i, $notaSaida) {
+        $itens = $itens->map(function ($item) use (&$i, $notaSaida) {
             return [
                 'numero_item'               => ++$i,
-                'codigo_produto'            => $ordem->itemNotaRemessa->codigo_item,
+                'codigo_produto'            => $item->codigo_produto,
                 'origem'                    => 0,
-                'descricao'                 => $ordem->equipamento->descricao,
-                'codigo_ncm'                => $ordem->itemNotaRemessa->ncm_item,
-                'cfop'                      => $notaSaida->parceiro->enderecos->first()->estado == 'SC' ? 5916 : 6916,
-                'unidade_comercial'         => 'UN',
-                'quantidade_comercial'      => 1,
-                'valor_unitario_comercial'  => $ordem->itemNotaRemessa->valor,
-                'valor_bruto'               => $ordem->itemNotaRemessa->valor,
+                'descricao'                 => $item->descricao_produto,
+                'codigo_ncm'                => $item->ncm,
+                'cfop'                      => $item->cfop,
+                'unidade_comercial'         => $item->unidade,
+                'quantidade_comercial'      => $item->quantidade,
+                'valor_unitario_comercial'  => $item->valor_unitario,
+                'valor_bruto'               => (float) $item->quantidade * $item->valor_unitario,
                 'inclui_no_total'           => 1,
                 'imposto'                   => [
-                    'icms'      => (object) ['situacao_tributaria' => 400],
-                    'pis'       => (object) ['situacao_tributaria' => '08'],
-                    'cofins'    => (object) ['situacao_tributaria' => '08'],
-                ],  
+                    'icms'      => (object) ['situacao_tributaria' => $item->impostos['icms']['situacao_tributaria']],
+                    'pis'       => (object) ['situacao_tributaria' => $item->impostos['pis']['situacao_tributaria']],
+                    'cofins'    => (object) ['situacao_tributaria' => $item->impostos['cofins']['situacao_tributaria']],
+                ],
             ];
         });
 
@@ -110,7 +114,7 @@ class NfeDTO2
         );
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'natureza_operacao'                     => $this->natureza_operacao,
@@ -131,21 +135,21 @@ class NfeDTO2
         ];
     }
 
-    public function getNumero()
+    public function getNumero(): int
     {
         return $this->numero;
     }
-    public function getSerie()
+    public function getSerie(): int
     {
         return $this->serie;
     }
 
-    public function getDataEmissao()
+    public function getDataEmissao(): string
     {
         return $this->data_emissao;
     }
 
-    public function getDataEntradaSaida()
+    public function getDataEntradaSaida(): string
     {
         return $this->data_entrada_saida;
     }

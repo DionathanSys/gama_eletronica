@@ -15,12 +15,12 @@ trait GerarPdf
             throw new Exception("Erro ao gerar PDF.");
         }
 
-        $nomeArquivo = $nomeArquivo ?? 'doc_'.time().'.pdf';
+        $nomeArquivo = $nomeArquivo.'.pdf' ?? 'doc_'.time().'.pdf';
 
-        $caminho = "pdfs/{$nomeArquivo}";
+        $caminho = 'pdfs\\'.$nomeArquivo;
+      
+        Storage::disk('public')->put($caminho, $pdf);
 
-        Storage::put($caminho, $pdf);
-
-        return $caminho;
+        return storage_path($caminho);
     }
 }
