@@ -17,10 +17,10 @@ trait GerarXml
 
         $nomeArquivo = $nomeArquivo.'.xml' ?? 'doc_'.time().'.xml';
 
-        $caminho = 'xmls\\'.$nomeArquivo;
+        $caminho = 'xmls/'.$nomeArquivo;
 
         Storage::disk('public')->put($caminho, $xml);
 
-        return storage_path('\\app\\public\\'.$caminho);
+        return storage_path('/app/public/'.$caminho);
     }
 }
