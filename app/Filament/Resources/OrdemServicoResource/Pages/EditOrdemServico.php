@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Session;
 
 class EditOrdemServico extends EditRecord
 {
-    
+
 
     protected static string $resource = OrdemServicoResource::class;
 
@@ -110,7 +110,6 @@ class EditOrdemServico extends EditRecord
                         }),
                     Actions\DeleteAction::make()
                         ->action(function(OrdemServico $record){
-                            ds($record->load('equipamento', 'itens', 'notaEntrada'));
                             DeleteOrdemServicoAction::exec($record);
                             redirect(OrdemServicoResource::getUrl('index'));
                         }),
@@ -219,7 +218,7 @@ class EditOrdemServico extends EditRecord
     }
 
     protected function getFormActions(): array
-    {   
+    {
         if ($this->record->status == StatusOrdemServicoEnum::PENDENTE->value) {
             return [
                 ...parent::getFormActions(),

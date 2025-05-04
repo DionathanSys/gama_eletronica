@@ -69,9 +69,6 @@ class NfeService
         $dtoClass = $notaSaida->natureza_operacao->getDTO();
         /** @var NfeDTOInterface $dto */
         $dto = $dtoClass::fromNotaSaida($notaSaida);
-        
-        ds($notaSaida)->label('Nota Saida');
-        ds($dto)->label('DTO');
 
         $resp = $this->nfe->preview($dto->toArray());
 
