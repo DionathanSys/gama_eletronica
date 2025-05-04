@@ -169,13 +169,13 @@ class NfeService
         Notification::make()
             ->title('Sucesso')
             ->body('Documento encaminhado para autorização.')
-            ->body("NF-e Retorno Nº {$nro_nota}")
+            ->body("NF-e Nº {$nro_nota}")
             ->actions([
                 Action::make('Abrir')
                     ->button()
                     ->url(route('nfe.view.pdf', ['notaSaida' => $chave]))
                     ->openUrlInNewTab(),
             ])
-            ->sendToDatabase(User::all());
+            ->sendToDatabase(collect([Auth::user(), User::find(1)]));
     }
 }
