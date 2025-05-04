@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::unguard();
         LogViewer::auth(function ($request) {
-            Log::info('LogViewer accessed by admin user: ' . $request->user, [$request->user]);
+            Log::notice('LogViewer accessed by admin user: ' . $request->user, [$request->user]);
             // if($request->user()->admin){
                 return true;
             // }
