@@ -76,7 +76,7 @@ class NfeRemessaDTO implements NfeDTOInterface
                 'codigo_ncm'                => $item->ncm,
                 'cfop'                      => $item->cfop,
                 'unidade_comercial'         => $item->unidade,
-                'quantidade_comercial'      => $item->quantidade,
+                'quantidade_comercial'      => 'bana',//$item->quantidade,
                 'valor_unitario_comercial'  => $item->valor_unitario,
                 'valor_bruto'               => (float) $item->quantidade * $item->valor_unitario,
                 'inclui_no_total'           => 1,

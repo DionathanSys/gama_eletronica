@@ -24,6 +24,8 @@ class EditNotaSaida extends EditRecord
 {
     use Notifica;
 
+    protected static bool $processando = false;
+
     protected static string $resource = NotaSaidaResource::class;
 
     protected function getHeaderActions(): array
@@ -38,7 +40,11 @@ class EditNotaSaida extends EditRecord
                     ->label('Confirmar NFe')
                     ->color('info')
                     ->requiresConfirmation(fn() => env('AMBIENTE_NFE') == '1')
-                    ->action(fn(NotaSaida $record) => (new NfeService())->criar($record)),
+                    ->disabled(fn(NotaSaida $record) => $record->status != StatusNotaFiscalEnum::PENDENTE || self::$processando)
+                    ->action(function(NotaSaida $record){
+                        self::$processando = true;
+                        (new NfeService())->criar($record);
+                    }),
                 Actions\Action::make('preview')
                     ->label('Preview NFe')
                     ->color('info')
