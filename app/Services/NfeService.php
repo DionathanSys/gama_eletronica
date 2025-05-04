@@ -52,12 +52,12 @@ class NfeService
                 ->sendToDatabase(Auth::user());
             return false;
         }
-        
+
         $this->setLastNumber($dto->getNumero(), $dto->getSerie());
         $this->refreshInfoNotaSaida($notaSaida, $dto, $resp->chave);
 
         ConsultaNfJob::dispatch($resp->chave);
-        
+
         $this->notificaSucesso($dto->getNumero(), $resp->chave);
 
         return $resp;
@@ -70,6 +70,9 @@ class NfeService
         /** @var NfeDTOInterface $dto */
         $dto = $dtoClass::fromNotaSaida($notaSaida);
         
+        ds($notaSaida)->label('Nota Saida');
+        ds($dto)->label('DTO');
+
         $resp = $this->nfe->preview($dto->toArray());
 
         if (!$resp->sucesso) {
@@ -77,10 +80,10 @@ class NfeService
                 ->title('Falha na solicitação')
                 ->body("Código {$resp->codigo}: {$resp->mensagem}.")
                 ->sendToDatabase(User::all());
-                
+
             return false;
         }
-        
+
         return $resp;
     }
 

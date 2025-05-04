@@ -43,6 +43,7 @@ class NotaSaidaResource extends Resource
                             ->columns(12)
                             ->schema([
                                 OrdemServicoResource::getParceiroFormField()
+                                    ->disabled()
                                     ->columnSpan(6),
                                 static::getNaturezaOperacaoFormField()
                                     ->columnSpan(3),
@@ -81,7 +82,7 @@ class NotaSaidaResource extends Resource
                             ->schema([
                                 static::getEventosNotaFormField()
                                     ->label(''),
-                                    
+
                             ])
                     ])
             ]);
@@ -116,7 +117,7 @@ class NotaSaidaResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('status')
                     ,
-               
+
                 Tables\Columns\TextColumn::make('data_emissao')
                     ->label('Dt. Emissão')
                     ->date()
@@ -220,18 +221,18 @@ class NotaSaidaResource extends Resource
     public static function getNotasReferenciadasFormField(): Forms\Components\KeyValue
     {
         return Forms\Components\KeyValue::make('notas_referenciadas')
-            ->keyLabel('Chave NF-e')    
+            ->keyLabel('Chave NF-e')
             ->valueLabel('Descrição')
             ->editableKeys(false)
             ->addable(false)
             ->deletable(false)
             ->columnSpan(6);
     }
-    
+
     public static function getEventosNotaFormField(): Forms\Components\KeyValue
     {
         return Forms\Components\KeyValue::make('eventos')
-            ->keyLabel('Evento')    
+            ->keyLabel('Evento')
             ->valueLabel('Descrição')
             ->editableKeys(false)
             ->addable(false)
@@ -308,6 +309,7 @@ class NotaSaidaResource extends Resource
     public static function getNroNotaFormField(): Forms\Components\TextInput
     {
         return Forms\Components\TextInput::make('nro_nota')
+            ->label('Nro. Nota')
             ->columnSpan(2)
             ->readOnly()
             ->numeric();
@@ -316,6 +318,7 @@ class NotaSaidaResource extends Resource
     public static function getSerieNotaFormField(): Forms\Components\TextInput
     {
         return Forms\Components\TextInput::make('serie')
+            ->label('Série')
             ->columnSpan(2)
             ->readOnly()
             ->numeric();

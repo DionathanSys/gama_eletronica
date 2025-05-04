@@ -13,6 +13,7 @@ use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Route;
 use HeadlessChromium\BrowserFactory;
 use Illuminate\Http\Request;
+use App\Traits\DefineCfop;
 
 
 Route::prefix('nfe')->group(function () {
@@ -37,7 +38,7 @@ Route::prefix('nfe')->group(function () {
 
         $nfe = (new NfeService());
         $resp = $nfe->preview($notaSaida);
-        
+
         if ($resp) {
 
             $pdf = base64_decode($resp->pdf);
@@ -221,5 +222,9 @@ Route::get('/nf/correcao/{chave}', function ($chave) {
 // });
 
 Route::get('/teste', function () {
-    ConsultaNfeAction::execute('42250236286501000123558500000000281138822030', 0);
+    $parceiro = Parceiro::find(46);
+    $tipo_nota = 'nfe_remessa';
+
+    self::getCfop($parceiro, $tipo_nota);
+
 });

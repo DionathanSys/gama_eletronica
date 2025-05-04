@@ -14,7 +14,8 @@ return [
     ],
     'serie' => [
         'nfe_retorno' => env('AMBIENTE_NFE') == '1' ? 5     : 850,
-        'nfe_estorno' => env('AMBIENTE_NFE') == '1' ? 849   : 850,
+        'nfe_estorno' => env('AMBIENTE_NFE') == '1' ? 849   : 851,
+        'nfe_remessa' => env('AMBIENTE_NFE') == '1' ? 700   : 852,
     ],
     'item' => [
         'origem' => [
@@ -33,10 +34,12 @@ return [
         'intraestadual' => [
             'nfe_retorno' => 5916,
             'nfe_estorno' => 1949,
+            'nfe_remessa' => 5915,
         ],
-        'insterestadual' => [
+        'interestadual' => [
             'nfe_retorno' => 6916,
             'nfe_estorno' => 2949,
+            'nfe_remessa' => 6915,
         ],
     ],
     'icms' => [

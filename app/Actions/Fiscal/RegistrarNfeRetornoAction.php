@@ -55,12 +55,12 @@ class RegistrarNfeRetornoAction
                 'valor_total'               => $ordem->itemNotaRemessa->valor,
                 'unidade'                   => 'UN',
                 'ncm'                       => $ordem->itemNotaRemessa->ncm_item,
-                'cfop'                      => $notaSaida->parceiro->enderecos->first()->estado == 'SC' ? config('nfe.cfop.intraestadual.nfe_retorno') : config('nfe.cfop.insterestadual.nfe_retorno'),
+                'cfop'                      => $notaSaida->parceiro->enderecos->first()->estado == 'SC' ? config('nfe.cfop.intraestadual.nfe_retorno') : config('nfe.cfop.interestadual.nfe_retorno'),
                 'impostos'                   => [
                     'icms'      => (object) ['situacao_tributaria' => config('nfe.icms.situacao_tributaria')],
                     'pis'       => (object) ['situacao_tributaria' => config('nfe.pis.situacao_tributaria')],
                     'cofins'    => (object) ['situacao_tributaria' => config('nfe.cofins.situacao_tributaria')],
-                ],  
+                ],
             ];
         });
 
@@ -92,7 +92,7 @@ class RegistrarNfeRetornoAction
         if ($ordensServico->unique('parceiro_id')->count() > 1) {
             throw new Exception('Todas as ordens de serviço devem pertencer ao mesmo cliente.');
         }
-        
+
         if ($ordensServico->contains(fn($ordem) => is_null($ordem->itemNotaRemessa))) {
             throw new Exception('Uma ou mais ordens de serviço não possuem vínculo com NFe de retorno.');
         }

@@ -22,10 +22,15 @@ class Parceiro extends Model
     | Relacionamentos
     |--------------------------------------------------------------------------
     */
-    
+
     public function enderecos(): HasMany
     {
         return $this->hasMany(Endereco::class);
+    }
+
+    public function endereco(): HasOne
+    {
+        return $this->hasOne(Endereco::class);
     }
 
     public function contato(): HasOne
@@ -85,7 +90,7 @@ class Parceiro extends Model
     {
         $this->attributes['nro_documento'] = preg_replace('/[-\/\.]/', '', $value);
     }
-    
+
     public function getNroDocumentoFormatadoAttribute(): string
     {
         return preg_replace(

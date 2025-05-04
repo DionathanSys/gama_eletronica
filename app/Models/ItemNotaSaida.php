@@ -11,4 +11,9 @@ class ItemNotaSaida extends Model
     protected $casts = [
         'impostos' => 'array',
     ];
+
+    public function notaSaida()
+    {
+        return $this->belongsTo(NotaSaida::class, 'nota_saida_id');
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Enums;
 
 use App\DTO\Fiscal\NfeRetornoDTO;
 use App\DTO\Fiscal\NfeEstornoDTO;
+use App\DTO\Fiscal\NfeRemessaDTO;
 
 enum NaturezaOperacaoEnum:string
 {
@@ -51,8 +52,11 @@ enum NaturezaOperacaoEnum:string
         return match ($this) {
             self::RETORNO_MERCADORIA        => NfeRetornoDTO::class,
             self::ESTORNO_NFE_NAO_CANCELADA => NfeEstornoDTO::class,
+            self::REMESSA_CONSIGNACAO       => NfeRemessaDTO::class,
 
             default => NfeRetornoDTO::class, // Fallback
         };
     }
+
+
 }

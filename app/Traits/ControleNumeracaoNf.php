@@ -19,8 +19,8 @@ trait ControleNumeracaoNf
     public static function setLastNumber(int $lastNumber, string $serie): bool
     {
         $resp = NumeroNotaSaida::create([
-            'nro_nota' => $lastNumber,
-            'serie_nota' => $serie,
+            'nro_nota'      => $lastNumber,
+            'serie_nota'    => $serie,
         ]);
 
         if (! $resp) {
