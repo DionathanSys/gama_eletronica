@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 use HeadlessChromium\BrowserFactory;
 use Illuminate\Http\Request;
 use App\Traits\DefineCfop;
-
+use Illuminate\Support\Facades\Log;
 
 Route::prefix('nfe')->group(function () {
     Route::get('/{chave}/pdf', function ($chave) {
@@ -222,9 +222,7 @@ Route::get('/nf/correcao/{chave}', function ($chave) {
 // });
 
 Route::get('/teste', function () {
-    $parceiro = Parceiro::find(46);
-    $tipo_nota = 'nfe_remessa';
 
-    self::getCfop($parceiro, $tipo_nota);
+    Log::alert("passou aqui");
 
 });

@@ -12,6 +12,7 @@ use Filament\Actions;
 use Filament\Actions\ActionGroup;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Forms;
+use Filament\Support\Enums\ActionSize;
 use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\MaxWidth;
 
@@ -39,9 +40,12 @@ class ListNotaSaidas extends ListRecords
                     ->modalSubmitActionLabel('Confirmar')
                     ->modalIcon('heroicon-o-document-text')
                     ->modalAlignment(Alignment::Center)
-                    ->modalWidth(MaxWidth::Medium)
-                    ,
-            ]),
+                    ->modalWidth(MaxWidth::Medium),
+            ])
+            ->iconbutton()
+            ->color('info')
+            ->size(ActionSize::ExtraLarge)
+            ->icon('heroicon-o-bars-4'),
         ];
     }
 }
