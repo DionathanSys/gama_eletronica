@@ -120,7 +120,7 @@ return [
         //
         'production' => [
             'name' => 'Production',
-            'host' => 'https://example.com/log-viewer',
+            'host' => 'http://localhost:8000/log-viewer',
             'auth' => [      // Example of Bearer token auth
                 'token' => env('LOG_VIEWER_PRODUCTION_TOKEN'),
             ],
