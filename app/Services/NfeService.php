@@ -97,6 +97,10 @@ class NfeService
             "chave" => $chave,
         ];
 
+        Log::debug('NfeService Consultando NFe', [
+            'chave' => $chave,
+            'params' => $this->nfe,
+        ]);
         return $this->nfe->consulta($payload);
     }
 
