@@ -220,7 +220,7 @@ Route::get('/teste', function () {
     return response('Erro ao realizar a requisição.', $response->status());
 });
 
-Route::get('/nfe-webhook', function (Request $request) {
+Route::post('/nfe-webhook', function (Request $request) {
     Log::debug('Webhook recebido', [
         'request' => $request->all(),
     ]);
