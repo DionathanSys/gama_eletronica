@@ -225,4 +225,4 @@ Route::post('/nfe-webhook', function (Request $request) {
         'request' => $request->all(),
     ]);
     return response('OK', 200);
-});
+})->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
