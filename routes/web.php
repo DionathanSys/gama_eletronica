@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 use HeadlessChromium\BrowserFactory;
 use Illuminate\Http\Request;
 use App\Traits\DefineCfop;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 Route::prefix('nfe')->group(function () {
@@ -72,19 +73,6 @@ Route::prefix('nfe')->group(function () {
 
     Route::get('/webhook/nfe', function () {});
 });
-
-Route::post('/api/webhook/nfe', function (Request $request) {
-    // $dados = $request->getContent();
-    // echo '<pre>';
-    // var_dump($dados);
-    // echo '</pre>';
-
-    // RetornoNfe::dispatch($request);
-
-
-    return response('OK', 200);
-})->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
-
 
 Route::get('/cnpj/{cnpj}', function ($cnpj) {
     $resp = (new BuscaCNPJ($cnpj))->getInfo();
@@ -190,39 +178,50 @@ Route::get('/nf/correcao/{chave}', function ($chave) {
 
 // Route::get('/nf/inutiliza', function (){
 
-//     $payload = [
-//         "numero_inicial" => "31",
-//         "numero_final" => "31",
-//         "serie" => "5",
-//         "justificativa" => "Foi inutilizado devido ao seu salto inadvertido durante emissões no sistema. Não houve operação fiscal vinculada a este número, e sua inutilização é solicitada para manter a sequência numérica e a conformidade com as normas fiscais vigentes"
-//     ];
+    //     $payload = [
+    //         "numero_inicial" => "31",
+    //         "numero_final" => "31",
+    //         "serie" => "5",
+    //         "justificativa" => "Foi inutilizado devido ao seu salto inadvertido durante emissões no sistema. Não houve operação fiscal vinculada a este número, e sua inutilização é solicitada para manter a sequência numérica e a conformidade com as normas fiscais vigentes"
+    //     ];
 
-//     $resp = (new NfeService())->inutiliza($payload);
+    //     $resp = (new NfeService())->inutiliza($payload);
 
-//     dd($resp);
-// });
+    //     dd($resp);
+    // });
 
 // Route::get('/estorno', function () {
 
-//     $nfe = new Nfe(config('nfe.params'));
-//     $dto = NfeEstornoDTO::fromNotaSaida(NotaSaida::find(40));
+    //     $nfe = new Nfe(config('nfe.params'));
+    //     $dto = NfeEstornoDTO::fromNotaSaida(NotaSaida::find(40));
 
-//     $resp = $nfe->cria($dto->toArray());
+    //     $resp = $nfe->cria($dto->toArray());
 
-//     if (!$resp->sucesso) {
-//         dd($resp);
-//     }
+    //     if (!$resp->sucesso) {
+    //         dd($resp);
+    //     }
 
-//     $pdf = base64_decode($resp->pdf);
+    //     $pdf = base64_decode($resp->pdf);
 
-//     return response($pdf)
-//         ->header('Content-Type', 'application/pdf')
-//         ->header('Content-Disposition', 'inline; filename="documento.pdf"');
+    //     return response($pdf)
+    //         ->header('Content-Type', 'application/pdf')
+    //         ->header('Content-Disposition', 'inline; filename="documento.pdf"');
 
-// });
+    // });
 
 Route::get('/teste', function () {
 
-    Log::alert("passou aqui");
+    $response = Http::get('http://191.101.234.7:8080/teste');
 
+    if ($response->successful()) {
+        return $response->body(); // Retorna o corpo da resposta
+    }
+
+    return response('Erro ao realizar a requisição.', $response->status());
+});
+
+Route::post('/nfe-webhook', function (Request $request) {
+    Log::debug('Webhook recebido', [
+        'request' => $request->all(),
+    ]);
 });
