@@ -25,6 +25,11 @@ class ConsultaNfeAction
         $nfe = new NfeService();
 
         $resp = $nfe->consulta($chave);
+        Log::debug('Action ConsultaNfeAction', [
+            'chave'     => $chave,
+            'tentativa' => $tentativa,
+            'resp'      => $resp,
+        ]);
 
         if ($resp->codigo == 5023) {
             ConsultaNfJob::dispatch($chave, $tentativa + 1)->delay(now()->addSeconds(30));
