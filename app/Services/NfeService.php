@@ -99,7 +99,7 @@ class NfeService
 
         Log::debug('NfeService Consultando NFe', [
             'chave' => $chave,
-            'params' => $this->nfe,
+            'params' => config('nfe.params'),
         ]);
         return $this->nfe->consulta($payload);
     }
