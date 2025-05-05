@@ -224,4 +224,5 @@ Route::post('/nfe-webhook', function (Request $request) {
     Log::debug('Webhook recebido', [
         'request' => $request->all(),
     ]);
+    return response()->json(['status' => 'success']);
 });
