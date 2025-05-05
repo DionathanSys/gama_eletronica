@@ -62,8 +62,7 @@ class NfeService
         $this->setLastNumber($dto->getNumero(), $dto->getSerie());
         $this->refreshInfoNotaSaida($notaSaida, $dto, $resp->chave);
 
-        ConsultaNfJob::dispatch($resp->chave)
-            ->delay(now()->addSeconds(30));
+        ConsultaNfJob::dispatch($resp->chave);
 
         $this->notificaSucesso($dto->getNumero(), $resp->chave);
 
