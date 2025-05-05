@@ -17,6 +17,7 @@ use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class NfeService
 {
@@ -50,6 +51,11 @@ class NfeService
                 ->title('Falha na solicitação')
                 ->body("Código {$resp->codigo}: {$resp->mensagem}.")
                 ->sendToDatabase(Auth::user());
+            Log::alert("Erro ao criar NFe", [
+                'nota_saida_id' => $notaSaida->id,
+                'resp'          => $resp,
+                'dto'           => $dto->toArray(),
+            ]);
             return false;
         }
 
@@ -153,13 +159,17 @@ class NfeService
     {
 
         $data = [
-            // 'status'                => StatusNotaFiscalEnum::AUTORIZADA->value, //!Mover para atualizar em Job/Action
             'chave_nota'            => $chave,
             'nro_nota'              => $dto->getNumero(),
             'serie'                 => $dto->getSerie(),
             'data_emissao'          => $dto->getDataEmissao(),
             'data_entrada_saida'    => $dto->getDataEntradaSaida(),
         ];
+
+        Log::debug('Atualizando nota de saída', [
+            'nota_saida_id' => $notaSaida->id,
+            'data'          => $data,
+        ]);
 
         $notaSaida->update($data);
     }

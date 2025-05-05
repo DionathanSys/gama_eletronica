@@ -209,16 +209,7 @@ Route::get('/nf/correcao/{chave}', function ($chave) {
 
     // });
 
-Route::get('/teste', function () {
 
-    $response = Http::get('http://191.101.234.7:8080/teste');
-
-    if ($response->successful()) {
-        return $response->body(); // Retorna o corpo da resposta
-    }
-
-    return response('Erro ao realizar a requisição.', $response->status());
-});
 
 Route::post('/nfe-webhook', function (Request $request) {
     Log::debug('Webhook recebido', [

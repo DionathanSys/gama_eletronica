@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\NfeService;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 
 class ConsultaNfeAction
 {
@@ -17,15 +18,20 @@ class ConsultaNfeAction
                 ->title('Falha na consulta')
                 ->body("Atingido limite de tentativas para a NFe {$chave}.")
                 ->sendToDatabase(User::all());
+            Log::alert("Atingido limite de tentativas para a NFe {$chave}.");
             return;
         }
 
         $nfe = new NfeService();
-        
+
         $resp = $nfe->consulta($chave);
 
         if ($resp->codigo == 5023) {
             ConsultaNfJob::dispatch($chave, $tentativa + 1)->delay(now()->addSeconds(30));
+            Log::debug('Job - Aguardando 30 segundos para nova consulta', [
+                'tentativa' => $tentativa,
+                'chave'     => $chave,
+            ]);
             return;
         }
 
@@ -34,9 +40,13 @@ class ConsultaNfeAction
                 ->title('Falha na consulta')
                 ->body("Código {$resp->codigo}: {$resp->mensagem}.")
                 ->sendToDatabase(User::all());
+            Log::alert("Erro ao consultar NFe", [
+                'chave' => $chave,
+                'resp'  => $resp,
+            ]);
             return;
         }
-   
+
         AtualizaDadosNfeAction::execute($resp);
 
         Notification::make()
