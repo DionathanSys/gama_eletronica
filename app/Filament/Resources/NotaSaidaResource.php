@@ -245,7 +245,7 @@ class NotaSaidaResource extends Resource
         return Forms\Components\Select::make('transportadora_id')
             ->label('Transportadora')
             ->columnSpan(6)
-            ->relationship('parceiro', 'nome')
+            // ->relationship('parceiro', 'nome')
             ->preload()
             ->searchable()
             ->hint('Não obrigatório')

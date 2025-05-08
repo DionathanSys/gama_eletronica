@@ -48,6 +48,7 @@ Route::prefix('nfe')->group(function () {
                 ->header('Content-Type', 'application/pdf')
                 ->header('Content-Disposition', 'inline; filename="documento.pdf"');
         }
+        dump($resp);
 
         echo "Erro na geração do preview da nota fiscal!";
         echo "";

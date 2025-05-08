@@ -122,8 +122,4 @@ class EditNotaSaida extends EditRecord
         return [];
     }
 
-    // protected function fillForm(): void
-    // {
-    //     dd($this->record);
-    // }
 }
