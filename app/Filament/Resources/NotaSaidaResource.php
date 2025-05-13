@@ -21,6 +21,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class NotaSaidaResource extends Resource
 {
@@ -157,7 +158,7 @@ class NotaSaidaResource extends Resource
                     ->iconButton()
                     ->icon('heroicon-o-eye')
                     ->disabled(fn($record) => $record->chave_nota ? false : true)
-                    ->url(fn($record) => route('nfe.pdf', ['chave' => $record->chave_nota ?? 0]))
+                    ->url(fn(NotaSaida $record) => route('nfe.view.pdf', ['notaSaida' => $record->id]))
                     ->openUrlInNewTab(),
             ])
             ->paginated([25, 50, 100])
@@ -302,7 +303,7 @@ class NotaSaidaResource extends Resource
     {
         return Forms\Components\TextInput::make('chave_nota')
             ->columnSpan(5)
-            ->readOnly()
+            ->readOnly(fn() =>!Auth::user()->admin)
             ->numeric();
     }
 
@@ -311,7 +312,7 @@ class NotaSaidaResource extends Resource
         return Forms\Components\TextInput::make('nro_nota')
             ->label('Nro. Nota')
             ->columnSpan(2)
-            ->readOnly()
+            ->readOnly(fn() =>!Auth::user()->admin)
             ->numeric();
     }
 
@@ -320,7 +321,7 @@ class NotaSaidaResource extends Resource
         return Forms\Components\TextInput::make('serie')
             ->label('Série')
             ->columnSpan(2)
-            ->readOnly()
+            ->readOnly(fn() =>!Auth::user()->admin)
             ->numeric();
     }
 

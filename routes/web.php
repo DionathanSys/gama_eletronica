@@ -1,42 +1,17 @@
 <?php
 
-use App\Actions\Fiscal\ConsultaNfeAction;
-use App\DTO\Fiscal\NfeEstornoDTO;
-use App\Models\ItemNotaSaida;
 use App\Models\NotaSaida;
 use App\Models\OrdemServico;
-use App\Models\Parceiro;
 use App\Services\BuscaCNPJ;
 use App\Services\NfeService;
 use CloudDfe\SdkPHP\Nfe;
-use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Route;
 use HeadlessChromium\BrowserFactory;
 use Illuminate\Http\Request;
-use App\Traits\DefineCfop;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 Route::prefix('nfe')->group(function () {
-    Route::get('/{chave}/pdf', function ($chave) {
-        $nfe = new Nfe(config('nfe.params'));
-
-        $resp = $nfe->pdf([
-            'chave' => $chave,
-        ]);
-
-        if ($resp->sucesso) {
-            return response(base64_decode($resp->pdf))
-                ->header('Content-Type', 'application/pdf')
-                ->header('Content-Disposition', 'inline; filename="documento.pdf"');
-        }
-        echo "Erro na geração do PDF da nota fiscal!";
-        echo "";
-        echo "Aguarde alguns segundos e ATUALIZE (F5) a tela novamente.";
-    })->name('nfe.pdf');
-
     Route::get('/{notaSaida}/preview', function (NotaSaida $notaSaida) {
-
         $nfe = (new NfeService());
         $resp = $nfe->preview($notaSaida);
 
@@ -48,7 +23,8 @@ Route::prefix('nfe')->group(function () {
                 ->header('Content-Type', 'application/pdf')
                 ->header('Content-Disposition', 'inline; filename="documento.pdf"');
         }
-        dump($resp);
+        echo '<pre>';
+        var_dump($resp);
 
         echo "Erro na geração do preview da nota fiscal!";
         echo "";
@@ -67,9 +43,19 @@ Route::prefix('nfe')->group(function () {
                 ->header('Content-Type', 'application/pdf')
                 ->header('Content-Disposition', 'inline; filename="documento.pdf"');
         }
-        echo "Erro na geração do PDF da nota fiscal!";
-        echo "";
+
+        echo 'MENSAGEM: '. $resp->mensagem . PHP_EOL;
+        echo 'ERROS: ';
+        if($resp->erros) {
+            foreach ($resp->erros as $erro) {
+                echo $erro . PHP_EOL;
+            }
+        } else {
+            echo 'Sem erros registrados' . PHP_EOL . PHP_EOL;
+        }
+        echo "Erro na geração do PDF da nota fiscal!" . PHP_EOL . PHP_EOL;
         echo "Aguarde alguns segundos e ATUALIZE (F5) a tela novamente.";
+
     })->name('nfe.view.pdf');
 
     Route::get('/webhook/nfe', function () {});
