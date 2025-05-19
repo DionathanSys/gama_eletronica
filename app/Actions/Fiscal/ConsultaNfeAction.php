@@ -13,6 +13,11 @@ class ConsultaNfeAction
 {
     public static function execute(string $chave, int $tentativa): void
     {
+        Log::debug('ConsultaNfeAction', [
+            'tentativa' => $tentativa,
+            'chave'     => $chave,
+        ]);
+        
         if ($tentativa > 5) {
             Notification::make()
                 ->title('Falha na consulta')

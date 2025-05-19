@@ -100,7 +100,31 @@ class NfeService
             'chave' => $chave,
             'params' => config('nfe.params'),
         ]);
-        return $this->nfe->consulta($payload);
+
+        $resp = $this->nfe->consulta($payload);
+
+        if(!$resp->sucesso) {
+            Notification::make()
+                ->title('Falha na solicitação')
+                ->body("Código {$resp->codigo}: {$resp->mensagem}.")
+                ->sendToDatabase(User::all());
+
+            Log::error('Erro ao consultar NFe', [
+                'chave' => $chave,
+                'resp'  => $resp,
+            ]);
+
+            return false;
+        }
+
+        $notaSaida = NotaSaida::where('chave_nota', $chave)->first();
+
+        if ($notaSaida) {
+            $notaSaida->status = StatusNotaFiscalEnum::AUTORIZADA;
+            $notaSaida->save();
+        }
+
+        return $resp;
     }
 
     public function correcao($payload)
@@ -111,6 +135,12 @@ class NfeService
     public static function cancelar(NotaSaida $notaSaida, string $justificativa)
     {
         if ($notaSaida->status != StatusNotaFiscalEnum::AUTORIZADA) {
+
+            Log::error('Tentativa de cancelamento de NFe com status diferente de autorizada', [
+                'nota_saida_id' => $notaSaida->id,
+                'status'        => $notaSaida->status,
+            ]);
+
             (new self)->notificaErro("Não é possível cancelar NFe com status diferente de 'Autorizada'.");
             return false;
         }
@@ -123,6 +153,12 @@ class NfeService
         $resp = (new self)->nfe->cancela($payload);
 
         if ($resp->sucesso) {
+            Log::debug(__METHOD__.' - '.__LINE__, [
+                'mensagem'       => 'Cancelamento NFe realizado com sucesso',
+                'nota_saida_id' => $notaSaida->id,
+                'resp'          => $resp,
+            ]);
+
             $pathPdf = PdfService::saveBase64ToPdf($resp->pdf);
             $pathXml = XmlService::saveBase64ToXml($resp->xml);
 
@@ -139,19 +175,39 @@ class NfeService
 
             $notaSaida->status = StatusNotaFiscalEnum::CANCELADA;
 
+            Log::debug(__METHOD__.' - '.__LINE__, [
+                'mensagem' => 'Atualizado nota de saída e criado documentos',
+                'nota_saida_id' => $notaSaida->id,
+                'status'        => $notaSaida->status,
+
+            ]);
+
             Notification::make()
                 ->color('succes')
                 ->title('Cancelamento NFe')
                 ->body("Nro. Protocolo {$resp->protocolo}")
-                ->sendToDatabase([User::all()]);
+                ->sendToDatabase(User::all());
+
+            Log::debug(__METHOD__.' - '.__LINE__, [
+                'mensagem' => 'notificado com sucesso',
+                'nota_saida_id' => $notaSaida->id,
+            ]);
+
+            return $resp;
         }
+
+        Log::error(__METHOD__.' - '.__LINE__, [
+            'mensagem' => 'Erro ao cancelar NFe',
+            'resp'     => $resp,
+            'payload' => $payload,
+        ]);
 
         Notification::make()
             ->title('Falha durante solicitação!')
             ->body("Erro {$resp->codigo} - {$resp->mensagem}")
             ->sendToDatabase(User::all());
 
-        return false;
+        return $resp;
     }
 
     public function inutiliza($payload)
@@ -168,6 +224,7 @@ class NfeService
             'serie'                 => $dto->getSerie(),
             'data_emissao'          => $dto->getDataEmissao(),
             'data_entrada_saida'    => $dto->getDataEntradaSaida(),
+            'status'                => StatusNotaFiscalEnum::PROCESSANDO,
         ];
 
         Log::debug('Atualizando nota de saída', [

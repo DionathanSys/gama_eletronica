@@ -1,5 +1,6 @@
 <?php
 
+use App\Jobs\AtualizaRetornoNotaFiscalJob;
 use App\Models\NotaSaida;
 use App\Models\OrdemServico;
 use App\Services\BuscaCNPJ;
@@ -23,6 +24,12 @@ Route::prefix('nfe')->group(function () {
                 ->header('Content-Type', 'application/pdf')
                 ->header('Content-Disposition', 'inline; filename="documento.pdf"');
         }
+
+        Log::error('Erro ao gerar o preview da NFe', [
+            'notaSaida' => $notaSaida->id,
+            'response' => $resp,
+        ]);
+
         echo '<pre>';
         var_dump($resp);
 
@@ -43,6 +50,12 @@ Route::prefix('nfe')->group(function () {
                 ->header('Content-Type', 'application/pdf')
                 ->header('Content-Disposition', 'inline; filename="documento.pdf"');
         }
+
+        Log::error('Erro ao gerar o PDF da NFe', [
+            'notaSaida' => $notaSaida->id,
+            'response' => $resp,
+        ]);
+
         echo '<pre>';
         echo 'MENSAGEM: '. $resp->mensagem . PHP_EOL;
         echo 'ERROS: ';
@@ -198,9 +211,37 @@ Route::get('/nf/correcao/{chave}', function ($chave) {
 
 
 
+
+    //? Webhook para comunicação com o emissor
 Route::post('/nfe-webhook', function (Request $request) {
-    Log::debug('Webhook recebido', [
-        'request' => $request->all(),
+
+    $dados = $request->only([
+        'sucesso',
+        'cnpj_cpf',
+        'chave',
+        'mensagem',
+        'codigo',
+        'status',
     ]);
+
+    Log::info('Acionado Webhook Interno', [
+        'dados' => $dados,
+    ]);
+
+    if(isset($dados['sucesso']) && $dados['sucesso'] == true) {
+        Log::info('Registrado Job: AtualizaRetornoNotaFiscalJob');
+        AtualizaRetornoNotaFiscalJob::dispatch($dados);
+    } else {
+        Log::alert('Documento com falha', [
+            'dados' => $dados,
+        ]);
+    }
+
+    Log::info('Webhook respondido', [
+        'dados' => $dados,
+    ]);
+
     return response('OK', 200);
+
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+

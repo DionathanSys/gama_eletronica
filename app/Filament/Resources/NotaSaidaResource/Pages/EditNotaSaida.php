@@ -18,6 +18,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Support\Enums\Alignment;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\HtmlString;
 
 class EditNotaSaida extends EditRecord
@@ -27,6 +28,13 @@ class EditNotaSaida extends EditRecord
     protected static bool $processando = false;
 
     protected static string $resource = NotaSaidaResource::class;
+
+    protected NfeService $nfeService;
+
+    public function __construct()
+    {
+        $this->nfeService = new NfeService();
+    }
 
     protected function getHeaderActions(): array
     {
@@ -43,7 +51,7 @@ class EditNotaSaida extends EditRecord
                     ->disabled(fn(NotaSaida $record) => $record->status != StatusNotaFiscalEnum::PENDENTE || self::$processando)
                     ->action(function(NotaSaida $record){
                         self::$processando = true;
-                        (new NfeService())->criar($record);
+                        $this->nfeService->criar($record);
                     }),
                 Actions\Action::make('preview')
                     ->label('Preview NFe')
@@ -81,6 +89,11 @@ class EditNotaSaida extends EditRecord
                     ])
                     ->action(function (Action $action, NotaSaida $notaSaida, array $data) {
 
+                        Log::debug(__METHOD__.' - '.__LINE__, [
+                            'nota_saida_id' => $notaSaida->id,
+                            'data' => $data,
+                        ]);
+
                         if ($data['codigo'] != $data['codigo_confirmation']) {
                             Notification::make()
                                 ->title('Erro de validação')
@@ -89,6 +102,11 @@ class EditNotaSaida extends EditRecord
                                 ->iconColor('danger')
                                 ->color('danger')
                                 ->send();
+
+                            Log::error('Código de validação incorreto', [
+                                'codigo' => $data['codigo'],
+                                'codigo_confirmation' => $data['codigo_confirmation'],
+                            ]);
 
                             $action->halt();
                         }
@@ -104,7 +122,13 @@ class EditNotaSaida extends EditRecord
                             'eventos',
                             'status',
                         ]);
-                    })
+                    }),
+                Actions\Action::make('consultar')
+                    ->label('Consultar NFe')
+                    ->visible(fn(NotaSaida $record): bool => $record->confirmado)
+                    ->color('info')
+                    ->icon('heroicon-o-magnifying-glass')
+                    ->action(fn (NotaSaida $record) => $this->nfeService->consulta($record->chave_nota)),
             ])->label('Ações')->button()
 
         ];

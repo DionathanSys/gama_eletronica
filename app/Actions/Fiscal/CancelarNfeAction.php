@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Actions\Fiscal;
 
@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use CloudDfe\SdkPHP\Nfe;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class CancelarNfeAction
 {
@@ -40,13 +41,11 @@ class CancelarNfeAction
         }
 
         return true;
-        
-    } 
+
+    }
 
     private function enviaCancelamento(): bool
     {
-        
-
         if ($this->notaSaida->eventos) {
             $eventos = $this->notaSaida->eventos;
             $eventos[now()->timestamp] = 'SOLICITADO CANCELAMENTO';
@@ -59,13 +58,19 @@ class CancelarNfeAction
             'eventos' => $eventos,
         ]);
 
-        $resp = $this->Nfe->cancela([
-            'justificativa'   =>  $this->data['justificativa'],
-            'chave'           =>  '42250136286501000123550050000000221831090401'//$this->notaSaida->chave_nota,
+        Log::debug(__METHOD__.' - '.__LINE__, [
+            'nota_saida_id' => $this->notaSaida->id,
+            'eventos' => $this->notaSaida->eventos,
+            'mensagem' => 'Solicitando cancelamento',
         ]);
 
-        if (! $resp->sucesso){
+        $resp = $this->Nfe->cancelar($this->notaSaida, $this->data['justificativa']);
 
+        if (! $resp->sucesso){
+            Log::error(__METHOD__.' - '.__LINE__, [
+                'mensagem' => 'Erro ao cancelar NFe',
+                'resp'     => $resp,
+            ]);
             Notification::make()
                 ->title('Erro ao cancelar NFe')
                 ->body("Código {$resp->codigo}: {$resp->mensagem}.")
@@ -73,6 +78,12 @@ class CancelarNfeAction
 
             return false;
         }
+
+        Log::debug(__METHOD__.' - '.__LINE__, [
+            'mensagem' => 'Cancelamento NFe realizado com sucesso',
+            'nota_saida_id' => $this->notaSaida->id,
+            'resp'     => $resp,
+        ]);
 
         Documento::create([
             [
@@ -85,12 +96,23 @@ class CancelarNfeAction
             ]
         ]);
 
+        Log::debug(__METHOD__.' - '.__LINE__, [
+            'nota_saida_id' => $this->notaSaida->id,
+            'mensagem' => 'Documentos gerados com sucesso'
+
+        ]);
+
         return true;
     }
 
     private function validate(): bool
     {
+
         if($this->notaSaida->status->value != StatusNotaFiscalEnum::AUTORIZADA->value){
+            Log::error(__METHOD__.' - '.__LINE__, [
+                'mensagem' => 'Não é possível cancelar NFe com status diferente de "Autorizada".',
+                'status' => $this->notaSaida->status,
+            ]);
             return false;
         }
 
