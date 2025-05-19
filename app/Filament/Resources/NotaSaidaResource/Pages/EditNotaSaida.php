@@ -125,7 +125,7 @@ class EditNotaSaida extends EditRecord
                     }),
                 Actions\Action::make('consultar')
                     ->label('Consultar NFe')
-                    ->visible(fn(NotaSaida $record): bool => $record->confirmado)
+                    ->visible(fn(NotaSaida $record): bool => $record->status != StatusNotaFiscalEnum::PENDENTE)
                     ->color('info')
                     ->icon('heroicon-o-magnifying-glass')
                     ->action(fn (NotaSaida $record) => $this->nfeService->consulta($record->chave_nota)),
