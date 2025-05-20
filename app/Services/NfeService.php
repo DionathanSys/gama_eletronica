@@ -64,7 +64,7 @@ class NfeService
 
         ConsultaNfJob::dispatch($resp->chave);
 
-        $this->notificaSucesso($dto->getNumero(), $resp->chave);
+        $this->notificaSucesso($notaSaida, $dto->getNumero());
 
         return $resp;
 
@@ -235,7 +235,7 @@ class NfeService
         $notaSaida->update($data);
     }
 
-    private function notificaSucesso($nro_nota, $chave): void
+    private function notificaSucesso(NotaSaida $notaSaida, $nro_nota): void
     {
         Notification::make()
             ->title('Sucesso')
@@ -244,7 +244,7 @@ class NfeService
             ->actions([
                 Action::make('Abrir')
                     ->button()
-                    ->url(route('nfe.view.pdf', ['notaSaida' => $chave]))
+                    ->url(route('nfe.view.pdf', ['notaSaida' => $notaSaida]))
                     ->openUrlInNewTab(),
             ])
             ->sendToDatabase(collect([Auth::user(), User::find(1)]));
