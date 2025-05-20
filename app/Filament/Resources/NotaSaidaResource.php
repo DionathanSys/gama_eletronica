@@ -286,7 +286,7 @@ class NotaSaidaResource extends Resource
         return Forms\Components\TextInput::make('volume_peso_liquido')
             ->columnSpan(2)
             ->default(1)
-            ->minValue(1)
+            ->minValue(0.01)
             ->numeric();
     }
 
@@ -295,7 +295,7 @@ class NotaSaidaResource extends Resource
         return Forms\Components\TextInput::make('volume_peso_bruto')
             ->columnSpan(2)
             ->default(1)
-            ->minValue(1)
+            ->minValue(0.01)
             ->numeric();
     }
 
