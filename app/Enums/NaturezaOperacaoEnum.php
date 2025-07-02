@@ -13,6 +13,7 @@ enum NaturezaOperacaoEnum:string
     case REMESSA_CONSIGNACAO            = 'REMESSA DE MERCADORIA OU BEM PARA CONSERTO OU REPARO';
     case DEVOLUCAO_VENDA                = 'DEVOLUÇÃO DE VENDA';
     case RETORNO_MERCADORIA             = 'RETORNO DE MERCADORIA';
+    case RETORNO_MERCADORIA_DEMO        = 'RETORNO DE MERCADORIA P/ DEMONSTRAÇÃO';
     case ESTORNO_NFE_NAO_CANCELADA      = 'ESTORNO NFE NÃO CANCELADA NO PRAZO LEGAL';
 
     /**
@@ -38,6 +39,7 @@ enum NaturezaOperacaoEnum:string
             self::REMESSA_CONSIGNACAO           => 'REMESSA DE MERCADORIA OU BEM PARA CONSERTO OU REPARO',
             self::DEVOLUCAO_VENDA               => 'DEVOLUÇÃO DE PRODUTOS PELO CLIENTE.',
             self::RETORNO_MERCADORIA            => 'RETORNO DE MERCADORIA',
+            self::RETORNO_MERCADORIA_DEMO       => 'RETORNO DE MERCADORIA P/ DEMONSTRAÇÃO',
             self::ESTORNO_NFE_NAO_CANCELADA     => 'ESTORNO NFE NÃO CANCELADA NO PRAZO LEGAL',
         };
     }
@@ -53,8 +55,7 @@ enum NaturezaOperacaoEnum:string
             self::RETORNO_MERCADORIA        => NfeRetornoDTO::class,
             self::ESTORNO_NFE_NAO_CANCELADA => NfeEstornoDTO::class,
             self::REMESSA_CONSIGNACAO       => NfeRemessaDTO::class,
-
-            default => NfeRetornoDTO::class, // Fallback
+            self::RETORNO_MERCADORIA_DEMO   => NfeRemessaDTO::class,
         };
     }
 

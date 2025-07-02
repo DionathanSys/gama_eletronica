@@ -21,9 +21,9 @@ class NotaSaidaService
     public static function criar(int $cliente_id, NaturezaOperacaoEnum $naturezaOperacao)
     {
         $notaSaida = NotaSaida::create([
-            'parceiro_id' => $cliente_id,
+            'parceiro_id'       => $cliente_id,
             'natureza_operacao' => $naturezaOperacao,
-            'status' => StatusNotaFiscalEnum::PENDENTE,
+            'status'            => StatusNotaFiscalEnum::PENDENTE,
         ]);
 
         Notification::make()

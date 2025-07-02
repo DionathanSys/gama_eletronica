@@ -18,6 +18,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Support\Enums\Alignment;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\HtmlString;
 
@@ -43,7 +44,7 @@ class EditNotaSaida extends EditRecord
             Actions\ActionGroup::make([
                 Actions\DeleteAction::make()
                     ->visible(fn(NotaSaida $record) => $record->status == StatusNotaFiscalEnum::PENDENTE)
-                    ->icon(null),
+                    ->iconButton(),
                 Actions\Action::make('confirmar')
                     ->label('Confirmar NFe')
                     ->color('info')
@@ -137,7 +138,7 @@ class EditNotaSaida extends EditRecord
     protected function getFormActions(): array
     {
 
-        if ($this->data['status'] != StatusNotaFiscalEnum::AUTORIZADA->value) {
+        if (Auth::user()->admin || $this->data['status'] != StatusNotaFiscalEnum::AUTORIZADA->value) {
             return [
                 ...parent::getFormActions(),
             ];

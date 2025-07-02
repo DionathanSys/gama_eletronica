@@ -42,7 +42,7 @@ class ItensRelationManager extends RelationManager
                             ->get()
                             ->pluck('descricao_produto', 'id')
                     )
-                    ->live(onBlur:true)
+                    ->live(onBlur: true)
                     ->afterStateUpdated(function ($state, Forms\Set $set) {
                         if ($state) {
                             $item = ItemNotaSaida::find($state);
@@ -83,9 +83,9 @@ class ItensRelationManager extends RelationManager
                     ->numeric()
                     ->default(1)
                     ->required()
-                    ->live(onBlur:true)
+                    ->live(onBlur: true)
                     ->afterStateUpdated(function ($state, Forms\Set $set, Forms\Get $get) {
-                        if($get('valor_unitario')) {
+                        if ($get('valor_unitario')) {
                             $set('valor_total', $state * $get('valor_unitario'));
                         }
                     }),
@@ -97,9 +97,9 @@ class ItensRelationManager extends RelationManager
                     ->minValue(1)
                     ->numeric()
                     ->required()
-                    ->live(onBlur:true)
+                    ->live(onBlur: true)
                     ->afterStateUpdated(function ($state, Forms\Set $set, Forms\Get $get) {
-                        if($get('quantidade')) {
+                        if ($get('quantidade')) {
                             $set('valor_total', $state * $get('quantidade'));
                         }
                     }),
@@ -145,7 +145,13 @@ class ItensRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->label('Adicionar Item')
-                    ->visible(fn() => $this->ownerRecord->natureza_operacao == NaturezaOperacaoEnum::REMESSA_CONSIGNACAO)
+                    ->visible(fn() => in_array(
+                        $this->ownerRecord->natureza_operacao,
+                        [
+                            NaturezaOperacaoEnum::REMESSA_CONSIGNACAO,
+                            NaturezaOperacaoEnum::RETORNO_MERCADORIA_DEMO
+                        ]
+                    ))
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['cfop'] = self::getCfop($this->ownerRecord->parceiro, 'nfe_remessa');
                         $data['unidade'] = 'UN';
@@ -162,8 +168,6 @@ class ItensRelationManager extends RelationManager
                     ->visible(fn() => $this->ownerRecord->status == StatusNotaFiscalEnum::PENDENTE && $this->ownerRecord->natureza_operacao == NaturezaOperacaoEnum::REMESSA_CONSIGNACAO)
                     ->iconButton(),
             ])
-            ->bulkActions([
-            ]);
+            ->bulkActions([]);
     }
-
 }

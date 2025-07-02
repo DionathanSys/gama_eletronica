@@ -13,9 +13,10 @@ return [
         ]
     ],
     'serie' => [
-        'nfe_retorno' => env('AMBIENTE_NFE') == '1' ? 5     : 850,
-        'nfe_estorno' => env('AMBIENTE_NFE') == '1' ? 849   : 851,
-        'nfe_remessa' => env('AMBIENTE_NFE') == '1' ? 700   : 852,
+        'nfe_retorno'       => env('AMBIENTE_NFE') == '1' ? 5     : 850,
+        'nfe_estorno'       => env('AMBIENTE_NFE') == '1' ? 849   : 851,
+        'nfe_remessa'       => env('AMBIENTE_NFE') == '1' ? 700   : 852,
+        'nfe_retorno_demo'  => env('AMBIENTE_NFE') == '1' ? 701   : 853,
     ],
     'item' => [
         'origem' => [

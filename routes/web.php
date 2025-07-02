@@ -3,12 +3,16 @@
 use App\Jobs\AtualizaRetornoNotaFiscalJob;
 use App\Models\NotaSaida;
 use App\Models\OrdemServico;
+use App\Models\User;
 use App\Services\BuscaCNPJ;
 use App\Services\NfeService;
 use CloudDfe\SdkPHP\Nfe;
+use Filament\Notifications\Actions\Action;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Route;
 use HeadlessChromium\BrowserFactory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 Route::prefix('nfe')->group(function () {
@@ -244,4 +248,5 @@ Route::post('/nfe-webhook', function (Request $request) {
     return response('OK', 200);
 
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+
 

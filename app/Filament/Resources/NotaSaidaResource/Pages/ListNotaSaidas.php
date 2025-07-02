@@ -24,19 +24,26 @@ class ListNotaSaidas extends ListRecords
     {
         return [
             ActionGroup::make([
-                Actions\Action::make('nova-nota-remessa')
+                Actions\Action::make('nova-nota-avulsa')
                     ->icon('heroicon-o-document-text')
                     ->form([
-                        OrdemServicoResource::getParceiroFormField()
+                        OrdemServicoResource::getParceiroFormField(),
+                        NotaSaidaResource::getNaturezaOperacaoFormField()
+                            ->columnSpan(9)
+                            ->disabled(false)
+                            ->options([
+                                NaturezaOperacaoEnum::REMESSA_CONSIGNACAO->value        => NaturezaOperacaoEnum::REMESSA_CONSIGNACAO->value,
+                                NaturezaOperacaoEnum::RETORNO_MERCADORIA_DEMO->value    => NaturezaOperacaoEnum::RETORNO_MERCADORIA_DEMO->value,
+                            ]),
                     ])
                     ->action(fn(array $data) => NotaSaidaService::criar(
                         $data['parceiro_id'],
-                        NaturezaOperacaoEnum::REMESSA_CONSIGNACAO,
+                        NaturezaOperacaoEnum::tryFrom($data['natureza_operacao']),
                         StatusNotaFiscalEnum::PENDENTE
                     ))
-                    ->label('Gerar NF-e Remessa')
-                    ->modalHeading('Gerar NF-e Remessa')
-                    ->modalDescription('Defina o parceiro para gerar a NF-e de remessa.')
+                    ->label('Gerar NF-e Avulsa')
+                    ->modalHeading('Gerar NF-e Avulsa')
+                    ->modalDescription('Defina o parceiro para gerar a NF-e.')
                     ->modalSubmitActionLabel('Confirmar')
                     ->modalIcon('heroicon-o-document-text')
                     ->modalAlignment(Alignment::Center)
