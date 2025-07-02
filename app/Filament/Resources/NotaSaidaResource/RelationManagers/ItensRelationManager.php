@@ -153,7 +153,15 @@ class ItensRelationManager extends RelationManager
                         ]
                     ))
                     ->mutateFormDataUsing(function (array $data): array {
-                        $data['cfop'] = self::getCfop($this->ownerRecord->parceiro, 'nfe_remessa');
+
+                        $operacao = $this->ownerRecord->natureza_operacao;
+                        $tipoCfop = match ($operacao) {
+                            NaturezaOperacaoEnum::REMESSA_CONSIGNACAO       => 'nfe_remessa',
+                            NaturezaOperacaoEnum::RETORNO_MERCADORIA_DEMO   => 'nfe_retorno_demo',
+                        };
+
+                        $data['cfop'] = self::getCfop($this->ownerRecord->parceiro, $tipoCfop);
+
                         $data['unidade'] = 'UN';
                         $data['impostos'] = self::getImpostosDefault();
                         unset($data['cadastrar_novo'], $data['produto']);

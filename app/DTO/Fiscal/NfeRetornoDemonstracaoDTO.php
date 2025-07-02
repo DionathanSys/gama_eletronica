@@ -35,7 +35,7 @@ class NfeRetornoDemonstracaoDTO implements NfeDTOInterface
     {
         $natureza_operacao                      = ($notaSaida->natureza_operacao)->value;
         $tipo_operacao                          = 1;
-        $serie                                  = config('nfe.serie.nfe_remessa');
+        $serie                                  = config('nfe.serie.nfe_retorno_demo');
         $numero                                 = self::getNextNumber($serie);
         $finalidade_emissao                     = 1;            // 1 - Nota normal
         $consumidor_final                       = 0;            // "0 - Normal" - "1 - Consumidor final"
