@@ -11,7 +11,7 @@ trait DefineCfop
     public static function getCfop(Parceiro $parceiro, string $tipo_nota): int
     {
         $operacao = $parceiro->endereco->estado == 'SC' ? 'intraestadual' : 'interestadual';
-
+        dd(config("nfe.cfop.{$operacao}.{$tipo_nota}"));
         return config("nfe.cfop.{$operacao}.{$tipo_nota}");
     }
 
