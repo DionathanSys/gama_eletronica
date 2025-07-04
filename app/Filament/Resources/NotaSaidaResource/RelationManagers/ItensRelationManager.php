@@ -160,7 +160,7 @@ class ItensRelationManager extends RelationManager
                             NaturezaOperacaoEnum::RETORNO_MERCADORIA_DEMO   => 'nfe_retorno_demo',
                         };
 
-                        $data['cfop'] = self::getCfop($this->ownerRecord->parceiro, $tipoCfop);
+                        $data['cfop'] = dd(self::getCfop($this->ownerRecord->parceiro, $tipoCfop));
 
                         $data['unidade'] = 'UN';
                         $data['impostos'] = self::getImpostosDefault();
