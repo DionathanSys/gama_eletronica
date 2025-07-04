@@ -24,6 +24,7 @@ class NfeRetornoDemonstracaoDTO implements NfeDTOInterface
         protected string    $presenca_comprador,
         protected string    $data_emissao,
         protected string    $data_entrada_saida,
+        protected string    $informacoes_adicionais_contribuinte,
         protected array     $destinatario,
         protected array     $frete,
         protected array     $pagamento,
@@ -42,7 +43,12 @@ class NfeRetornoDemonstracaoDTO implements NfeDTOInterface
         $presenca_comprador                     = 0;            // "0 - Não se aplica"
         $data_emissao                           = Carbon::createFromFormat('Y-m-d H:i:s', now())->format('Y-m-d\TH:i:sP');
         $data_entrada_saida                     = Carbon::createFromFormat('Y-m-d H:i:s', now())->format('Y-m-d\TH:i:sP');
+        $informacoes_adicionais_contribuinte    = 'Retorno de mercadoria ref. nota(s) ' . implode(', ', $notaSaida->notas_referenciadas);
         $destinatario                           = (new ClienteDTO($notaSaida->parceiro))->toArray();
+
+        foreach ($notaSaida->notas_referenciadas as $key => $value) {
+            $notas_referenciadas[]['nfe']['chave'] = $key;
+        }
 
         $frete = $notaSaida->frete
             ? [
@@ -98,6 +104,7 @@ class NfeRetornoDemonstracaoDTO implements NfeDTOInterface
             $presenca_comprador,
             $data_emissao,
             $data_entrada_saida,
+            $informacoes_adicionais_contribuinte,
             $destinatario,
             $frete,
             $pagamento,
@@ -117,6 +124,7 @@ class NfeRetornoDemonstracaoDTO implements NfeDTOInterface
             'presenca_comprador'                    => $this->presenca_comprador,
             'data_emissao'                          => $this->data_emissao,
             'data_entrada_saida'                    => $this->data_entrada_saida,
+            'informacoes_adicionais_contribuinte'   => $this->informacoes_adicionais_contribuinte,
             'destinatario'          => $this->destinatario,
             'frete'                 => $this->frete,
             'pagamento'             => $this->pagamento,

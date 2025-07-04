@@ -224,7 +224,7 @@ class NotaSaidaResource extends Resource
         return Forms\Components\KeyValue::make('notas_referenciadas')
             ->keyLabel('Chave NF-e')
             ->valueLabel('Descrição')
-            ->editableKeys(false)
+            ->editableKeys(true)
             ->addable(false)
             ->deletable(false)
             ->columnSpan(6);
