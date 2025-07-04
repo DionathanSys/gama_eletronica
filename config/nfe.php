@@ -36,7 +36,7 @@ return [
             'nfe_retorno'       => 5916,
             'nfe_estorno'       => 1949,
             'nfe_remessa'       => 5915,
-            'nfe_retorno_demo'  => 5913,    
+            'nfe_retorno_demo'  => 5913,
         ],
         'interestadual' => [
             'nfe_retorno'       => 6916,
