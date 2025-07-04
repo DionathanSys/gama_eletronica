@@ -42,7 +42,7 @@ return [
             'nfe_retorno'       => 6916,
             'nfe_estorno'       => 2949,
             'nfe_remessa'       => 6915,
-            'nfe_retorno_demoo'  => 2913,
+            'nfe_retorno_demo'  => 2913,
         ],
     ],
     'icms' => [
