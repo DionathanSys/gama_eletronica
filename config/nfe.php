@@ -33,16 +33,16 @@ return [
     ],
     'cfop' => [
         'intraestadual' => [
+            'nfe_retorno_demo'  => 5913,
             'nfe_retorno'       => 5916,
             'nfe_estorno'       => 1949,
             'nfe_remessa'       => 5915,
-            'nfe_retorno_demo'  => 5913,
         ],
         'interestadual' => [
+            'nfe_retorno_demo'  => 2913,
             'nfe_retorno'       => 6916,
             'nfe_estorno'       => 2949,
             'nfe_remessa'       => 6915,
-            'nfe_retorno_demo'  => 2913,
         ],
     ],
     'icms' => [
