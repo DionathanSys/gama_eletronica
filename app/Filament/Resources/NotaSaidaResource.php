@@ -105,6 +105,14 @@ class NotaSaidaResource extends Resource
                     ->label('Série')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('ordensServico.id')
+                    ->label('OS\'s')
+                    ->placeholder('N/A')
+                    // ->listWithLineBreaks()
+                    // ->limitList(1)
+                    // ->expandableLimitedList()
+                    ->searchable(['ordens_servico.id'])
+                    ->toggleable(isToggledHiddenByDefault: false),
                 Tables\Columns\TextColumn::make('fatura_id')
                     ->placeholder('N/A')
                     ->label('Fatura')
@@ -116,8 +124,7 @@ class NotaSaidaResource extends Resource
                 Tables\Columns\TextColumn::make('natureza_operacao')
                     ->label('Natureza Operação')
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('status')
-                    ,
+                Tables\Columns\TextColumn::make('status'),
 
                 Tables\Columns\TextColumn::make('data_emissao')
                     ->label('Dt. Emissão')
@@ -149,7 +156,7 @@ class NotaSaidaResource extends Resource
                 Tables\Filters\SelectFilter::make('parceiro_id')
                     ->label('Cliente')
                     ->searchable()
-                    ->relationship('parceiro', 'nome')
+                    ->relationship('parceiro', 'nome'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
@@ -303,7 +310,7 @@ class NotaSaidaResource extends Resource
     {
         return Forms\Components\TextInput::make('chave_nota')
             ->columnSpan(5)
-            ->readOnly(fn() =>!Auth::user()->admin)
+            ->readOnly(fn() => !Auth::user()->admin)
             ->numeric();
     }
 
@@ -312,7 +319,7 @@ class NotaSaidaResource extends Resource
         return Forms\Components\TextInput::make('nro_nota')
             ->label('Nro. Nota')
             ->columnSpan(2)
-            ->readOnly(fn() =>!Auth::user()->admin)
+            ->readOnly(fn() => !Auth::user()->admin)
             ->numeric();
     }
 
@@ -321,7 +328,7 @@ class NotaSaidaResource extends Resource
         return Forms\Components\TextInput::make('serie')
             ->label('Série')
             ->columnSpan(2)
-            ->readOnly(fn() =>!Auth::user()->admin)
+            ->readOnly(fn() => !Auth::user()->admin)
             ->numeric();
     }
 
