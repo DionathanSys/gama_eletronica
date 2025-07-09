@@ -158,6 +158,7 @@ class NotaSaidaResource extends Resource
                     ->searchable()
                     ->relationship('parceiro', 'nome'),
             ])
+            ->deferFilters()
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->iconButton(),
