@@ -93,6 +93,7 @@ class RegistrarNfeRetornoAction
             throw new Exception('Todas as ordens de serviço devem pertencer ao mesmo cliente.');
         }
 
+        //TODO: Rever mensagem de erro
         if ($ordensServico->contains(fn($ordem) => is_null($ordem->itemNotaRemessa))) {
             throw new Exception('Uma ou mais ordens de serviço não possuem vínculo com NFe de retorno.');
         }

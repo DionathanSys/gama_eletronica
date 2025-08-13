@@ -65,10 +65,10 @@ class ItensOrcamentoRelationManager extends RelationManager
                     ->tooltip(fn($record)=> $record->observacao)
                     ->label('Observação')
                     ->wrap(),
-                
+
                 Tables\Columns\IconColumn::make('aprovado')
                     ->boolean(),
-                    
+
             ])
             ->filters([
                 //
@@ -81,12 +81,12 @@ class ItensOrcamentoRelationManager extends RelationManager
                     ->color('info')
                     ->visible(fn()=>$this->getOwnerRecord()->status == StatusOrdemServicoEnum::PENDENTE->value ? true : false)
                     ->mutateFormDataUsing(function (array $data): array {
-                 
+
                         $this->updateStatusOrdemServico($this->getOwnerRecord(), StatusProcessoOrdemServicoEnum::AGUARDANDO_APROVACAO->value);
-                 
+
                         $data['created_by'] = Auth::id();
                         $data['updated_by'] = Auth::id();
-                 
+
                         return $data;
                     }),
             ])
@@ -94,11 +94,11 @@ class ItensOrcamentoRelationManager extends RelationManager
                 Tables\Actions\EditAction::make()
                     ->iconButton()
                     ->visible(fn()=>$this->getOwnerRecord()->status == StatusOrdemServicoEnum::PENDENTE->value ? true : false),
-            
+
                 Tables\Actions\DeleteAction::make()
                     ->iconButton()
                     ->visible(fn()=>$this->getOwnerRecord()->status == StatusOrdemServicoEnum::PENDENTE->value ? true : false),
-                    
+
             ])
             ->bulkActions([
             ])

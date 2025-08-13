@@ -34,7 +34,7 @@
       {{-- Espaço em Branco --}}
       <div class="basis-1/6 mt-2">
       </div>
-     
+
       <!-- Ordem de Serviço e Detalhes -->
       <div class="basis-2/6 text-right mt-2">
         <div class="text-left">
@@ -45,7 +45,7 @@
         </div>
       </div>
     </div>
-  
+
   <div class="flex justify-between mx-10">
     <!-- Seção de Dados do Cliente -->
     <div class="p-4 w-42">
@@ -55,7 +55,7 @@
       <p class="text-xs font-thin whitespace-pre-line">{{$cliente->enderecos->first()}}</p>
       <p class="text-xs font-thin">Telefone: {{$contato->telefone_cel ?? ($contato->telefone_fixo ?? '')}}</p>
     </div>
-  
+
     <!-- Seção de Dados do Equipamento -->
     <div class="border-t p-4">
       <h2 class="text-sm font-semibold mb-2">EQUIPAMENTO</h2>
@@ -84,7 +84,7 @@
       <p class="m-2 text-xs font-normal">{{$ordem_servico->observacao_geral}}</p>
     </div>
   @endif
-  
+
   @if ($ordem_servico->itens_recebidos != '')
     <div class="mt-2 border border-black">
       <h2 class="text-sm font-semibold m-2">
@@ -105,7 +105,7 @@
         <p class="basis-1/4">Valor Unitário</p>
         <p class="basis-1/4">Valor Total</p>
       </li>
-      
+
       @foreach ($itens as $item)
         <li class="flex flex-row font-normal text-sm">
           <p class="basis-3/4">{{$item->servico->nome}}</p>
@@ -119,12 +119,12 @@
     <div class="px-2">
       <hr class="h-[1px] bg-black border-0">
     </div>
-    
+
     <ul class="m-2">
       <li class="flex flex-row font-semibold text-sm">
         <p class="basis-3/4"></p>
         <p class="basis-2/4">Total em Serviços</p>
-        <p class="basis-1/4">{{'R$ '.number_format($ordem_servico->valor_total, 2, '.', ',')}}</p>
+        <p class="basis-1/4">{{'R$ '.number_format($ordem_servico->valor_total + $ordem_servico->desconto, 2, '.', ',')}}</p>
       </li>
       @if ($ordem_servico->desconto > 0)
         <li class="flex flex-row font-semibold text-sm">
@@ -167,7 +167,7 @@
     </div>
   </div>
 
-  
+
 </div>
 </body>
 </html>
