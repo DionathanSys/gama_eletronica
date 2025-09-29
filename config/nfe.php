@@ -46,7 +46,10 @@ return [
         ],
     ],
     'icms' => [
-        'situacao_tributaria' => 900,
+        'situacao_tributaria' => [
+            'nfe_remessa' => 400,
+            'nfe_retorno' => 900,
+    ],
     ],
     'pis' => [
         'situacao_tributaria' => '08',

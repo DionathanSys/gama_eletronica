@@ -88,7 +88,7 @@ class NfeRetornoDTO implements NfeDTOInterface
                 'valor_bruto'               => (float) $item->quantidade * $item->valor_unitario,
                 'inclui_no_total'           => 1,
                 'imposto'                   => [
-                    'icms'      => (object) ['situacao_tributaria' => $item->impostos['icms']['situacao_tributaria']],
+                    'icms'      => (object) ['situacao_tributaria' => $item->impostos['icms']['situacao_tributaria']['nfe_retorno']],
                     'pis'       => (object) ['situacao_tributaria' => $item->impostos['pis']['situacao_tributaria']],
                     'cofins'    => (object) ['situacao_tributaria' => $item->impostos['cofins']['situacao_tributaria']],
                 ],

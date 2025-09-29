@@ -125,7 +125,7 @@
         <p class="basis-3/4"></p>
         <p class="basis-2/4">Total em Serviços</p>
         <p class="basis-1/4">{{'R$ '.number_format($ordem_servico->valor_total + $ordem_servico->desconto, 2, '.', ',')}}</p>
-      </li>
+      </li>''
       @if ($ordem_servico->desconto > 0)
         <li class="flex flex-row font-semibold text-sm">
           <p class="basis-3/4"></p>

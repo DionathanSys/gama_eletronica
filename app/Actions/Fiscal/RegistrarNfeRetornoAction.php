@@ -57,7 +57,7 @@ class RegistrarNfeRetornoAction
                 'ncm'                       => $ordem->itemNotaRemessa->ncm_item,
                 'cfop'                      => $notaSaida->parceiro->enderecos->first()->estado == 'SC' ? config('nfe.cfop.intraestadual.nfe_retorno') : config('nfe.cfop.interestadual.nfe_retorno'),
                 'impostos'                   => [
-                    'icms'      => (object) ['situacao_tributaria' => config('nfe.icms.situacao_tributaria')],
+                    'icms'      => (object) ['situacao_tributaria' => config('nfe.icms.situacao_tributaria.nfe_retorno')],
                     'pis'       => (object) ['situacao_tributaria' => config('nfe.pis.situacao_tributaria')],
                     'cofins'    => (object) ['situacao_tributaria' => config('nfe.cofins.situacao_tributaria')],
                 ],
