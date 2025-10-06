@@ -97,7 +97,7 @@ class NfeRemessaDTO implements NfeDTOInterface
                     ],
                 ],
             ];
-        });
+        })->toArray();
 
         return new self(
             $natureza_operacao,
