@@ -76,7 +76,15 @@ class NfeService
         /** @var NfeDTOInterface $dto */
         $dto = $dtoClass::fromNotaSaida($notaSaida);
 
+        Log::debug('NfeService Gerando Preview NFe NF ID ' . $notaSaida->id, [
+            'dto'           => $dto->toArray(),
+        ]);
+
         $resp = $this->nfe->preview($dto->toArray());
+
+        Log::debug('NfeService Preview NFe gerado NF ID' . $notaSaida->id, [
+            'resp'          => $resp,
+        ]);
 
         if (!$resp->sucesso) {
             Notification::make()
