@@ -80,22 +80,22 @@ class NfeRemessaDTO implements NfeDTOInterface
                 'valor_unitario_comercial'  => $item->valor_unitario,
                 'valor_bruto'               => (float) $item->quantidade * $item->valor_unitario,
                 'inclui_no_total'           => 1,
-                // 'imposto'                   => [
-                //     'icms'      => (object) ['situacao_tributaria' => $item->impostos['icms']['situacao_tributaria']],
-                //     'pis'       => (object) ['situacao_tributaria' => $item->impostos['pis']['situacao_tributaria']],
-                //     'cofins'    => (object) ['situacao_tributaria' => $item->impostos['cofins']['situacao_tributaria']],
-                // ],
-                'imposto' => [
-                    'icms'   => [
-                        'situacao_tributaria' => $item->impostos['icms']['situacao_tributaria']
-                    ],
-                    'pis'    => [
-                        'situacao_tributaria' => $item->impostos['pis']['situacao_tributaria']
-                    ],
-                    'cofins' => [
-                        'situacao_tributaria' => $item->impostos['cofins']['situacao_tributaria']
-                    ],
+                'imposto'                   => [
+                    'icms'      => (object) ['situacao_tributaria' => $item->impostos['icms']['situacao_tributaria']['nfe_remessa']],
+                    'pis'       => (object) ['situacao_tributaria' => $item->impostos['pis']['situacao_tributaria']],
+                    'cofins'    => (object) ['situacao_tributaria' => $item->impostos['cofins']['situacao_tributaria']],
                 ],
+                // 'imposto' => [
+                //     'icms'   => [
+                //         'situacao_tributaria' => $item->impostos['icms']['situacao_tributaria']
+                //     ],
+                //     'pis'    => [
+                //         'situacao_tributaria' => $item->impostos['pis']['situacao_tributaria']
+                //     ],
+                //     'cofins' => [
+                //         'situacao_tributaria' => $item->impostos['cofins']['situacao_tributaria']
+                //     ],
+                // ],
             ];
         })->toArray();
 
