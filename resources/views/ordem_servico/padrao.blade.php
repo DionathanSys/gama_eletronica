@@ -25,8 +25,8 @@
       </div>
       <div class="basis-2/6 mt-2 ms-3 text-xs">
         <p class="font-semibold">Gamma Eletrônica LTDA</p>
-        <p class="font-thin">Rua Maravilha, 679 E APT 102</p>
-        <p class="font-thin">Efapi 89809-540 - Chapecó - SC</p>
+        <p class="font-thin">Rua Lucia Piano Rostirolla, 1049 E Lot. Vederti III</p>
+        <p class="font-thin">Autódromo 89.808-692 - Chapecó - SC</p>
         <p class="font-thin">Telefone: (49) 98821-2687</p>
         <p class="font-thin">CNPJ: 45.790.457/0001-85</p>
       </div>

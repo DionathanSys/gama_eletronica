@@ -85,17 +85,6 @@ class NfeRemessaDTO implements NfeDTOInterface
                     'pis'       => (object) ['situacao_tributaria' => $item->impostos['pis']['situacao_tributaria']],
                     'cofins'    => (object) ['situacao_tributaria' => $item->impostos['cofins']['situacao_tributaria']],
                 ],
-                // 'imposto' => [
-                //     'icms'   => [
-                //         'situacao_tributaria' => $item->impostos['icms']['situacao_tributaria']
-                //     ],
-                //     'pis'    => [
-                //         'situacao_tributaria' => $item->impostos['pis']['situacao_tributaria']
-                //     ],
-                //     'cofins' => [
-                //         'situacao_tributaria' => $item->impostos['cofins']['situacao_tributaria']
-                //     ],
-                // ],
             ];
         })->toArray();
 

@@ -20,7 +20,7 @@
         <h1 class="font-bold text-3xl text-red-800">ORÇAMENTO</h1>
       </div>
     </div>
-    
+
     <!-- Seção Superior -->
     <div class="flex flex-row items-start border p-4 border-black">
 
@@ -28,10 +28,10 @@
       <div class="basis-1/6 mt-2">
         <img src="{{ asset('storage/logo.png') }}" alt="Logo" class="h-18 w-h-18 px-3">
       </div>
-      <div class="basis-2/6 mt-2 ms-3 text-xs">
+        <div class="basis-2/6 mt-2 ms-3 text-xs">
         <p class="font-semibold">Gamma Eletrônica LTDA</p>
-        <p class="font-thin">Rua Maravilha, 679 E APT 102</p>
-        <p class="font-thin">Efapi 89809-540 - Chapecó - SC</p>
+        <p class="font-thin">Rua Lucia Piano Rostirolla, 1049 E Lot. Vederti III</p>
+        <p class="font-thin">Autódromo 89.808-692 - Chapecó - SC</p>
         <p class="font-thin">Telefone: (49) 98821-2687</p>
         <p class="font-thin">CNPJ: 45.790.457/0001-85</p>
       </div>
@@ -39,7 +39,7 @@
       {{-- Espaço em Branco --}}
       <div class="basis-1/6 mt-2">
       </div>
-     
+
       <!-- Ordem de Serviço e Detalhes -->
       <div class="basis-2/6 text-right mt-2">
         <div class="text-left">
@@ -50,7 +50,7 @@
         </div>
       </div>
     </div>
-  
+
   <div class="flex justify-between mx-10">
     <!-- Seção de Dados do Cliente -->
     <div class="p-4 w-42">
@@ -60,7 +60,7 @@
       <p class="text-xs font-thin whitespace-pre-line">{{$cliente->enderecos->first()}}</p>
       <p class="text-xs font-thin">Telefone: {{$contato->telefone_cel ?? ($contato->telefone_fixo ?? '')}}</p>
     </div>
-  
+
     <!-- Seção de Dados do Equipamento -->
     <div class="border-t p-4">
       <h2 class="text-sm font-semibold mb-2">EQUIPAMENTO</h2>
@@ -104,7 +104,7 @@
     <div class="px-2">
       <hr class="h-[1px] bg-black border-0">
     </div>
-    
+
     <ul class="m-2">
       <li class="flex flex-row font-semibold text-sm">
         <p class="basis-3/4"></p>
@@ -144,8 +144,8 @@
       <p class="text-center font-semibold text-sm" style="text-transform: uppercase;">{{$cliente->nome}}</p>
     </div>
   </div>
-  
-  
+
+
 </div>
 </body>
 </html>
