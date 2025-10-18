@@ -249,4 +249,13 @@ Route::post('/nfe-webhook', function (Request $request) {
 
 })->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
-
+// Rota temporária para testar asset()
+Route::get('/test-asset', function () {
+    dd([
+        'asset_empty_string' => asset(''),
+        'asset_css' => asset('css/app.css'),
+        'asset_logo' => asset('storage/public/logo.png'),
+        'app_url' => config('app.url'),
+        'public_path' => public_path()
+    ]);
+});

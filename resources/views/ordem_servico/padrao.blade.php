@@ -15,13 +15,11 @@
 </head>
 <body class="">
   <div class="p-4 mt-10 mx-8">
-
     <!-- Seção Superior -->
     <div class="flex flex-row items-start border p-4 border-black">
-
       <!-- Logo e Informações da Empresa -->
       <div class="basis-1/6 mt-2">
-        <img src="{{ asset('storage/logo.png') }}" alt="Logo" class="h-18 w-h-18 px-3">
+        <img src="{{ asset('storage/logo.jpg') }}" alt="Logo" class="h-18 w-h-18 px-3">
       </div>
       <div class="basis-2/6 mt-2 ms-3 text-xs">
         <p class="font-semibold">Gamma Eletrônica LTDA</p>
