@@ -25,6 +25,7 @@ class NfeRetornoDTO implements NfeDTOInterface
         protected string    $data_emissao,
         protected string    $data_entrada_saida,
         protected string    $informacoes_adicionais_contribuinte,
+        protected array     $observacoes_contribuinte,
         protected array     $destinatario,
         protected array     $notas_referenciadas,
         protected array     $frete,
@@ -45,6 +46,7 @@ class NfeRetornoDTO implements NfeDTOInterface
         $data_emissao                           = Carbon::createFromFormat('Y-m-d H:i:s', now())->format('Y-m-d\TH:i:sP');
         $data_entrada_saida                     = Carbon::createFromFormat('Y-m-d H:i:s', now())->format('Y-m-d\TH:i:sP');
         $informacoes_adicionais_contribuinte    = 'Retorno de mercadoria ref. nota(s) ' . implode(', ', $notaSaida->notas_referenciadas);
+        $observacoes_contribuinte               = $notaSaida->observacoes_contribuinte ?? [];
         $destinatario                           = (new ClienteDTO(Parceiro::find($notaSaida->parceiro_id)))->toArray();
 
         foreach ($notaSaida->notas_referenciadas as $key => $value) {
@@ -106,6 +108,7 @@ class NfeRetornoDTO implements NfeDTOInterface
             $data_emissao,
             $data_entrada_saida,
             $informacoes_adicionais_contribuinte,
+            $observacoes_contribuinte,
             $destinatario,
             $notas_referenciadas,
             $frete,
@@ -127,6 +130,7 @@ class NfeRetornoDTO implements NfeDTOInterface
             'data_emissao'                          => $this->data_emissao,
             'data_entrada_saida'                    => $this->data_entrada_saida,
             'informacoes_adicionais_contribuinte'   => $this->informacoes_adicionais_contribuinte,
+            'observacoes_contribuinte'              => $this->observacoes_contribuinte,
             'destinatario'          => $this->destinatario,
             'notas_referenciadas'   => $this->notas_referenciadas,
             'frete'                 => $this->frete,

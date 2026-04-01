@@ -84,6 +84,11 @@ class NotaSaidaResource extends Resource
                                 static::getEventosNotaFormField()
                                     ->label(''),
 
+                            ]),
+                        Tab::make('observacoes')
+                            ->label('Observações Contribuinte')
+                            ->schema([
+                                static::getObservacoesContribuinteFormField(),
                             ])
                     ])
             ]);
@@ -247,6 +252,28 @@ class NotaSaidaResource extends Resource
             ->addable(false)
             ->deletable(false)
             ->columnSpan(6);
+    }
+
+    public static function getObservacoesContribuinteFormField(): Forms\Components\Repeater
+    {
+        return Forms\Components\Repeater::make('observacoes_contribuinte')
+            ->label('Observações do Contribuinte')
+            ->schema([
+                Forms\Components\TextInput::make('campo')
+                    ->label('Campo (xCampo)')
+                    ->required()
+                    ->minLength(1)
+                    ->maxLength(20),
+                Forms\Components\TextInput::make('texto')
+                    ->label('Texto (xTexto)')
+                    ->required()
+                    ->minLength(1)
+                    ->maxLength(60),
+            ])
+            ->columns(2)
+            ->columnSpanFull()
+            ->defaultItems(0)
+            ->addActionLabel('Adicionar observação');
     }
 
     public static function getTransportadoraFormField(): Forms\Components\Select

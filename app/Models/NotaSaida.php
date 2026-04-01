@@ -18,6 +18,7 @@ class NotaSaida extends Model
         'status'              => StatusNotaFiscalEnum::class,
         'natureza_operacao'   => NaturezaOperacaoEnum::class,
         'notas_referenciadas' => 'array',
+        'observacoes_contribuinte' => 'array',
         'frete'               => 'array',
         'eventos'             => 'array',
     ];
