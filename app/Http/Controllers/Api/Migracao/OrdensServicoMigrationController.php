@@ -41,6 +41,7 @@ class OrdensServicoMigrationController extends Controller
         $query = OrdemServico::query()
             ->with([
                 'itens:id,ordem_servico_id,servico_id,quantidade,valor_unitario,valor_total,desconto,observacao,garantia',
+                'itens.servico:id,nome,descricao,valor_unitario,ativo',
             ])
             ->select([
                 'id',
@@ -130,6 +131,13 @@ class OrdensServicoMigrationController extends Controller
                             'legacy_id' => $item->id,
                             'legacy_ordem_servico_id' => $item->ordem_servico_id,
                             'legacy_servico_id' => $item->servico_id,
+                            'servico' => $item->servico ? [
+                                'legacy_id' => $item->servico->id,
+                                'nome' => $item->servico->nome,
+                                'descricao' => $item->servico->descricao,
+                                'valor_unitario' => (float) $item->servico->valor_unitario,
+                                'ativo' => (bool) $item->servico->ativo,
+                            ] : null,
                             'quantidade' => (float) $item->quantidade,
                             'valor_unitario' => (float) $item->valor_unitario,
                             'valor_total' => (float) $item->valor_total,

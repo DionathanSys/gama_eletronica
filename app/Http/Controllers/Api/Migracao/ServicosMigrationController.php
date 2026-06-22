@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Servico;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ServicosMigrationController extends Controller
 {
@@ -69,10 +70,29 @@ class ServicosMigrationController extends Controller
             $query->where('ativo', (bool) $ativo);
         }
 
+        Log::info('Migracao API servicos: consulta montada', [
+            'filters' => [
+                'limit' => $limit,
+                'after_id' => $afterId,
+                'updated_from' => $updatedFrom,
+                'include_deleted' => $includeDeleted,
+                'ativo' => $ativo,
+            ],
+            'sql' => $query->toSql(),
+            'bindings' => $query->getBindings(),
+        ]);
+
         $records = $query->get();
         $items = $records->take($limit)->values();
         $hasMore = $records->count() > $limit;
         $nextAfterId = $hasMore ? $items->last()?->id : null;
+
+        Log::info('Migracao API servicos: consulta executada', [
+            'returned_with_buffer' => $records->count(),
+            'returned_to_client' => $items->count(),
+            'has_more' => $hasMore,
+            'next_after_id' => $nextAfterId,
+        ]);
 
         return response()->json([
             'data' => $items->map(function (Servico $servico) {
