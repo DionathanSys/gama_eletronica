@@ -129,7 +129,19 @@ class NotaSaidaResource extends Resource
                 Tables\Columns\TextColumn::make('notas_referenciadas')
                     ->label('Notas Referenciadas')
                     ->placeholder('N/A')
-                    ->formatStateUsing(fn(?array $state) => filled($state) ? implode(', ', array_keys($state)) : null)
+                    ->formatStateUsing(function (array|string|null $state): ?string {
+                        if (blank($state)) {
+                            return null;
+                        }
+
+                        $notas = is_string($state) ? json_decode($state, true) : $state;
+
+                        if (! is_array($notas)) {
+                            return $state;
+                        }
+
+                        return implode(', ', array_keys($notas));
+                    })
                     ->searchable(query: fn($query, string $search) => $query
                         ->where('notas_referenciadas', 'like', "%{$search}%"))
                     ->toggleable(isToggledHiddenByDefault: true),
