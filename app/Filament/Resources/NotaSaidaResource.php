@@ -126,6 +126,13 @@ class NotaSaidaResource extends Resource
                 Tables\Columns\TextColumn::make('chave_nota')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('notas_referenciadas')
+                    ->label('Notas Referenciadas')
+                    ->placeholder('N/A')
+                    ->formatStateUsing(fn(?array $state) => filled($state) ? implode(', ', array_keys($state)) : null)
+                    ->searchable(query: fn($query, string $search) => $query
+                        ->where('notas_referenciadas', 'like', "%{$search}%"))
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('natureza_operacao')
                     ->label('Natureza Operação')
                     ->toggleable(isToggledHiddenByDefault: true),
