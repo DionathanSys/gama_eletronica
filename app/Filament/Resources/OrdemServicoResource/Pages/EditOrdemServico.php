@@ -16,6 +16,7 @@ use App\Actions\OrdemServico\UpdateValorOrdemActions;
 use App\Enums\StatusProcessoOrdemServicoEnum;
 use App\Models\Parceiro;
 use App\Services\DownloadPdf;
+use App\Services\OrdemServicoAuditService;
 use App\Traits\UpdateStatusProcessoOrdemServico;
 use Filament\Actions;
 use Filament\Forms\Components\DatePicker;
@@ -50,9 +51,23 @@ class EditOrdemServico extends EditRecord
                 ->label('O. S. Cliente')
                 ->action(function(OrdemServico $record){
 
-                    Session::put('parceiro_id', $record->parceiro_id);
-                    Session::put('nro_doc_parceiro', $record->nro_doc_parceiro);
-                    Session::put('data_ordem', $record->data_ordem);
+                    $dataOrdem = $record->getRawOriginal('data_ordem');
+
+                    Session::put('nova_os_context', [
+                        'parceiro_id' => $record->parceiro_id,
+                        'nro_doc_parceiro' => Parceiro::find($record->parceiro_id)?->nro_documento,
+                        'data_ordem' => $dataOrdem,
+                    ]);
+
+                    OrdemServicoAuditService::record(
+                        event: 'new_os_context_selected',
+                        ordemServico: $record,
+                        source: 'filament.action.nova-os-cliente',
+                        newDataOrdem: $dataOrdem,
+                        context: [
+                            'target' => 'create_form',
+                        ],
+                    );
 
                     redirect(OrdemServicoResource::getUrl('create'));
                 }),
@@ -203,10 +218,31 @@ class EditOrdemServico extends EditRecord
             ])
         );
 
+        OrdemServicoAuditService::record(
+            event: 'edit_form_opened',
+            ordemServico: $this->record,
+            source: 'filament.edit',
+            newDataOrdem: $this->record->getRawOriginal('data_ordem'),
+            context: [
+                'form_data_ordem' => $this->form->getState()['data_ordem'] ?? null,
+            ],
+        );
+
     }
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
+        OrdemServicoAuditService::record(
+            event: 'edit_submitted',
+            ordemServico: $this->record,
+            source: 'filament.edit',
+            oldDataOrdem: $this->record->getRawOriginal('data_ordem'),
+            newDataOrdem: $data['data_ordem'] ?? null,
+            context: [
+                'changed_fields' => array_keys($data),
+            ],
+        );
+
         $data['updated_by'] = Auth::id();
 
         return $data;

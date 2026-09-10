@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\OrdemServico;
+use App\Observers\OrdemServicoObserver;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Model::unguard();
+        OrdemServico::observe(OrdemServicoObserver::class);
         LogViewer::auth(function ($request) {
             return true;
         });

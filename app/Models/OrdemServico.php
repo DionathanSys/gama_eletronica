@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\NaturezaOperacaoEnum;
 use App\Enums\VinculoParceiroEnum;
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -62,6 +63,11 @@ class OrdemServico extends Model
     public function itens(): HasMany
     {
         return $this->hasMany(ItemOrdemServico::class);
+    }
+
+    public function auditorias(): HasMany
+    {
+        return $this->hasMany(OrdemServicoAudit::class)->latest();
     }
     
     public function itens_orcamento(): HasMany
@@ -154,8 +160,14 @@ class OrdemServico extends Model
 
     public function getDataFormated()
     {
-        // Definindo a data
-        $date = Carbon::createFromFormat('Y-m-d', $this->data_ordem);
+        $dateValue = $this->data_ordem;
+
+        if ($dateValue instanceof CarbonInterface) {
+            $dateValue = $dateValue->toDateString();
+        }
+
+        // A coluna e DATE; a leitura explicita evita qualquer conversao de fuso horario.
+        $date = Carbon::createFromFormat('!Y-m-d', (string) $dateValue, config('app.timezone'));
 
         // Formatando a data no formato desejado
         $formattedDate = $date->locale('pt_BR')->isoFormat('dddd, DD [de] MMMM [de] YYYY');

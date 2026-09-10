@@ -7,7 +7,7 @@ use App\Actions\Fiscal\CreateNfeRetornoAction;
 use App\Enums\PrioridadeOrdemServicoEnum;
 use App\Filament\Resources\OrdemServicoResource\Pages;
 use App\Filament\Resources\OrdemServicoResource\RelationManagers;
-use App\Filament\Resources\OrdemServicoResource\RelationManagers\{ItensOrcamentoRelationManager, ItensOrdensAnterioresRelationManager, ItensRelationManager};
+use App\Filament\Resources\OrdemServicoResource\RelationManagers\{AuditoriasRelationManager, ItensOrcamentoRelationManager, ItensOrdensAnterioresRelationManager, ItensRelationManager};
 use App\Actions\Fiscal\CreateNfRetornoAction;
 use App\Actions\Fiscal\RegistrarNfeRetornoAction;
 // use App\Actions\NotaFiscalMercadoria\RegistrarNfeRetornoAction;
@@ -254,6 +254,7 @@ class OrdemServicoResource extends Resource
             ItensRelationManager::class,
             ItensOrcamentoRelationManager::class,
             ItensOrdensAnterioresRelationManager::class,
+            AuditoriasRelationManager::class,
         ];
     }
 
@@ -283,7 +284,7 @@ class OrdemServicoResource extends Resource
             ->relationship('cliente', 'nome')
             ->preload()
             ->searchable()
-            ->default(fn() => Session::get('parceiro_id', null))
+            ->default(null)
             ->afterStateUpdated(function (Set $set, Get $get, $state) {
 
                 $set('equipamento_id', null);
@@ -303,7 +304,7 @@ class OrdemServicoResource extends Resource
             ->columnSpan(3)
             ->label('CNPJ/CPF')
             ->placeholder('CPF/CNPJ')
-            ->default(Session::get('nro_doc_parceiro', null))
+            ->default(null)
             ->dehydrated(false);
     }
 
@@ -311,13 +312,13 @@ class OrdemServicoResource extends Resource
     {
         return  Forms\Components\DatePicker::make('data_ordem')
             ->columnSpan(2)
-            ->date('d/m/Y')
+            ->format('Y-m-d')
             ->displayFormat('d/m/Y')
             ->closeOnDateSelection()
-            ->maxDate(now())
+            ->maxDate(today())
             ->native(false)
             ->required()
-            ->default(Session::get('data_ordem', now()));
+            ->default(today()->toDateString());
     }
 
     public static function getEquipamentoFormField($var = null): Forms\Components\Select

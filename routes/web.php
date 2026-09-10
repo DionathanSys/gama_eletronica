@@ -6,6 +6,7 @@ use App\Models\OrdemServico;
 use App\Models\User;
 use App\Services\BuscaCNPJ;
 use App\Services\NfeService;
+use App\Services\OrdemServicoAuditService;
 use CloudDfe\SdkPHP\Nfe;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
@@ -125,6 +126,18 @@ Route::prefix('os')->group(function () {
     Route::get('{id}/html', function ($id) {
 
         $ordemServico = OrdemServico::with(['itens.servico', 'parceiro.enderecos', 'equipamento'])->findOrFail($id);
+        $dataOrdem = $ordemServico->getRawOriginal('data_ordem');
+
+        OrdemServicoAuditService::record(
+            event: 'pdf_opened',
+            ordemServico: $ordemServico,
+            source: 'route.os.html',
+            newDataOrdem: $dataOrdem,
+            context: [
+                'requested_id' => (string) $id,
+                'formatted_data_ordem' => $ordemServico->getDataFormated(),
+            ],
+        );
 
         return view('ordem_servico.padrao', [
             'ordem_servico' => $ordemServico,
@@ -137,6 +150,19 @@ Route::prefix('os')->group(function () {
     Route::get('{id}/orcamento/html', function ($id) {
 
         $ordemServico = OrdemServico::with(['itens.servico', 'parceiro.enderecos', 'equipamento'])->findOrFail($id);
+        $dataOrdem = $ordemServico->getRawOriginal('data_ordem');
+
+        OrdemServicoAuditService::record(
+            event: 'pdf_opened',
+            ordemServico: $ordemServico,
+            source: 'route.os.orcamento.html',
+            newDataOrdem: $dataOrdem,
+            context: [
+                'requested_id' => (string) $id,
+                'document' => 'orcamento',
+                'formatted_data_ordem' => $ordemServico->getDataFormated(),
+            ],
+        );
 
         return view('ordem_servico.orcamento', [
             'ordem_servico' => $ordemServico,
