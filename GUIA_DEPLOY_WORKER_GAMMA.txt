@@ -1,0 +1,186 @@
+GUIA DE DEPLOY - WORKER DA FILA GAMMA ELETRONICA
+================================================
+
+Objetivo
+--------
+Manter a aplicacao gamma_eletronica usando a fila database e executar os
+jobs pelo Supervisor. Nao usar o Horizon do aplicativo tornedon.
+
+O Horizon atualmente ativo pertence ao tornedon. Esta aplicacao nao possui
+laravel/horizon no composer.json e nao deve compartilhar o processo do outro
+aplicativo.
+
+1. Configuracao do .env
+-----------------------
+
+Arquivo:
+/srv/apps/php/gamma_eletronica/.env
+
+Garantir estas configuracoes:
+
+APP_ENV=production
+APP_DEBUG=false
+APP_TIMEZONE=America/Sao_Paulo
+
+QUEUE_CONNECTION=database
+DB_QUEUE=default
+DB_QUEUE_RETRY_AFTER=120
+
+Durante a operacao normal, preferir LOG_LEVEL=info. Se for necessario
+investigar um erro, usar LOG_LEVEL=debug temporariamente e proteger os logs.
+
+O projeto registra configuracoes sensiveis em alguns logs antigos. Nunca
+compartilhar laravel.log ou logs do servidor sem remover tokens.
+
+2. Validar banco e fila
+-----------------------
+
+Executar como deploy, na raiz da aplicacao:
+
+cd /srv/apps/php/gamma_eletronica
+
+php artisan migrate:status
+php artisan queue:failed
+
+php artisan tinker --execute='
+dump([
+    "queue" => config("queue.default"),
+    "queue_driver" => config("queue.connections." . config("queue.default") . ".driver"),
+    "db" => config("database.default"),
+    "env" => config("app.env"),
+]);
+'
+
+Verificar se a tabela jobs existe e se ha jobs pendentes:
+
+php artisan tinker --execute='
+dump(DB::table("jobs")
+    ->select("id", "queue", "attempts", "reserved_at", "available_at", "created_at")
+    ->orderByDesc("id")
+    ->limit(30)
+    ->get());
+'
+
+Se alguma migration necessaria estiver pendente, fazer backup e executar:
+
+php artisan migrate --force
+
+Nao executar queue:retry nem emitir novas NF-e antes de reconciliar as NF-e
+dos numeros 174, 175 e 176 no provedor fiscal.
+
+3. Permissoes dos logs
+----------------------
+
+O PHP-FPM executa como www-data. Os arquivos de log precisam ser gravaveis
+por esse usuario:
+
+sudo chgrp www-data /srv/apps/php/gamma_eletronica/storage/logs/*.log
+sudo chmod g+rw /srv/apps/php/gamma_eletronica/storage/logs/*.log
+sudo chmod 2770 /srv/apps/php/gamma_eletronica/storage/logs
+
+sudo -u www-data test -w /srv/apps/php/gamma_eletronica/storage/logs && echo "storage/logs OK"
+sudo -u www-data test -w /srv/apps/php/gamma_eletronica/storage/logs/laravel-$(date +%Y-%m-%d).log && echo "log atual OK"
+
+Se o segundo teste falhar porque o arquivo ainda nao existe, verificar
+somente a permissao do diretorio. O setgid aplicado acima faz novos arquivos
+herdarem o grupo www-data.
+
+4. Arquivo do Supervisor
+------------------------
+
+Criar:
+/etc/supervisor/conf.d/gamma-eletronica-worker.conf
+
+Conteudo:
+
+[program:gamma-eletronica-worker]
+process_name=%(program_name)s_%(process_num)02d
+command=/usr/bin/php8.3 /srv/apps/php/gamma_eletronica/artisan queue:work database --queue=default --sleep=3 --tries=3 --timeout=90 --backoff=10 --memory=256
+directory=/srv/apps/php/gamma_eletronica
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+user=www-data
+numprocs=1
+redirect_stderr=true
+stdout_logfile=/srv/apps/php/gamma_eletronica/storage/logs/queue-worker.log
+stdout_logfile_maxbytes=20MB
+stdout_logfile_backups=5
+stopwaitsecs=3600
+
+O comando acima usa explicitamente o driver database. Ele nao interfere no
+tornedon-horizon nem no tornedon-schedule.
+
+Para criar o arquivo usando um heredoc:
+
+sudo tee /etc/supervisor/conf.d/gamma-eletronica-worker.conf >/dev/null <<'EOF'
+[program:gamma-eletronica-worker]
+process_name=%(program_name)s_%(process_num)02d
+command=/usr/bin/php8.3 /srv/apps/php/gamma_eletronica/artisan queue:work database --queue=default --sleep=3 --tries=3 --timeout=90 --backoff=10 --memory=256
+directory=/srv/apps/php/gamma_eletronica
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+user=www-data
+numprocs=1
+redirect_stderr=true
+stdout_logfile=/srv/apps/php/gamma_eletronica/storage/logs/queue-worker.log
+stdout_logfile_maxbytes=20MB
+stdout_logfile_backups=5
+stopwaitsecs=3600
+EOF
+
+5. Carregar o worker
+--------------------
+
+sudo supervisorctl reread
+sudo supervisorctl update
+sudo supervisorctl start gamma-eletronica-worker:*
+sudo supervisorctl status gamma-eletronica-worker:*
+
+Resultado esperado:
+
+gamma-eletronica-worker:gamma-eletronica-worker_00   RUNNING
+
+Se o programa ja estiver registrado, usar:
+
+sudo supervisorctl restart gamma-eletronica-worker:*
+
+Nao reiniciar tornedon-horizon para aplicar esta configuracao.
+
+6. Validar o processamento
+--------------------------
+
+Verificar o processo:
+
+ps -eo user,pid,args | grep '[q]ueue:work.*gamma_eletronica'
+
+Verificar falhas:
+
+php artisan queue:failed
+
+Verificar o log do worker:
+
+ls -lah /srv/apps/php/gamma_eletronica/storage/logs/queue-worker.log
+
+Depois de confirmar o worker, uma NF-e que tenha sido atualizada para
+PROCESSANDO devera gerar uma consulta na fila. O worker nao corrige a nota
+244 nem deve ser usado para reenviar NF-e com resultado externo incerto.
+
+7. Diagnostico do HTTP 500
+--------------------------
+
+O worker nao corrige o HTTP 500 inicial. Para localizar esse erro, consultar:
+
+sudo grep -nE 'Permission denied|UnexpectedValueException|Fatal error|Uncaught' /var/log/php8.3-fpm.log
+sudo grep -n ' 500 ' /var/log/nginx/gamma_eletronica-access.log
+sudo grep -nE 'upstream|connect\(\)|prematurely closed' /var/log/nginx/gamma_eletronica-error.log
+
+Antes de qualquer novo teste fiscal:
+
+1. Consultar no provedor as NF-e dos numeros 174, 175 e 176.
+2. Identificar qual chave corresponde a nota local 244.
+3. Reconciliar a nota 244 ou cancelar a duplicada conforme orientacao fiscal.
+4. Somente depois realizar novo teste.
