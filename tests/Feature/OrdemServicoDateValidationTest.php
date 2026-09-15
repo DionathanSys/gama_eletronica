@@ -11,6 +11,9 @@ it('allows the current order date after midnight', function () {
 
         expect($field->getMaxDate())
             ->toBe('2026-09-15');
+
+        expect($field->mutateStateForValidation('2026-09-15 14:30:00'))
+            ->toBe('2026-09-15');
     } finally {
         Carbon::setTestNow();
     }

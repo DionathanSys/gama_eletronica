@@ -213,7 +213,7 @@ class EditOrdemServico extends EditRecord
         parent::mount($record);
 
         $this->form->fill(
-            array_merge($this->form->getState(), [
+            array_merge($this->form->getRawState(), [
                 'nro_doc_parceiro' => Parceiro::find($this->record->parceiro_id)?->nro_documento,
             ])
         );
@@ -224,7 +224,7 @@ class EditOrdemServico extends EditRecord
             source: 'filament.edit',
             newDataOrdem: $this->record->getRawOriginal('data_ordem'),
             context: [
-                'form_data_ordem' => $this->form->getState()['data_ordem'] ?? null,
+                'form_data_ordem' => $this->form->getRawState()['data_ordem'] ?? null,
             ],
         );
 

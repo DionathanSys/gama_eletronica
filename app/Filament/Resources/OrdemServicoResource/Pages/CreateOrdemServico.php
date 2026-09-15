@@ -27,7 +27,7 @@ class CreateOrdemServico extends CreateRecord
         $this->novaOsContext = Session::pull('nova_os_context', []);
 
         if ($this->novaOsContext !== []) {
-            $this->form->fill(array_merge($this->form->getState(), [
+            $this->form->fill(array_merge($this->form->getRawState(), [
                 'parceiro_id' => $this->novaOsContext['parceiro_id'] ?? null,
                 'nro_doc_parceiro' => $this->novaOsContext['nro_doc_parceiro'] ?? null,
                 'data_ordem' => $this->novaOsContext['data_ordem'] ?? today()->toDateString(),
@@ -37,7 +37,7 @@ class CreateOrdemServico extends CreateRecord
         OrdemServicoAuditService::record(
             event: 'create_form_opened',
             source: 'filament.create',
-            newDataOrdem: $this->form->getState()['data_ordem'] ?? null,
+            newDataOrdem: $this->form->getRawState()['data_ordem'] ?? null,
             context: [
                 'session_context' => $this->novaOsContext ?: null,
                 'expected_today' => today()->toDateString(),

@@ -316,7 +316,18 @@ class OrdemServicoResource extends Resource
             ->displayFormat('d/m/Y')
             ->closeOnDateSelection()
             ->maxDate(today()->toDateString())
-            ->native(false)
+            ->mutateStateForValidationUsing(function ($state) {
+                if (blank($state)) {
+                    return $state;
+                }
+
+                try {
+                    return Carbon::parse($state)->toDateString();
+                } catch (\Throwable) {
+                    return $state;
+                }
+            })
+            ->native(true)
             ->required()
             ->default(today()->toDateString());
     }
