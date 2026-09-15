@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Traits\ControleNumeracaoNf;
 use App\Traits\Notifica;
 use CloudDfe\SdkPHP\Nfe;
+use Carbon\Carbon;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Collection;
@@ -230,8 +231,9 @@ class NfeService
             'chave_nota'            => $chave,
             'nro_nota'              => $dto->getNumero(),
             'serie'                 => $dto->getSerie(),
-            'data_emissao'          => $dto->getDataEmissao(),
-            'data_entrada_saida'    => $dto->getDataEntradaSaida(),
+            // These columns are DATE; keep the full ISO timestamp only in the API payload.
+            'data_emissao'          => Carbon::parse($dto->getDataEmissao())->toDateString(),
+            'data_entrada_saida'    => Carbon::parse($dto->getDataEntradaSaida())->toDateString(),
             'status'                => StatusNotaFiscalEnum::PROCESSANDO,
         ];
 
