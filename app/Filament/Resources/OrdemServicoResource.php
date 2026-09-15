@@ -315,7 +315,7 @@ class OrdemServicoResource extends Resource
             ->format('Y-m-d')
             ->displayFormat('d/m/Y')
             ->closeOnDateSelection()
-            ->maxDate(today())
+            ->maxDate(today()->toDateString())
             ->native(false)
             ->required()
             ->default(today()->toDateString());
