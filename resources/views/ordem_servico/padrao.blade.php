@@ -138,7 +138,7 @@
     <h3 class="font-bold">VALOR DESTA FATURA {{'R$ '.number_format($ordem_servico->valor_total, 2, '.', ',')}}</h3>
   </div>
 
-  <div class="grid justify-items-center my-10">
+  <div class="grid justify-items-center my-6">
     <p class="text-center m-0 text-xs font-normal">
       Autorizo a execução dos serviços discriminados e assumo a responsabilidade pelos dados fornecidos, bem como a responsabilidade da cobrança e/ou pagamento em caso de inadimplência por parte do referido cliente.
     </p>
@@ -147,7 +147,7 @@
     </h2>
   </div>
 
-  <div class="grid grid-cols-2 gap-8 mt-20">
+  <div class="grid grid-cols-2 gap-8 mt-10">
     <!-- Assinatura da Empresa -->
     <div class="flex flex-col items-center">
       <!-- Linha para Assinatura -->
@@ -165,7 +165,7 @@
     </div>
   </div>
 
-  <footer class="mt-10 border-t border-black pt-3 text-justify" style="font-size: 11px; line-height: 1.45; page-break-inside: avoid; break-inside: avoid;">
+  <footer class="mt-4 border-t border-black pt-2 text-justify" style="font-size: 10px; line-height: 1.35; page-break-inside: avoid; break-inside: avoid;">
     <p>
       <strong>GARANTIA:</strong> 90 dias sobre o serviço realizado, contados da entrega, exclusivamente em relação ao defeito informado e descrito nesta OS, mediante análise técnica.
     </p>
