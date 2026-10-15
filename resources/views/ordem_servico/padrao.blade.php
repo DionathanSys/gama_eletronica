@@ -165,6 +165,14 @@
     </div>
   </div>
 
+  <footer class="mt-10 border-t border-black pt-3 text-justify" style="font-size: 11px; line-height: 1.45; page-break-inside: avoid; break-inside: avoid;">
+    <p>
+      <strong>GARANTIA:</strong> 90 dias sobre o serviço realizado, contados da entrega, exclusivamente em relação ao defeito informado e descrito nesta OS, mediante análise técnica.
+    </p>
+    <p class="mt-1">
+      Não abrange novos defeitos ou falhas decorrentes de mau uso, sobretensão, curto-circuito, umidade (equipamento molhado), danos físicos, intervenção de terceiros ou problemas em outros componentes do equipamento.
+    </p>
+  </footer>
 
 </div>
 </body>
